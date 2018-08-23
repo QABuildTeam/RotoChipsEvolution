@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// an Decorator class for victory messages queue shown in WinnerScwnw
+// an Decorator class for victory messages queue shown in WinnerScene
 public class VictoryMessages : MonoBehaviour
 {
 

@@ -13,7 +13,7 @@ public class WorldSphereScript : MonoBehaviour
 	int activeSelector;             // selected level for playing
 	int gallerySelector;
 	int levelSelector;
-	MusicFader mf;
+	//MusicFader mf;
 
 	public float HintArrowDistance = 20f;   // a temporary solution
 
@@ -95,7 +95,7 @@ public class WorldSphereScript : MonoBehaviour
 		GallerySatelliteActive = ld.status.Complete;
 		GallerySatellite.SetActive(GallerySatelliteActive);
 		ss = CenterRotator.GetComponent<SatelliteScript>();
-		mf = gameObject.GetComponent<MusicFader>();
+		//mf = gameObject.GetComponent<MusicFader>();
 		lds = GameObject.Find("DescriptionCanvas").GetComponent<LevelDescriptionScript>();
 
 		// set up the dialog links
@@ -173,7 +173,7 @@ public class WorldSphereScript : MonoBehaviour
 		}
 		else
 		{
-			mf.FadeOut();
+			//mf.FadeOut();
 			Fader.FadeOut(FinalScene);
 		}
 	}
@@ -242,7 +242,7 @@ public class WorldSphereScript : MonoBehaviour
 		{
 			case eWorldStatus.RestartDialog:
 				GameManager.instance.resetGame();           // reset the game
-				mf.FadeOut();
+				//mf.FadeOut();
 				//FaderCanvas.SetActive (true);			// make the fader active first
 				Fader.FadeOut(gameObject.scene.name);   // restart the level
 				break;
@@ -548,7 +548,7 @@ public class WorldSphereScript : MonoBehaviour
 		AppData.instance[AppData.Storage.SelectedLevel] = wsm.getSelectorLevel(wsm.iActiveSelector());
 		wsm.rotateToSelected();
 		wsm.flashActiveSelector();
-		mf.FadeOut();
+		//mf.FadeOut();
 		//FaderCanvas.SetActive (true);
 		Fader.SetColor(Color.white);
 		Fader.FadeOut(LevelScene);
@@ -565,7 +565,7 @@ public class WorldSphereScript : MonoBehaviour
 		//PlayerStat.instance.saveCurrentLevel();
 		wsm.rotateToSelected();
 		wsm.flashActiveSelector();
-		mf.FadeOut();
+		//mf.FadeOut();
 		//FaderCanvas.SetActive (true);
 		Fader.SetColor(Color.white);
 		Fader.FadeOut(GalleryScene);

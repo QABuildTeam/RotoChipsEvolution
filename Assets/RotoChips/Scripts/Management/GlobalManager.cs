@@ -23,6 +23,10 @@ namespace RotoChips.Management
         {
             get; private set;
         }
+        public ObjectManager MObject
+        {
+            get; private set;
+        }
         public AudioManager MAudio
         {
             get; private set;
@@ -68,6 +72,7 @@ namespace RotoChips.Management
                 MMessage = (GameMessageManager)LocateManager(typeof(GameMessageManager));       // 20
                 MAudio = (AudioManager)LocateManager(typeof(AudioManager));                     // 30
                 MLanguage = (LocalizationManager)LocateManager(typeof(LocalizationManager));    // 70
+                MObject = (ObjectManager)LocateManager(typeof(ObjectManager));                  // 10
                 //Debug.Log("Submanagers are linked");
 
                 // make myself immortal
