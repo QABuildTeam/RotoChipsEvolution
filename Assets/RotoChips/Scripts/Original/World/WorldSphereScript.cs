@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class WorldSphereScript : MonoBehaviour
 {
-
+    /*
 	bool selectMode;                // view mode in whatever mode (level selection or gallery): false - view mode, true - select mode
 
 	int activeSelector;             // selected level for playing
@@ -25,7 +25,7 @@ public class WorldSphereScript : MonoBehaviour
 	public GameObject LightValueText;
 	public GameObject LightIntensityText;
 	// -----------------------
-
+    */
 	public enum eWorldStatus
 	{
 		Init,                       // start up status
@@ -54,7 +54,7 @@ public class WorldSphereScript : MonoBehaviour
 		DescriptionActive			// a completed level description is being displayed
 	};
 	eWorldStatus status;
-
+    /*
 	public string GalleryScene;
 	public string FinalScene;
 	public string LevelScene;
@@ -80,9 +80,10 @@ public class WorldSphereScript : MonoBehaviour
 
 	bool sphereToZero;          // coroutine flag
 	bool cameraMoved;           // coroutine flag
-
+    */
 	void Awake()
 	{
+        /*
 		status = eWorldStatus.Init;
 		wsm = gameObject.GetComponent<WorldSphereModel>();
 		puzzleInput = gameObject.GetComponent<PuzzleInput>();
@@ -111,11 +112,12 @@ public class WorldSphereScript : MonoBehaviour
 
 		sphereToZero = false;
 		cameraMoved = false;
-
+        */
 	}
 
 	void Start()
 	{
+        /*
         HintSystemScript.instance.SetListener(gameObject);
 		// the game cannot be restarted during the first round
 		// the player can watch the final rolls sequence any time after the game is finished
@@ -124,6 +126,7 @@ public class WorldSphereScript : MonoBehaviour
 		GameGUIScript.instance.setPointScore((long)AppData.instance[AppData.Storage.CurrentPoints]);
 		GameGUIScript.instance.setCoinsBalance((decimal)AppData.instance[AppData.Storage.CurrentCoins]);
 		GameManager.instance.processGameEvent(GameManager.GameEvents.WorldLoaded);
+        */
 	}
 
 	// ======== Callbacks ========
@@ -153,6 +156,7 @@ public class WorldSphereScript : MonoBehaviour
 	// it works in level select mode only
 	public void AskForRestart()
 	{
+        /*
 		if (GameManager.instance.processGameEvent(GameManager.GameEvents.WorldButtonRestartGamePressed))
 		{
 			status = eWorldStatus.WaitingInput;
@@ -162,11 +166,13 @@ public class WorldSphereScript : MonoBehaviour
 			status = eWorldStatus.RestartDialog;
 			Dialog.GetComponent<DialogOkCancelScript>().Activate(LocalizationManager.instance.GetLocalizedValue("REALLY RESET THE GAME?"));
 		}
+        */
 	}
 
 	// this method is a callback for Source GUI button
 	public void ShowSource()
 	{
+        /*
 		if (GameManager.instance.processGameEvent(GameManager.GameEvents.WorldButtonShowFinalRollsPressed))
 		{
 			status = eWorldStatus.WaitingInput;
@@ -176,11 +182,13 @@ public class WorldSphereScript : MonoBehaviour
 			//mf.FadeOut();
 			Fader.FadeOut(FinalScene);
 		}
+        */
 	}
 
 	// this is a callback method which is called whenever a 'pointsScore' GUI area is tapped
 	public void PointsTap()
 	{
+        /*
 		switch (status)
 		{
 			case eWorldStatus.WaitingInput:
@@ -188,17 +196,20 @@ public class WorldSphereScript : MonoBehaviour
 				GameManager.instance.processGameEvent(GameManager.GameEvents.WorldPointScoreTapped);
 				break;
 		}
+        */
 	}
 
 	// this is a callback method which is called whenever a 'pointsScore' GUI area is tapped
 	public void CoinsTap()
 	{
+        /*
 		switch (status)
 		{
 			case eWorldStatus.WaitingInput:
 				GameManager.instance.processGameEvent(GameManager.GameEvents.WorldCoinsScoreTapped);
 				break;
 		}
+        */
 	}
 
 	// ----- debug callbacks ---------
@@ -222,6 +233,7 @@ public class WorldSphereScript : MonoBehaviour
 	// Intensity tuning
 	public void BackLevel()
 	{
+        /*
 		if (status != eWorldStatus.IntensityTuning)
 		{
 			status = eWorldStatus.IntensityTuning;
@@ -231,6 +243,7 @@ public class WorldSphereScript : MonoBehaviour
 		{
 			status = eWorldStatus.WaitingInput;
 		}
+        */
 	}
 	// -------------------------------
 
@@ -238,6 +251,7 @@ public class WorldSphereScript : MonoBehaviour
 	// this is a callback method which is called whenever an OK button in the dialog is pressed
 	public void OKAction()
 	{
+        /*
 		switch (status)
 		{
 			case eWorldStatus.RestartDialog:
@@ -247,12 +261,15 @@ public class WorldSphereScript : MonoBehaviour
 				Fader.FadeOut(gameObject.scene.name);   // restart the level
 				break;
 		}
+        */
 	}
 
 	// this is a callback method which is called whenever a Cancel button in the dialog is pressed
 	public void CancelAction()
 	{
+        /*
 		status = eWorldStatus.WaitingInput;
+        */
 	}
 
 
@@ -261,12 +278,14 @@ public class WorldSphereScript : MonoBehaviour
 	// it just sets the corresponding flag
 	public void sphereZeroRotated()
 	{
+        /*
 		sphereToZero = true;
 		if (wsm.cloudsFading()) // fade the clouds if needed
 		{
 			//Debug.Log("fading clouds");
 			wsm.fadeCloudsDown();
 		}
+        */
 	}
 
 	// -------- Camera callbacks -------------
@@ -274,16 +293,20 @@ public class WorldSphereScript : MonoBehaviour
 	// it just sets the corresponding flag
 	public void cameraMovedDown()
 	{
+        /*
 		cameraMoved = true;
 		selectMode = false; // and set camera mode mode to view mode
+        */
 	}
 
 	// this method is just a callback for wcc.pMoveCamera
 	// it just sets the corresponding flag
 	public void cameraMovedUp()
 	{
+        /*
 		cameraMoved = true;
 		selectMode = true; // and set camera mode mode to select mode
+        */
 	}
 
 	// --------- Selector callbacks -------------
@@ -310,9 +333,9 @@ public class WorldSphereScript : MonoBehaviour
 	// this method is a callback called after a hint is removed
 	public void HintRemoved()
 	{
+		/*
 		switch (status)
 		{
-			/*
 			case eWorldStatus.FirstWelcomeHint:
 				// display second welcome message
 				status = eWorldStatus.FirstWelcomeHint2;
@@ -321,6 +344,7 @@ public class WorldSphereScript : MonoBehaviour
 				HintSystemScript.instance.DisplayHint(HintSystemScript.HintType.FirstTimeWelcome2, obj: wsm.activeSelectorObject());
 				break;
 				*/
+                /*
 			case eWorldStatus.FirstWelcomeHint2:
 				AppData.instance[AppData.Storage.FirstStart] = false;
 				wsm.enableRotation();
@@ -332,7 +356,8 @@ public class WorldSphereScript : MonoBehaviour
 				//status = eWorldStatus.WaitingInput;
 				status = eWorldStatus.Init;
 				break;
-			case eWorldStatus.GameFinishedHint:
+                */
+			//case eWorldStatus.GameFinishedHint:
 				/*
 				status = eWorldStatus.RestartGameHint;
 				HintSystemScript.instance.DisplayHint(HintSystemScript.HintType.GameRestartButton, point: LevelGUIAskForRestartButton.transform.position);
@@ -344,6 +369,7 @@ public class WorldSphereScript : MonoBehaviour
 				break;
 			case eWorldStatus.GameRollsHint:
 			*/
+            /*
 				AppData.instance[AppData.Storage.FirstTimeFinished] = false;
 				status = eWorldStatus.Init;
 				break;
@@ -352,11 +378,13 @@ public class WorldSphereScript : MonoBehaviour
 				status = eWorldStatus.WaitingInput;
 				break;
 		}
+        */
 	}
 
 	// this method is a callback called after an arrow is tapped and a hint is removed
 	public void HintArrowRemoved()
 	{
+        /*
 		//Debug.Log("Hint arrow removed with status " + status.ToString());
 		switch (status)
 		{
@@ -382,18 +410,22 @@ public class WorldSphereScript : MonoBehaviour
 				status = eWorldStatus.WaitingInput;
 				break;
 		}
+        */
 	}
 
 	// -------- LevelDescriptionScript callback -------
 	public void LevelDescriptionClosed()
 	{
+        /*
 		wsm.enableRotation();
 		status = eWorldStatus.WaitingInput;
+        */
 	}
 
 	// ======== Hint system handling ==========
 	void ProcessHints()
 	{
+        /*
 		if (status != eWorldStatus.WaitingInput)
 		{
 			return;
@@ -434,6 +466,7 @@ public class WorldSphereScript : MonoBehaviour
 					//Debug.Log("Displaying hint for GameFinishedCongratulation");
 					HintSystemScript.instance.DisplayHint(HintSystemScript.Type.GameFinishedCongratulation);
 					break;
+                    */
                     /*
 				case HintSystemScript.Type.LevelNotYetPlayable:
 					status = eWorldStatus.HintActive;
@@ -441,6 +474,7 @@ public class WorldSphereScript : MonoBehaviour
 					HintSystemScript.instance.DisplayHint(HintSystemScript.Type.LevelNotYetPlayable);
 					break;
 					*/
+                    /*
 				default:
                     //Debug.Log("Displaying hint " + hint.type.ToString());
 					status = eWorldStatus.HintActive;
@@ -449,12 +483,14 @@ public class WorldSphereScript : MonoBehaviour
 					break;
 			}
 		}
+        */
 	}
 
 	// =============== Auxillary coroutines ===============
 	// this is an auxillary method
 	// it waits when both sphere-to-aero rotation and camera movement are finished
 	// actually, it is a callback after the focusWorld action is finished
+    /*
 	IEnumerator waitForFocus(bool keepStatus)
 	{
 		while (!(sphereToZero && cameraMoved))
@@ -466,9 +502,11 @@ public class WorldSphereScript : MonoBehaviour
 			status = eWorldStatus.WaitingInput;
 		}
 	}
+    */
 
 	// this is an auxillary method
 	// it waits when camera movement is finished
+    /*
 	IEnumerator waitForZoom(bool keepStatus)
 	{
 		while (!cameraMoved)
@@ -480,21 +518,25 @@ public class WorldSphereScript : MonoBehaviour
 			status = eWorldStatus.WaitingInput;
 		}
 	}
+    */
 
 	// ========== Commands ===========
 	// this method focuses camera on a elected selector
 	void focusWorld(bool keepStatus = false)
 	{
+        /*
 		sphereToZero = false;
 		cameraMoved = false;
 		wsm.rotateToSelected();
 		wcc.pMoveCamera(true);
 		StartCoroutine(waitForFocus(keepStatus));
+        */
 	}
 
 	// this method just rotates the world sphere when the player slides his finger on screen 
 	void rotateWorld()
 	{
+        /*
 		float cameraDistance = Camera.main.transform.position.z;
 		Vector3 delta = new Vector3();
 		delta = puzzleInput.moveDelta();
@@ -504,30 +546,37 @@ public class WorldSphereScript : MonoBehaviour
 		delta.z = 0;
 		//Vector3 delta = new Vector3(-Input.GetTouch(0).deltaPosition.y * cameraDistance / 100, Input.GetTouch(0).deltaPosition.x * cameraDistance / 100, 0f);
 		wsm.rotateByAngle(delta);
+        */
 	}
 
 	// this method rotates the world sphere around the z-axis when the player rotates its two-finger touch
 	void rotateWorldByZ()
 	{
+        /*
 		wsm.rotateZByAngle(puzzleInput.angleDelta());
+        */
 	}
 
 	// this method just stops world and camera rotation
 	void stopRotation()
 	{
+        /*
 		// this method stops the rotation of both the world sphere and the gallery satellite
 		wsm.stopRotation();
 		ss.stopRotation();
+        */
 	}
 
 	// this method zooms the camera in and out
 	void zoomCamera(bool keepStatus = false)
 	{
+        /*
 		// if the world is in select mode (selectMode==true), the camera should be moved down (up==false)
 		// if the world is in view mode (selectMode==view), the camera should be moved up (up==true)
 		cameraMoved = false;
 		wcc.pMoveCamera(!selectMode);
 		StartCoroutine(waitForZoom(keepStatus));
+        */
 	}
 
 	/*
@@ -543,6 +592,7 @@ public class WorldSphereScript : MonoBehaviour
 	// this method runs a puzzle using the level id of the active selector
 	void runPuzzle()
 	{
+        /*
 		status = eWorldStatus.FadeFromWorld;
 		// set current level id
 		AppData.instance[AppData.Storage.SelectedLevel] = wsm.getSelectorLevel(wsm.iActiveSelector());
@@ -553,11 +603,13 @@ public class WorldSphereScript : MonoBehaviour
 		Fader.SetColor(Color.white);
 		Fader.FadeOut(LevelScene);
 		// do nothing, because a level scene is going to be loaded
+        */
 	}
 
 	// this method runs the gallery using the level id of the active selector
 	void runGallery()
 	{
+        /*
 		//Debug.Log("Running gallery");
 		status = eWorldStatus.FadeFromWorld;
 		// save current level id
@@ -570,10 +622,12 @@ public class WorldSphereScript : MonoBehaviour
 		Fader.SetColor(Color.white);
 		Fader.FadeOut(GalleryScene);
 		// do nothing, because a level scene is going to be loaded
+        */
 	}
 
 	void tuneLight()
 	{
+        /*
 		switch (puzzleInput.checkInput())
 		{
 			case PuzzleInput.inputStatus.inputSinglePress:
@@ -635,11 +689,13 @@ public class WorldSphereScript : MonoBehaviour
 				LightIntensityText.GetComponent<Text>().text = intensityTuning.ToString();
 				break;
 		}
+        */
 	}
 
 	// main status processor
 	void processStatus()
 	{
+        /*
 		switch (status)
 		{
 			case eWorldStatus.ColorTuning:
@@ -648,10 +704,12 @@ public class WorldSphereScript : MonoBehaviour
 				break;
 			case eWorldStatus.Init:
 				stopRotation();
+                */
 				/*
 				if (!ProcessHints())
 				{
 				*/
+                /*
 					if (wsm.iActiveSelector() >= 0) // if there is an active selector in the world
 					{
 						status = eWorldStatus.WorldRotating;    // after initialization focus the world on the selected level button
@@ -661,9 +719,11 @@ public class WorldSphereScript : MonoBehaviour
 					{
 						status = eWorldStatus.WaitingInput;     // no, just go for player's input
 					}
+                    */
 				/*
 				}
 				*/
+                /*
 				break;
 			case eWorldStatus.WaitingInput:             // waiting for player's input
                 if (GameGUIScript.instance.IsPointerInGUI())    // do not process touches in the GUI area
@@ -764,13 +824,16 @@ public class WorldSphereScript : MonoBehaviour
 				}
 				break;
 		}
+        */
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
+        /*
 		ProcessHints();
 		processStatus();
+        */
 	}
 
 }

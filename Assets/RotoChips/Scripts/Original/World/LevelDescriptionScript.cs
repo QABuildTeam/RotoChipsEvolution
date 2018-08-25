@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class LevelDescriptionScript : MonoBehaviour
 {
 
+    /*
     public GameObject listener;
     public ShiveringMessage shiveringMessage;
 
@@ -24,7 +25,7 @@ public class LevelDescriptionScript : MonoBehaviour
 
     public Vector2 maxHorizontalSize;
     public Vector2 maxVerticalSize;
-
+    */
     //public int LevelID = 0;
 
     // Use this for initialization
@@ -39,7 +40,7 @@ public class LevelDescriptionScript : MonoBehaviour
 		
 	}
 	*/
-
+    /*
     public void ShowDescription(int level)
     {
         // get level data
@@ -113,4 +114,5 @@ public class LevelDescriptionScript : MonoBehaviour
         // now deactivate the description dialog
         DescriptionDialog.SetActive(false);
     }
+    */
 }

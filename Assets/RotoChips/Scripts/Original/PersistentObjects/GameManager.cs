@@ -4,6 +4,7 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
+    /*
     bool forceFirstTime = false;
 
 	public static GameManager instance;         // the global instance of a singleton
@@ -431,10 +432,6 @@ public class GameManager : MonoBehaviour
                     // the shuffle the puzzle in a predefined way
                     return true;
                 }
-                /*else if (SelectedLevel == 1)
-                {
-                    return true;
-                }*/
                 break;
             case GameEvents.PuzzleShuffled:
                 if (FirstRound)
@@ -460,15 +457,13 @@ public class GameManager : MonoBehaviour
             case GameEvents.PuzzleQuartetRotated:
                 // PuzzleQuartetRotated - any puzzle button has been pressed by the player
                 // and the four of its neighbouring tiles have rotated clockwise
-                /*
-                if (getGameFlag(GameEvents.PuzzleShuffled) && !checkAndSetGameFlag(GameEvents.PuzzleQuartetRotated))
-				{
-					HintSystemScript.instance.putNextHint(HintSystemScript.Type.FirstPuzzleQuartetRotated, HintSystemScript.Environment.Puzzle);
-					return true;
-				}
-				break;
-			case GameEvents.PuzzleTileInPlace:
-			*/
+                //if (getGameFlag(GameEvents.PuzzleShuffled) && !checkAndSetGameFlag(GameEvents.PuzzleQuartetRotated))
+				//{
+				//	HintSystemScript.instance.putNextHint(HintSystemScript.Type.FirstPuzzleQuartetRotated, HintSystemScript.Environment.Puzzle);
+				//	return true;
+				//}
+				//break;
+			//case GameEvents.PuzzleTileInPlace:
                 return processPuzzleTileInPlace(FirstRound, SelectedLevel);
             case GameEvents.PuzzleButtonShowSourcePressed:
                 if (!checkAndSetGameFlag(anEvent))
@@ -538,14 +533,10 @@ public class GameManager : MonoBehaviour
     // this method handles exclusively puzzle tiles
     bool processPuzzleTileInPlace(bool FirstRound, int SelectedLevel)
     {
-        /*
-        int SelectedLevel = (int)(long)AppData.instance[AppData.Storage.SelectedLevel];
-        bool FirstRound = (bool)AppData.instance[AppData.Storage.FirstRound];
-        */
-        /*
-        PuzzleModel pms = puzzleModelObject.GetComponent<PuzzleModel>();
-        GenericGameController ggc = puzzleModelObject.GetComponent<GenericGameController>();
-        */
+        //int SelectedLevel = (int)(long)AppData.instance[AppData.Storage.SelectedLevel];
+        //bool FirstRound = (bool)AppData.instance[AppData.Storage.FirstRound];
+        //PuzzleModel pms = puzzleModelObject.GetComponent<PuzzleModel>();
+        //GenericGameController ggc = puzzleModelObject.GetComponent<GenericGameController>();
         bool retVal = false;
         if (FirstRound)
         {
@@ -631,4 +622,5 @@ public class GameManager : MonoBehaviour
         }
         return retVal;
     }
+*/
 }

@@ -8,6 +8,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RotoChips.ImageProcessing;
 
 namespace RotoChips.Management
 {
@@ -19,7 +20,7 @@ namespace RotoChips.Management
             get; private set;
         }
 
-        public GameMessageManager MMessage
+        public InstantMessageManager MInstantMessage
         {
             get; private set;
         }
@@ -32,6 +33,10 @@ namespace RotoChips.Management
             get; private set;
         }
         public LocalizationManager MLanguage
+        {
+            get; private set;
+        }
+        public StressImageCreator MImage
         {
             get; private set;
         }
@@ -69,10 +74,11 @@ namespace RotoChips.Management
 
                 managers = new SortedDictionary<int, List<GenericManager>>();
                 // all the component managers are already here, they only need to be initialized (within Awake call)
-                MMessage = (GameMessageManager)LocateManager(typeof(GameMessageManager));       // 20
+                MInstantMessage = (InstantMessageManager)LocateManager(typeof(InstantMessageManager));       // 20
                 MAudio = (AudioManager)LocateManager(typeof(AudioManager));                     // 30
                 MLanguage = (LocalizationManager)LocateManager(typeof(LocalizationManager));    // 70
                 MObject = (ObjectManager)LocateManager(typeof(ObjectManager));                  // 10
+                MImage = (StressImageCreator)LocateManager(typeof(StressImageCreator));
                 //Debug.Log("Submanagers are linked");
 
                 // make myself immortal

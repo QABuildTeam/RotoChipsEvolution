@@ -207,7 +207,7 @@ namespace RotoChips.Management
                 Debug.Log(entriesRead.ToString() + " entries read for " + languageName + " language");
                 if (notify)
                 {
-                    GlobalManager.Instance.MMessage.PostMessage(GameMessageManager.GameMessageType.LanguageChanged, this, currentLanguage);
+                    GlobalManager.Instance.MInstantMessage.DeliverMessage(InstantMessageType.LanguageChanged, this, currentLanguage);
                 }
             }
             else
