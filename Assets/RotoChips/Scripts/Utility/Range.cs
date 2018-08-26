@@ -38,6 +38,24 @@ namespace RotoChips.Utility
         {
             return GetType().Name + "(min:" + min.ToString() + ", max:" + max.ToString() + ")";
         }
+        public T this[int i]
+        {
+            get
+            {
+                return (i % 2 == 0) ? min : max;
+            }
+            set
+            {
+                if (i % 2 == 0)
+                {
+                    min = value;
+                }
+                else
+                {
+                    max = value;
+                }
+            }
+        }
     }
 
     [System.Serializable]

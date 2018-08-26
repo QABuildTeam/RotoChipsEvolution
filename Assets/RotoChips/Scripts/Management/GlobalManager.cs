@@ -7,6 +7,8 @@
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 using UnityEngine;
 using RotoChips.ImageProcessing;
 
@@ -153,34 +155,53 @@ namespace RotoChips.Management
             }
         }
 
-        void Load()
+        protected class StatusChunk
+        {
+            public string signature;
+            public object prototype;
+        }
+
+        protected class StatusSaver
+        {
+            public List<StatusChunk> statusList;
+        }
+
+        protected StatusSaver LoadStatusBinary(string statusFileName)
+        {
+            StatusSaver statusSaver = null;
+            using (FileStream fs = new FileStream(statusFileName, FileMode.Open))
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                statusSaver = (StatusSaver)bf.Deserialize(fs);
+            }
+            return statusSaver;
+        }
+
+        protected StatusSaver LoadStatusJSON(string statusFileName)
+        {
+            StatusSaver statusSaver = null;
+            using (StreamReader stream = new StreamReader(statusFileName))
+            {
+                string filedata = stream.ReadToEnd();
+                if (filedata != null)
+                {
+                    statusSaver = JsonUtility.FromJson<StatusSaver>(filedata);
+                }
+            }
+            return statusSaver;
+        }
+
+        protected StatusSaver LoadStatus()
         {
             string statusFileName = StatusFileName;
+            StatusSaver statusSaver = null;
             try
             {
                 if (File.Exists(statusFileName))
                 {
-                    using (StreamReader stream = new StreamReader(statusFileName))
-                    {
-                        while (!stream.EndOfStream)
-                        {
-                            string initLine = stream.ReadLine();
-                            if (initLine != null)
-                            {
-                                foreach (KeyValuePair<int, List<GenericManager>> list in managers)
-                                {
-                                    foreach (GenericManager manager in list.Value)
-                                    {
-                                        if (manager.CheckSignature(initLine))
-                                        {
-                                            manager.Load(stream);
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    //choose either loading procedure
+                    statusSaver = LoadStatusBinary(statusFileName);
+                    //statusSaver = LoadStatusJSON(statusFileName);
                 }
             }
             catch (System.Exception e)
@@ -188,13 +209,54 @@ namespace RotoChips.Management
                 Debug.Log("GlobalManager.Load failed: " + e.ToString());
                 throw;
             }
+            return statusSaver;
+        }
+
+        void Load()
+        {
+            StatusSaver status = LoadStatus();
+            if (status != null)
+            {
+                foreach (StatusChunk chunk in status.statusList)
+                {
+                    foreach (KeyValuePair<int, List<GenericManager>> list in managers)
+                    {
+                        foreach (GenericManager manager in list.Value)
+                        {
+                            if (manager.CheckSignature(chunk.signature))
+                            {
+                                manager.Load(chunk.prototype);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        protected void SaveStatusBinary(string statusFileName, StatusSaver statusSaver)
+        {
+            using (FileStream fs = new FileStream(statusFileName, FileMode.Create))
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(fs, statusSaver);
+            }
+        }
+
+        protected void SaveStatusJSON(string statusFileName, StatusSaver statusSaver)
+        {
+            using (StreamWriter stream = new StreamWriter(statusFileName))
+            {
+                stream.Write(JsonUtility.ToJson(statusSaver));
+            }
         }
 
         public void Save()
         {
             string statusFileName = StatusFileName;
-            using (StreamWriter stream = new StreamWriter(statusFileName, false, System.Text.Encoding.UTF8))
+            try
             {
+                StatusSaver status = new StatusSaver();
                 foreach (KeyValuePair<int, List<GenericManager>> list in managers)
                 {
                     foreach (GenericManager manager in list.Value)
@@ -202,11 +264,25 @@ namespace RotoChips.Management
                         string signature = manager.SaveSignature();
                         if (!string.IsNullOrEmpty(signature))
                         {
-                            stream.WriteLine(signature);
-                            manager.Save(stream);
+                            object prototype = manager.Save();
+                            if (prototype != null)
+                            {
+                                status.statusList.Add(new StatusChunk { signature = signature, prototype = prototype });
+                            }
                         }
                     }
                 }
+                if (status.statusList.Count > 0)
+                {
+                    // choose either save procedure
+                    SaveStatusBinary(statusFileName, status);
+                    //SaveStatusJSON(statusFileName, status);
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log("GlobalManager.Save failed: " + e.ToString());
+                throw;
             }
         }
 

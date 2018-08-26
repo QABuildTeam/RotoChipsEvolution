@@ -30,6 +30,7 @@ namespace RotoChips.Management
         GUIRestartButtonPressed,
         GUIViewButtonPressed,
         GUIMagicButtonPressed,
+        GUIWhiteCurtainFaded,
         LanguageChanged
     }
 

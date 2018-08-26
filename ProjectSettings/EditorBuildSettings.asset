@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/RotoChips/Scenes/Start.unity
+    guid: 23040b9779fb91c4f9c486d8770a7962
+  - enabled: 1
+    path: Assets/RotoChips/Scenes/Logo.unity
+    guid: b9c2657b622734cf2b240b7be5507b9c
   m_configObjects: {}

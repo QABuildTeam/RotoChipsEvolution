@@ -65,7 +65,7 @@ namespace RotoChips.Management
         // all the needed configuration data are contained in the header...
         public override bool CheckSignature(string initLine)
         {
-            LocalizationHeader header = GenericManager.ParseSignature<LocalizationHeader>(initLine);
+            LocalizationHeader header = GenericManager.ParseJSONSignature<LocalizationHeader>(initLine);
             bool check = false;
             if (header != null && header.signature == localizationSignature)
             {
@@ -77,7 +77,7 @@ namespace RotoChips.Management
 
         public override string SaveSignature()
         {
-            return GenericManager.SetSignature<LocalizationHeader>(new LocalizationHeader
+            return GenericManager.SetJSONSignature<LocalizationHeader>(new LocalizationHeader
             {
                 signature = localizationSignature,
                 language = currentLanguage.ToString()

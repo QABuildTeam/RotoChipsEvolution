@@ -16,15 +16,15 @@ namespace RotoChips.Management
     {
         public class Storage
         {
+            public bool GameStarted;            // the game has already started for at least once
+                                                // set when the game is started for the very first time,
+                                                // and never reset
             public int SelectedLevel;           // currently selected level id on the world map
             public int GalleryLevel;            // currently selected level id in the gallery
             public long CurrentPoints;          // current amount of points earned by the player in the current game round
             public long TotalPoints;            // total earned points (from the very first start of the game)
                                                 // boolean flags
             public decimal CurrentCoins;        // current amount of RotoCoins
-            public bool GameStarted;            // the game has already started for at least once
-                                                // set when the game is started for the very first time,
-                                                // and never reset
             public bool FirstRound;             // the game has not been beaten before;
                                                 // set when the game is started for the very first time,
                                                 // reset when the game is first finished
@@ -44,37 +44,67 @@ namespace RotoChips.Management
                                                 // set simultaneously with the GameStarted flag
                                                 // reset after all the first welcome messages have been displayed
             public bool BonusCoinsAdded;        // the player has already received bonus coins
-                                                // set after adding the bonus coins to the player's balance and bever reset
+                                                // set after adding the bonus coins to the player's balance and never reset
+        }
+
+        public Storage storage;
+
+        protected virtual Storage InitialStorage()
+        {
+            Storage tempStorage = new Storage
+            {
+                GameStarted = false,
+                SelectedLevel = -1,
+                GalleryLevel = -1,
+                CurrentPoints = 0,
+                TotalPoints = 0,
+                CurrentCoins = 0m,
+                FirstRound = true,
+                FirstGallery = false,
+                GameFinished = false,
+                FirstPuzzleRun = true,
+                FirstTimeFinished = false,
+                FirstStart = true,
+                BonusCoinsAdded = false
+            };
+            return tempStorage;
         }
 
         public override void MakeInitial()
         {
+            storage = InitialStorage();
             base.MakeInitial();
         }
 
         // streaming methods
+        const string signature = ".storage.";
         public override bool CheckSignature(string initLine)
         {
-            return base.CheckSignature(initLine);
+            return initLine == signature;
         }
 
-        public override void Load(StreamReader stream)
+        public override void Load(object prototype)
         {
-            base.Load(stream);
+            Storage tempStorage = prototype as Storage;
+            if (tempStorage != null)
+            {
+                storage = tempStorage;
+            }
         }
 
         public override string SaveSignature()
         {
-            return base.SaveSignature();
+            return signature;
         }
 
-        public override void Save(StreamWriter stream)
+        public override object Save()
         {
-            base.Save(stream);
+            return storage;
         }
 
         public override void MakeReady()
         {
+            storage.GameStarted = true;
             base.MakeReady();
         }
     }

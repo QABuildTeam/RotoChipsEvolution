@@ -18,7 +18,7 @@ namespace RotoChips.Management
     {
 
         // Singleton
-        protected bool created;
+        protected static bool created;
         private void Awake()
         {
             if (!created)
@@ -96,26 +96,33 @@ namespace RotoChips.Management
         // ---------------------------------
         // streamable loading/saving methods
         // ---------------------------------
+        // this method checks if an object being loaded has a signature which matches the current class signature
         public virtual bool CheckSignature(string initLine)
         {
             return false;
         }
 
+        // this method creates a class signature string for an object being saved
         public virtual string SaveSignature()
         {
             return string.Empty;
         }
 
-        public virtual void Load(StreamReader stream)
+        // this method restores a current object's state from a loaded object
+        public virtual void Load(object prototype)
         {
+            // nothing is loaded
         }
 
-        public virtual void Save(StreamWriter stream)
+        // this method creates an object with the current object's state for saving
+        public virtual object Save()
         {
+            // nothing to save
+            return null;
         }
 
-        // auxillary loading/saving methods
-        public static T LoadObject<T>(StreamReader stream) where T : class
+        // auxillary JSON loading/saving methods
+        public static T LoadJSONObject<T>(StreamReader stream) where T : class
         {
             string src = stream.ReadLine();
             if (src != null)
@@ -129,7 +136,7 @@ namespace RotoChips.Management
             return null;
         }
 
-        public static T ParseSignature<T>(string line) where T : class
+        public static T ParseJSONSignature<T>(string line) where T : class
         {
             if (!string.IsNullOrEmpty(line))
             {
@@ -138,7 +145,7 @@ namespace RotoChips.Management
             return null;
         }
 
-        public static void SaveObject<T>(StreamWriter stream, T obj) where T : class
+        public static void SaveJSONObject<T>(StreamWriter stream, T obj) where T : class
         {
             if (obj != null)
             {
@@ -150,7 +157,7 @@ namespace RotoChips.Management
             }
         }
 
-        public static string SetSignature<T>(T obj) where T : class
+        public static string SetJSONSignature<T>(T obj) where T : class
         {
             if (obj != null)
             {
