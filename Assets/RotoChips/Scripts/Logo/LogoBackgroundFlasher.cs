@@ -16,7 +16,7 @@ namespace RotoChips.Logo
     {
         SpriteRenderer sr;
 
-        protected override void SetAlpha(float alpha)
+        protected override void Visualize(float alpha)
         {
             if (sr != null)
             {
@@ -29,7 +29,7 @@ namespace RotoChips.Logo
         void Start()
         {
             sr = gameObject.GetComponent<SpriteRenderer>();
-            SetAlpha(alphaRange.min);
+            Visualize(flashRange.min);
         }
 
     }

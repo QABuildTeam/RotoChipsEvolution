@@ -14,16 +14,16 @@ namespace RotoChips.Generic
     public abstract class FlashingObject : MonoBehaviour
     {
         [SerializeField]
-        protected FloatRange alphaRange;    // minimum & maximum values for alpha
-        public FloatRange AlphaRange
+        protected FloatRange flashRange;    // minimum & maximum values for visual change
+        public FloatRange FlashRange
         {
             get
             {
-                return alphaRange;
+                return flashRange;
             }
             set
             {
-                alphaRange = value;
+                flashRange = value;
             }
         }
 
@@ -41,7 +41,7 @@ namespace RotoChips.Generic
             }
         }
 
-        protected abstract void SetAlpha(float alpha);      // sets the transparency of the gameObject or its component(s)
+        protected abstract void Visualize(float factor);      // sets the visuals of the gameObject or its component(s)
 
         // this method defines which flashing period is valid
         protected virtual bool IsValidPeriod(int periodIndex)
@@ -56,35 +56,36 @@ namespace RotoChips.Generic
 
         protected IEnumerator Flash(bool up = true)
         {
-            // up argument sets the initial direction of transparency change:
-            // true  - transparency changes from alphaRange.min to alphaRange.max, using flashDuration.min
-            // false - transparency changes from alphaRange.max to alphaRange.min, using flashDuration.max
+            // up argument sets the initial direction of visual change:
+            // true  - appearance changes from flashRange.min to flashRange.max, using flashDuration.min
+            // false - appearance changes from flashRange.max to flashRange.min, using flashDuration.max
             int periodIndex = up ? 0 : 1;
-            float startAlpha = alphaRange[periodIndex];
-            float endAlpha = alphaRange[periodIndex + 1];
-            float minAlpha = Mathf.Min(startAlpha, endAlpha);
-            float maxAlpha = Mathf.Max(startAlpha, endAlpha);
+            float startFlash = flashRange[periodIndex];
+            float endFlash = flashRange[periodIndex + 1];
+            float minFlash = Mathf.Min(startFlash, endFlash);
+            float maxFlash = Mathf.Max(startFlash, endFlash);
+            float currentTime = 0;
             while (IsValidPeriod(periodIndex))
             {
-                SetAlpha(startAlpha);
-                float alpha = startAlpha;
-                float currentTime = 0;
+                Visualize(startFlash);
+                float currentFlash = startFlash;
                 float duration = flashDuration[periodIndex];
                 while (currentTime < duration)
                 {
                     yield return null;
                     currentTime += Time.deltaTime;
-                    alpha = Mathf.Clamp(Mathf.Lerp(startAlpha, endAlpha, currentTime / duration), minAlpha, maxAlpha);
-                    SetAlpha(alpha);
+                    currentFlash = Mathf.Clamp(Mathf.Lerp(startFlash, endFlash, currentTime / duration), minFlash, maxFlash);
+                    Visualize(currentFlash);
                 }
-                SetAlpha(endAlpha);
+                Visualize(endFlash);
                 PeriodFinished(up);
                 up = !up;
                 periodIndex = (periodIndex + 1) % 1024; // 1024 is a trick which does not allow periodIndex to become too big
-                // exchange startAlpha and endAlpha
-                float temp = startAlpha;
-                startAlpha = endAlpha;
-                endAlpha = temp;
+                currentTime -= duration;
+                // exchange startFlash and endFlash
+                float temp = startFlash;
+                startFlash = endFlash;
+                endFlash = temp;
             }
 
         }

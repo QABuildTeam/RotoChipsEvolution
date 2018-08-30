@@ -38,12 +38,12 @@ namespace RotoChips.ImageProcessing
         // this method does all the preparation staff for image scaling
         // it is an IEnumerator type because it may enter a wait cycle for a "final" (STRESSed) image
         // after preparation is complete it yields into the FinalImageLoop
-        IEnumerator preloadImages()
+        IEnumerator PreloadImages()
         {
             painterFinished = false;
             stopScaling = true;
-            int currentGalleryLevel = (int)(long)AppData.instance[AppData.Storage.GalleryLevel];
-            LevelData.Descriptor ld = LevelData.instance[currentGalleryLevel];
+            int currentGalleryLevel = GlobalManager.MStorage.GalleryLevel;
+            LevelDataManager.Descriptor ld = GlobalManager.MLevel.GetLevelDescriptor(currentGalleryLevel);
 
             // calculate x and y scaling factors of both images (they are the same)
             finalXYScale = ld.init.finalXYScale;
@@ -56,8 +56,8 @@ namespace RotoChips.ImageProcessing
             imgCount = FinalRawImage.GetUpperBound(0) + 1;
 
             // force the size of the canvas to be the size of the screen
-            canvasWidth = (float)(Screen.width);
-            canvasHeight = (float)(Screen.height);
+            canvasWidth = Screen.width;
+            canvasHeight = Screen.height;
             Vector2 canvasResolution = new Vector2(canvasWidth, canvasHeight);
             FinalImageCanvas.GetComponent<CanvasScaler>().referenceResolution = canvasResolution;
 
@@ -76,9 +76,9 @@ namespace RotoChips.ImageProcessing
                 if (i == 0)
                 {
                     // upper (STRESSed) image
-                    string finalImageName = GlobalManager.Instance.MImage.StressedFinalImageFile(currentGalleryLevel);
+                    string finalImageName = StressImageCreator.StressedFinalImageFile(currentGalleryLevel);
                     // the image may be not ready yet, so wait for the image generatorß
-                    while (!GlobalManager.Instance.MImage.HasFinalImage(currentGalleryLevel))
+                    while (!GlobalManager.MStressImage.HasFinalImage(currentGalleryLevel))
                     {
                         yield return new WaitForFixedUpdate();
                     }
@@ -89,7 +89,7 @@ namespace RotoChips.ImageProcessing
                 else
                 {
                     // lower (normal) image
-                    FinalImage[i].texture = Resources.Load<Texture>(ld.GraphicsResource + imgName);
+                    FinalImage[i].texture = Resources.Load<Texture>(LevelDataManager.GraphicsResource(currentGalleryLevel) + imgName);
                 }
 
                 rt[i] = FinalRawImage[i].GetComponent<RectTransform>();
@@ -100,17 +100,17 @@ namespace RotoChips.ImageProcessing
             }
 
             stopScaling = false;
-            StartCoroutine(finalImageLoop());
+            StartCoroutine(FinalImageLoop());
         }
 
         // this method calculates the ending scale factor
-        float getScale2()
+        float GetScale2()
         {
             return minSizeFactor + UnityEngine.Random.value * (maxSizeFactor - minSizeFactor);
         }
 
         // this method calculates the destination point of an image center
-        Vector3 getPos2(float newScale)
+        Vector3 GetPos2(float newScale)
         {
             float newX = (0.5f - UnityEngine.Random.value) * canvasWidth * (1 - newScale * xScale);
             float newY = (0.5f - UnityEngine.Random.value) * canvasHeight * (1 - newScale * yScale);
@@ -118,7 +118,7 @@ namespace RotoChips.ImageProcessing
         }
 
         // this method changes image(s) opacity (final effect, when the "wet brush painter" has finished)
-        IEnumerator imageOpacity(float aStart, float aEnd, int lImgCount)
+        IEnumerator ImageOpacity(float aStart, float aEnd, int lImgCount)
         {
             Color[] imageFadeColor = new Color[lImgCount];
             for (int j = 0; j < lImgCount; j++)
@@ -154,18 +154,18 @@ namespace RotoChips.ImageProcessing
         }
 
         // this is the main loop of images scaling
-        IEnumerator finalImageLoop()
+        IEnumerator FinalImageLoop()
         {
             // make images non-transparent
-            StartCoroutine(imageOpacity(0f, 1f, imgCount));
+            StartCoroutine(ImageOpacity(0f, 1f, imgCount));
 
             // now move and scale the 'final' image randomly
             float sizeFactor0 = minSizeFactor;                              // start scaling
-            float sizeFactor1 = getScale2();                                // end scaling
+            float sizeFactor1 = GetScale2();                                // end scaling
             float deltaSize = (sizeFactor1 - sizeFactor0) / effectSteps;    // scaling step
             float sizeFactor = sizeFactor0;                                 // current scaling
             Vector3 imgPos0 = rt[0].localPosition;                          // start position
-            Vector3 imgPos1 = getPos2(sizeFactor1);                         // end position
+            Vector3 imgPos1 = GetPos2(sizeFactor1);                         // end position
             Vector3 deltaPos = (imgPos1 - imgPos0) / effectSteps;           // position step
             Vector3 imgPos = imgPos0;                                       // current position
                                                                             //Debug.Log ("sizeFactor0=" + sizeFactor0.ToString () + ", sizeFactor1=" + sizeFactor1.ToString () + ", imgPos0=" + imgPos0.ToString () + ", imgPos1=" + imgPos1.ToString ());
@@ -204,12 +204,12 @@ namespace RotoChips.ImageProcessing
                         painterFinished = false;
                         stopAfterLoop = true;
                         // make upper image transparent
-                        StartCoroutine(imageOpacity(1f, 0f, 1));
+                        StartCoroutine(ImageOpacity(1f, 0f, 1));
                     }
                     else
                     {
-                        sizeFactor1 = getScale2();
-                        imgPos1 = getPos2(sizeFactor1);
+                        sizeFactor1 = GetScale2();
+                        imgPos1 = GetPos2(sizeFactor1);
                     }
                     deltaSize = (sizeFactor1 - sizeFactor0) / effectSteps;
                     sizeFactor = sizeFactor0;
@@ -231,7 +231,7 @@ namespace RotoChips.ImageProcessing
 
         public void ShowFinalImage()
         {
-            StartCoroutine(preloadImages());
+            StartCoroutine(PreloadImages());
         }
 
         public void StopFinalImage()

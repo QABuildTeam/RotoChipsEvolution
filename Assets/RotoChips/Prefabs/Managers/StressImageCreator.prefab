@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b01204e82b434e78879435e2aec6ec9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initOrder: 0
+  initOrder: 50
   neighboursCount: 100
   radiusPower: 2
   stressRadius: 200

@@ -29,16 +29,16 @@ namespace RotoChips.ImageProcessing
             sourceGenerated = false;
         }
 
-        public Texture2D getSourceImage(int level)
+        public Texture2D GetSourceImage(int level)
         {
             if (!sourceGenerated)
             {
-                if (GlobalManager.Instance.MImage.HasFinalImage(level))
+                if (GlobalManager.MStressImage.HasFinalImage(level))
                 {
                     // get level parameters
-                    LevelData.Descriptor ld = LevelData.instance[level];
+                    LevelDataManager.Descriptor ld = GlobalManager.MLevel.GetLevelDescriptor(level);
                     // load STRESS ("final") image as is
-                    string stressImage = GlobalManager.Instance.MImage.StressedFinalImageFile(level);
+                    string stressImage = StressImageCreator.StressedFinalImageFile(level);
                     //Debug.Log ("Loading stress image from file " + stressImage);
                     Texture2D tex = new Texture2D(2, 2, TextureFormat.RGB24, false);
                     tex.LoadImage(System.IO.File.ReadAllBytes(stressImage));

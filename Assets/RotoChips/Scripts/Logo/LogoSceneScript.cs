@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿/*
+ * File:        LogoSceneScript.cs
+ * Author:      Igor Spiridonov
+ * Descrpition: Class LogoSceneScript controls the animation sequence on the Logo scene
+ * Created:     24.08.2018
+ */
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -48,10 +54,7 @@ namespace RotoChips.Logo
         // Use this for initialization
         void Start()
         {
-            //Physics.gravity = new Vector3(0, -1f, 0);
             LogoText.SetActive(false);
-            StartButton.SetActive(false);
-            //StartText.SetActive(false);
             RegisterHandlers();
             StartCoroutine(LogoAnimation());
         }
@@ -109,7 +112,6 @@ namespace RotoChips.Logo
             yield return new WaitForSeconds(LogoWaitSeconds);
             // activate a "Tap to start" button
             // it will also wait for the very first STRESS image to be ready
-            //StartButton.SetActive(true);
             StartText.GetComponent<StartTextScript>().StartFlash();
         }
 
@@ -117,7 +119,7 @@ namespace RotoChips.Logo
         {
             if (GlobalManager.Instance != null)
             {
-                GlobalManager.Instance.MInstantMessage.AddListener(InstantMessageType.GUIWhiteCurtainFaded, OnWhiteCurtainFaded);
+                GlobalManager.MInstantMessage.AddListener(InstantMessageType.GUIWhiteCurtainFaded, OnWhiteCurtainFaded);
             }
         }
 
@@ -125,7 +127,7 @@ namespace RotoChips.Logo
         {
             if (GlobalManager.Instance != null)
             {
-                GlobalManager.Instance.MInstantMessage.RemoveListener(InstantMessageType.GUIWhiteCurtainFaded, OnWhiteCurtainFaded);
+                GlobalManager.MInstantMessage.RemoveListener(InstantMessageType.GUIWhiteCurtainFaded, OnWhiteCurtainFaded);
             }
         }
 
@@ -135,9 +137,9 @@ namespace RotoChips.Logo
             bool up = (bool)args.arg;
             if (up)
             {
-                UnregisterHandlers();
                 if (!string.IsNullOrEmpty(NextScene))
                 {
+                    UnregisterHandlers();
                     SceneManager.LoadScene(NextScene);
                 }
             }
@@ -146,9 +148,9 @@ namespace RotoChips.Logo
         // Button handler
         public void StartButtonPressed()
         {
-            if (SceneTransition != null)
+            if (GlobalManager.Instance != null)
             {
-                SceneTransition.FadeOut();
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeOutWhiteCurtain, this);
             }
         }
     }

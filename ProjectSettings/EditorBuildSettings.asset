@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/RotoChips/Scenes/Logo.unity
     guid: b9c2657b622734cf2b240b7be5507b9c
+  - enabled: 1
+    path: Assets/RotoChips/Scenes/World.unity
+    guid: 468998a9d5b9e2b4b91e9bd98f46cf2c
   m_configObjects: {}

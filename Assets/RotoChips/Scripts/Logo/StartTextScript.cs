@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿/*
+ * File:        StartTextScript.cs
+ * Author:      Igor Spiridonov
+ * Descrpition: Class StartTextScript controls the StartText object on the Logo scene (and its paren button) by flashing its intensity
+ * Created:     24.08.2018
+ */
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,16 +28,16 @@ namespace RotoChips.Logo
         void Start()
         {
             text = GetComponent<Text>();
-            alphaRange.min = 0;
-            alphaRange.max = 1;
-            text.text = GlobalManager.Instance.MLanguage.Entry(loadingTextKey);
+            flashRange.min = 0;
+            flashRange.max = 1;
+            text.text = GlobalManager.MLanguage.Entry(loadingTextKey);
             parentButton.GetComponent<Button>().interactable = false;
             parentButton.SetActive(false);
         }
 
         bool CheckAvailability()
         {
-            return GlobalManager.Instance == null || GlobalManager.Instance.MImage.HasFinalImage(0);
+            return GlobalManager.Instance == null || GlobalManager.MStressImage.HasFinalImage(0);
         }
 
         IEnumerator MakeButtonInteractable()
@@ -40,11 +46,11 @@ namespace RotoChips.Logo
             {
                 yield return null;
             }
-            text.text = GlobalManager.Instance.MLanguage.Entry(tapToStartTextKey);
+            text.text = GlobalManager.MLanguage.Entry(tapToStartTextKey);
             parentButton.GetComponent<Button>().interactable = true;
         }
 
-        protected override void SetAlpha(float alpha)
+        protected override void Visualize(float alpha)
         {
             if (text != null)
             {

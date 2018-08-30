@@ -160,6 +160,30 @@ Prefab:
       propertyPath: m_LocalEulerAnglesHint.y
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 2300010, guid: 1cfc087f42bde4714968385983e79da8, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0a8ee69bc86575f409efb37dd42d1a0b, type: 2}
+    - target: {fileID: 2300000, guid: 1cfc087f42bde4714968385983e79da8, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9a72de8f1f1bda04b8308719faefb94c, type: 2}
+    - target: {fileID: 2300002, guid: 1cfc087f42bde4714968385983e79da8, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7c2cede7f7953a74996f315301d4e286, type: 2}
+    - target: {fileID: 2300004, guid: 1cfc087f42bde4714968385983e79da8, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7c2cede7f7953a74996f315301d4e286, type: 2}
+    - target: {fileID: 2300006, guid: 1cfc087f42bde4714968385983e79da8, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7c2cede7f7953a74996f315301d4e286, type: 2}
+    - target: {fileID: 2300008, guid: 1cfc087f42bde4714968385983e79da8, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7c2cede7f7953a74996f315301d4e286, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1cfc087f42bde4714968385983e79da8, type: 3}
   m_IsPrefabAsset: 0
@@ -1157,6 +1181,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1835081429061812, guid: cfec6373c41a67b4d8e5466dcf114da5, type: 2}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114748300649159710, guid: cfec6373c41a67b4d8e5466dcf114da5,
+        type: 2}
+      propertyPath: fadeIn
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1320,7 +1349,7 @@ MonoBehaviour:
   deltaCamera: {x: -0.5, y: 0.7, z: 0.1}
   deltaCameraSeconds: 0.025
   deltaCameraSteps: 20
-  NextScene: 
+  NextScene: World
 --- !u!4 &791053379
 Transform:
   m_ObjectHideFlags: 0
@@ -1446,7 +1475,7 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9f3080141f1f64197825663e067f94f8, type: 2}
   - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -6548,9 +6577,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b5f6758118094c8884490185d2458ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alphaRange:
+  flashRange:
     min: 0
-    max: 1
+    max: 0
   flashDuration:
     min: 1.5
     max: 1.5

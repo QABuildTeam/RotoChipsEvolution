@@ -51,6 +51,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c078c98e53c10664baff29f1245e65f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initOrder: 0
+  initOrder: 30
   currentLanguage: 42
   localizationFileTemplate: localizationStrings-{0}.json

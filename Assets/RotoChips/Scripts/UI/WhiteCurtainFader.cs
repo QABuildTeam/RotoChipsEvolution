@@ -36,19 +36,34 @@ namespace RotoChips.UI
             }
         }
 
+        [SerializeField]
+        bool fadeIn = true;
+        [SerializeField]
+        bool fadeOut = true;
+
         // Use this for initialization
         void Start()
         {
             fader = GetComponentInChildren<Image>();
-            alphaRange.min = 0;
-            alphaRange.max = 1;
-            FadeIn();
+            flashRange.min = 0;
+            flashRange.max = 1;
+            if (fadeOut)
+            {
+                RegisterHandlers();
+            }
+            if (fadeIn)
+            {
+                FadeIn();
+            }
+            else
+            {
+                Visualize(flashRange.min);
+                gameObject.SetActive(false);
+            }
         }
 
-        // auxillary method
         // it sets the alpha channel of the fader color
-        // to prevent a momentary flash on screen
-        protected override void SetAlpha(float alpha)
+        protected override void Visualize(float alpha)
         {
             if (fader != null)
             {
@@ -58,16 +73,29 @@ namespace RotoChips.UI
             }
         }
 
-        // this method fades an image from opaque initial color into full transparency
-        public void FadeIn()
+        // this method is called on each period end
+        protected override void PeriodFinished(bool up)
         {
+            gameObject.SetActive(up);
+            if (GlobalManager.Instance != null)
+            {
+                UnregisterHandlers();
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIWhiteCurtainFaded, gameObject, up);
+            }
+        }
+
+        // this method fades an image from opaque initial color into full transparency
+        protected void FadeIn()
+        {
+            Visualize(flashRange.max);
             gameObject.SetActive(true);
             StartFlash(false);
         }
 
         // this method sets full transparency out to an opaque finishing color
-        public void FadeOut()
+        protected void FadeOut()
         {
+            Visualize(flashRange.min);
             gameObject.SetActive(true);
             StartFlash(true);
         }
@@ -77,12 +105,24 @@ namespace RotoChips.UI
             return periodIndex == 0;    // this fader progresses only one period
         }
 
-        protected override void PeriodFinished(bool up)
+        public void OnFadeOutWhiteCurtain(object sender, InstantMessageManager.InstantMessageArgs args)
         {
-            gameObject.SetActive(false);
+            FadeOut();
+        }
+
+        void RegisterHandlers()
+        {
             if (GlobalManager.Instance != null)
             {
-                GlobalManager.Instance.MInstantMessage.DeliverMessage(InstantMessageType.GUIWhiteCurtainFaded, gameObject, up);
+                GlobalManager.MInstantMessage.AddListener(InstantMessageType.GUIFadeOutWhiteCurtain, OnFadeOutWhiteCurtain);
+            }
+        }
+
+        void UnregisterHandlers()
+        {
+            if (GlobalManager.Instance != null)
+            {
+                GlobalManager.MInstantMessage.RemoveListener(InstantMessageType.GUIFadeOutWhiteCurtain, OnFadeOutWhiteCurtain);
             }
         }
 

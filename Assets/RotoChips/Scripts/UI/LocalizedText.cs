@@ -53,7 +53,7 @@ namespace RotoChips.UI
                 argValue = value;
                 if (textControl != null)
                 {
-                    textControl.text = string.Format(GlobalManager.Instance.MLanguage.Entry(textId), value);
+                    textControl.text = string.Format(GlobalManager.MLanguage.Entry(textId), value);
                 }
             }
         }
@@ -70,7 +70,7 @@ namespace RotoChips.UI
             {
                 textControl = GetComponent<Text>();
                 Value = argValue;  // default text value
-                GlobalManager.Instance.MInstantMessage.AddListener(languageChangedEvent, OnLanguageChange);
+                GlobalManager.MInstantMessage.AddListener(languageChangedEvent, OnLanguageChange);
             }
         }
 
@@ -86,7 +86,7 @@ namespace RotoChips.UI
 
         private void OnDestroy()
         {
-            GlobalManager.Instance.MInstantMessage.RemoveListener(languageChangedEvent, OnLanguageChange);
+            GlobalManager.MInstantMessage.RemoveListener(languageChangedEvent, OnLanguageChange);
         }
 
     }

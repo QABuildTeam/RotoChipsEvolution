@@ -63,7 +63,7 @@ namespace RotoChips.Management
         {
             //Initialize();
             //Debug.Log("Building pool object " + objectClass.ToString());
-            ObjectManager.ObjectPrefabDeclaration decl = GlobalManager.Instance.MObject.GetObjectDecl(objectClass);
+            ObjectManager.ObjectPrefabDeclaration decl = GlobalManager.MObject.GetObjectDecl(objectClass);
             if (decl != null)
             {
                 //Debug.Log("Found object declaration: " + GlobalManager.Instance.MLanguage.Entry(decl.descriptionId));

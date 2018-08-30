@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using RotoChips.Generic;
 
 namespace RotoChips.Management
 {
@@ -56,34 +57,31 @@ namespace RotoChips.Management
         }
 
         // these are overloaded load/save methods
-        const string localizationSignature = ".LocalizationManager.";
-        protected class LocalizationHeader
+        const string signature = ".LocalizationManager.";
+        [System.Serializable]
+        protected class LanguageWrapper
         {
-            public string signature;
-            public string language;
+            public SystemLanguage language;
         }
-        // all the needed configuration data are contained in the header...
         public override bool CheckSignature(string initLine)
         {
-            LocalizationHeader header = GenericManager.ParseJSONSignature<LocalizationHeader>(initLine);
-            bool check = false;
-            if (header != null && header.signature == localizationSignature)
-            {
-                check = true;
-                currentLanguage = ConformSystemLanguage((SystemLanguage)Enum.Parse(typeof(SystemLanguage), header.language));
-            }
-            return check;
+            return initLine == signature;
         }
-
+        public override void Load(object prototype)
+        {
+            currentLanguage = ConformSystemLanguage(((LanguageWrapper)prototype).language);
+        }
         public override string SaveSignature()
         {
-            return GenericManager.SetJSONSignature<LocalizationHeader>(new LocalizationHeader
-            {
-                signature = localizationSignature,
-                language = currentLanguage.ToString()
-            });
+            return signature;
         }
-        // so no actual Load and Save methods needed
+        public override object Save()
+        {
+            return new LanguageWrapper
+            {
+                language = currentLanguage
+            };
+        }
 
         // MakeReady starts here...
         public override void MakeReady()
@@ -115,6 +113,7 @@ namespace RotoChips.Management
                 foreach (SystemLanguage language in Enum.GetValues(typeof(SystemLanguage)))
                 {
                     string localizationFileName = LocalizationFileName(language);
+                    Debug.Log("LocalizationManager.InitAvailableLocalizations(): checking " + language.ToString());
                     StartCoroutine(CheckStreamableAsset(localizationFileName, (assetName, exists) => { if (exists) { availableLocalizations.Add(language); } }));
                     while (!IsLoaded)
                     {
@@ -207,7 +206,7 @@ namespace RotoChips.Management
                 Debug.Log(entriesRead.ToString() + " entries read for " + languageName + " language");
                 if (notify)
                 {
-                    GlobalManager.Instance.MInstantMessage.DeliverMessage(InstantMessageType.LanguageChanged, this, currentLanguage);
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.LanguageChanged, this, currentLanguage);
                 }
             }
             else
