@@ -22,6 +22,8 @@ GameObject:
   - component: {fileID: 33807704683243350}
   - component: {fileID: 23428752957065356}
   - component: {fileID: 114439766373772628}
+  - component: {fileID: 65581138807161814}
+  - component: {fileID: 114195915250798906}
   m_Layer: 0
   m_Name: RotoChipCube001
   m_TagString: Untagged
@@ -83,7 +85,7 @@ Transform:
   m_GameObject: {fileID: 1013090520691968}
   m_LocalRotation: {x: -1, y: -0, z: 0, w: 0}
   m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_Children:
   - {fileID: 4805583615150596}
   - {fileID: 4544834879197138}
@@ -145,6 +147,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1013090520691968}
   m_Mesh: {fileID: 4300000, guid: cb994728e76ed479c82f99be7427bbca, type: 3}
+--- !u!65 &65581138807161814
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1013090520691968}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 2, z: 2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!108 &108267757516756218
 Light:
   m_ObjectHideFlags: 1
@@ -182,6 +196,19 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &114195915250798906
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1013090520691968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8282a4b4a67b94f4db385b468ee09b08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
+  delegates: []
 --- !u!114 &114439766373772628
 MonoBehaviour:
   m_ObjectHideFlags: 1

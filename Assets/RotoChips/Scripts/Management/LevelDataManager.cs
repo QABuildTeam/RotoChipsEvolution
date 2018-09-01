@@ -14,6 +14,7 @@ namespace RotoChips.Management
 {
     public class LevelDataManager : GenericManager
     {
+        [System.Serializable]
         public class State                      // this is a structure of modifiable data which changes along the course of the game
         {
             public int id;                      // level id

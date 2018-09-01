@@ -122,12 +122,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c7ed8e4b5984c719c11aae76f70f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fader: {fileID: 114447961900101234}
-  fadeDuration: 1
-  fadeCount: 32
-  LevelToGo: 
+  flashRange:
+    min: 0
+    max: 0
+  flashDuration:
+    min: 0
+    max: 0
   fadeColor: {r: 1, g: 1, b: 1, a: 0}
-  MsgReceiver: {fileID: 0}
+  fadeIn: 1
+  fadeOut: 1
 --- !u!222 &222581126030952726
 CanvasRenderer:
   m_ObjectHideFlags: 1

@@ -44,7 +44,7 @@ namespace RotoChips.Generic
         protected abstract void Visualize(float factor);      // sets the visuals of the gameObject or its component(s)
 
         // this method defines which flashing period is valid
-        protected virtual bool IsValidPeriod(int periodIndex)
+        protected virtual bool IsValidPeriod(int periodCounter)
         {
             return true;
         }
@@ -59,17 +59,18 @@ namespace RotoChips.Generic
             // up argument sets the initial direction of visual change:
             // true  - appearance changes from flashRange.min to flashRange.max, using flashDuration.min
             // false - appearance changes from flashRange.max to flashRange.min, using flashDuration.max
-            int periodIndex = up ? 0 : 1;
-            float startFlash = flashRange[periodIndex];
-            float endFlash = flashRange[periodIndex + 1];
+            int periodHalf = up ? 0 : 1;
+            float startFlash = flashRange[periodHalf];
+            float endFlash = flashRange[periodHalf + 1];
             float minFlash = Mathf.Min(startFlash, endFlash);
             float maxFlash = Mathf.Max(startFlash, endFlash);
+            int periodCounter = 0;
             float currentTime = 0;
-            while (IsValidPeriod(periodIndex))
+            while (IsValidPeriod(periodCounter))
             {
                 Visualize(startFlash);
                 float currentFlash = startFlash;
-                float duration = flashDuration[periodIndex];
+                float duration = flashDuration[periodHalf];
                 while (currentTime < duration)
                 {
                     yield return null;
@@ -80,7 +81,8 @@ namespace RotoChips.Generic
                 Visualize(endFlash);
                 PeriodFinished(up);
                 up = !up;
-                periodIndex = (periodIndex + 1) % 1024; // 1024 is a trick which does not allow periodIndex to become too big
+                periodHalf = up ? 0 : 1;
+                periodCounter = (periodCounter + 1) % 1024; // 1024 is a trick which does not allow periodCounter to become too big
                 currentTime -= duration;
                 // exchange startFlash and endFlash
                 float temp = startFlash;

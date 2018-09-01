@@ -9,6 +9,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using RotoChips.Management;
 using RotoChips.Data;
 using RotoChips.Utility;
@@ -18,16 +19,6 @@ namespace RotoChips.World
     public class WorldSphereBuilder : MonoBehaviour
     {
 
-        public float rotationDeltaAngle;
-        public float selfRotationWaitTime;
-
-        bool rotationEnabled;
-        bool isRotating;
-        float selfRotationStartTime;
-
-        GameObject clouds;
-        bool fadeClouds;
-
         // prefabs
         [SerializeField]
         protected GameObject cloudsPrefab;
@@ -36,25 +27,23 @@ namespace RotoChips.World
         List<GameObject> selectors;
         [SerializeField]
         protected FloatRange selectorHeight;
+        [SerializeField]
+        protected GameObject ConnectLinePrefab;
+        [SerializeField]
+        protected int cameraStepsCount;
 
-        public GameObject ConnectLinePrefab;
-
-
-        int activeSelector;
-        int levelSelector;
-        int gallerySelector;
-
-        int cameraPhase;
-        public int cameraStepsCount;
-
-        public GameObject worldListener;
+        MessageRegistrator registrator;
 
         // this method constructs the level selection objects on the world sphere
         void Awake()
         {
-            RegisterHandlers();
-            fadeClouds = false;
-            EnableRotation(false);                                  // make sure the sphere does not rotate while constructing spikes
+            registrator = new MessageRegistrator(InstantMessageType.WorldRotateToObject, (InstantMessageHandler)OnWorldRotateToObject);
+            registrator.RegisterHandlers();
+
+            GameObject clouds;
+            bool fadeClouds = false;
+
+            //EnableRotation(false);                                  // make sure the sphere does not rotate while constructing spikes
 
             // now construct and set up level selectors
             transform.eulerAngles = new Vector3(0, 0, 0);
@@ -64,17 +53,15 @@ namespace RotoChips.World
             position.z = -radius;
             Vector3 previousPosition = position;
 
-            activeSelector = -1;
-            gallerySelector = -1;
             Quaternion cloudsRotation = Quaternion.Euler(0, 0, 0);
             bool setClouds = false;
             int visibleSelectors = 0;
 
-            int i = 0;  // a selectors index
             foreach (LevelDataManager.Descriptor descriptor in GlobalManager.MLevel.LevelDescriptors())
             {
                 //if (descriptor.state.Revealed)     // the level is visible on the world map
                 {
+                    //Debug.Log("WSB.Start: Creating selector #" + descriptor.init.id.ToString());
                     // set initial rotation for the level button
                     Quaternion rotation = Quaternion.Euler(descriptor.init.eulerX, descriptor.init.eulerY, descriptor.init.eulerZ);
                     transform.rotation = rotation;
@@ -118,7 +105,6 @@ namespace RotoChips.World
                         connectorLine.GetComponent<IntercubeConnectorFlasher>().Init(ri.connectorColor, previousPosition - newPosition);
                     }
                     previousPosition = newPosition;
-                    i++;
                 }
             }
             if (setClouds && visibleSelectors == 1) // if there is only one visible (playable) selector in the realm (except the main one)
@@ -134,38 +120,23 @@ namespace RotoChips.World
                 transform.rotation = cloudsRotation;
                 clouds = (GameObject)Instantiate(cloudsPrefab);
                 clouds.transform.SetParent(transform);
+                if (fadeClouds)
+                {
+                    clouds.GetComponent<CloudFader>().FadeOut();
+                }
             }
             // set the world sphere to the initial position
             transform.rotation = Quaternion.Euler(0, 0, 0);
             // let the rotation go
-            EnableRotation(true);
+            //EnableRotation(true);
         }
 
-        public bool cloudsFading()
+        /*
+        void EnableRotation(bool on)
         {
-            return fadeClouds;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, on);
         }
-
-        public void fadeCloudsDown()
-        {
-            fadeClouds = false;
-            clouds.GetComponent<CloudFader>().FadeOut();
-        }
-
-        // this method starts rotation of the world sphere to place a selected selector before the player's eyes
-        public void rotateToSelected()
-        {
-            if (activeSelector >= 0 && activeSelector < selectors.Count)
-            {
-                StartCoroutine(RotateToSphereZero(selectors[activeSelector]));
-            }
-        }
-
-        // this method starts rotation of the world sphere to place an object right before the player's eyes
-        public void rotateToObject(GameObject o)
-        {
-            StartCoroutine(RotateToSphereZero(o));
-        }
+        */
 
         // and this method performs such a rotation
         IEnumerator RotateToSphereZero(GameObject rotateTarget)
@@ -174,7 +145,7 @@ namespace RotoChips.World
             Vector3 pos = rotateTarget.transform.position;  // a vector that points to rotateTarget
             Vector3 viewer = Vector3.back;                  // a vector that points to the player
             float angle = Vector3.Angle(pos, viewer);       // a flat angle between start (pos) and end (viewer) vectors
-            if (Math.Abs(angle) > 0.5f)                     // the angle is too small, do not rotate
+            if (Math.Abs(angle) > 0.5f)                     // do not rotate if the angle is too small
             {
                 Vector3 cross = Vector3.Cross(pos, viewer); // cross product of pos and viewer
                 float deltaAngle = angle / cameraStepsCount;
@@ -186,159 +157,23 @@ namespace RotoChips.World
                     yield return new WaitForFixedUpdate();
                 }
             }
-            //Debug.Log("Rotated to: " + gameObject.transform.rotation.eulerAngles.ToString());
-            worldListener.SendMessage("sphereZeroRotated");
-        }
-
-        // this method stops the axial rotation of the world sphere
-        // it wil start the rotation again itself after selfRotationWaitTime seconds
-        public void StopRotation()
-        {
-            isRotating = false;
-            selfRotationStartTime = Time.time;
-        }
-
-        // this method just rotates the world sphere by an angle specified in delta
-        // it is used when the player slides his finger on the screen
-        public void rotateByAngle(Vector3 delta)
-        {
-            gameObject.transform.Rotate(delta, Space.World);
-        }
-
-        // this method rotates the world sphere around the z-axis
-        // by an angle specified in delta
-        // it is used when the player rotates his two-finger touch
-        public void rotateZByAngle(float delta)
-        {
-            gameObject.transform.Rotate(new Vector3(0, 0, delta), Space.World);
-        }
-
-        // this method returns the level status of the selector
-        public void getSelectorStatus(int selector, out bool Playable, out bool Complete)
-        {
-            int levelId = getSelectorLevel(selector);
-            Playable = false;
-            Complete = false;
-            if (levelId != -1)
-            {
-                LevelDataManager.Descriptor ld = GlobalManager.MLevel.GetLevelDescriptor(levelId);
-                Playable = ld.state.Playable;
-                Complete = ld.state.Complete;
-            }
-        }
-
-        // returns the level id assigned to a selector
-        public int getSelectorLevel(int selector)
-        {
-            if (selector >= 0 && selector < selectors.Count)
-            {
-                //return selectors[selector].GetComponent<WorldSelectorController>().LevelId;
-            }
-            return -1;
-        }
-
-        // this auxillary method sets or resets selection status
-        void setLevelSelection(int selector, bool on)
-        {
-            WorldSelectorController lss = selectors[selector].GetComponent<WorldSelectorController>();
-            //lss.setSelected(on);
-            //int levelId = lss.LevelId;
-            /*
-            if (on) // if selection is set on
-            {
-                PlayerStat.instance.SelectedLevel = levelId;
-            }
-            */
-            /*
-            PlayerStat.LevelDesc ld = PlayerStat.instance.loadPlayerState(levelId);
-            ld.status.Playable = on;
-            PlayerStat.instance.saveLevelStatus(ld);
-            */
-        }
-
-        // this method unselects activeSelector and makes a selector selected
-        public bool setSelectedSelector(int selector)
-        {
-            if (selector >= 0 && selector < selectors.Count)
-            {
-                if (selector != activeSelector)
-                {
-                    if (activeSelector >= 0 && activeSelector < selectors.Count)
-                    {
-                        setLevelSelection(activeSelector, false);
-                    }
-                }
-                activeSelector = selector;
-                setLevelSelection(activeSelector, true);
-                // selected is selected successfully
-                return true;
-            }
-            // invalid selector specified
-            return false;
-        }
-
-        // this method looks for a spike hit by a finger touch
-        public bool getHitSelector(GameObject hitObject, out int selector)
-        {
-            selector = -1;
-            int totalLevels = selectors.Count;
-            for (int i = 0; i < totalLevels; ++i)
-            {
-                if (hitObject == selectors[i])
-                {
-                    selector = i;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        // a daily rotation is performed in FixedUpdate
-        // it also checks if it has been idle for selfRotationWaitTime and starts the rotation again
-        void FixedUpdate()
-        {
-            if (rotationEnabled)
-            {
-                if (!isRotating)
-                {
-                    if (Time.time - selfRotationStartTime > selfRotationWaitTime)
-                    {
-                        isRotating = true;
-                    }
-                }
-                if (isRotating)
-                    transform.Rotate(Vector3.up, rotationDeltaAngle, Space.Self);
-            }
-        }
-
-        void EnableRotation(bool on)
-        {
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, on);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotatedToObject, this, rotateTarget);
         }
 
         // message handling
-        void OnWorldRotationEnable(object sender, InstantMessageManager.InstantMessageArgs args)
+        void OnWorldRotateToObject(object sender, InstantMessageArgs args)
         {
-            rotationEnabled = (bool)args.arg;
-            if (!rotationEnabled)
+            GameObject rotateTarget = (GameObject)args.arg;
+            if (rotateTarget != null)
             {
-                StopRotation();
+                StartCoroutine(RotateToSphereZero(rotateTarget));
             }
-        }
-
-        void RegisterHandlers()
-        {
-            GlobalManager.MInstantMessage.AddListener(InstantMessageType.WorldRotationEnable, OnWorldRotationEnable);
-        }
-
-        void UnregisterHandlers()
-        {
-            GlobalManager.MInstantMessage.RemoveListener(InstantMessageType.WorldRotationEnable, OnWorldRotationEnable);
         }
 
         private void OnDestroy()
         {
-            UnregisterHandlers();
+            registrator.UnregisterHandlers();
         }
+
     }
 }

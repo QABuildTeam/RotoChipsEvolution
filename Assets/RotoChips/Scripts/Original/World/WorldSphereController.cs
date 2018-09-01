@@ -1,9 +1,10 @@
-using UnityEngine;
 using System.Collections;
-//using System;
-//using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using RotoChips.Management;
 
 namespace RotoChips.World
 {
@@ -83,8 +84,12 @@ namespace RotoChips.World
         bool sphereToZero;          // coroutine flag
         bool cameraMoved;           // coroutine flag
         */
+
+        MessageRegistrator registrator;
         void Awake()
         {
+            registrator = new MessageRegistrator(InstantMessageType.SteadyMouseUpAsButton, (InstantMessageHandler)OnSteadyMouseUpAsButton);
+            registrator.RegisterHandlers();
             /*
             status = eWorldStatus.Init;
             wsm = gameObject.GetComponent<WorldSphereModel>();
@@ -129,6 +134,7 @@ namespace RotoChips.World
             GameGUIScript.instance.setCoinsBalance((decimal)AppData.instance[AppData.Storage.CurrentCoins]);
             GameManager.instance.processGameEvent(GameManager.GameEvents.WorldLoaded);
             */
+
         }
 
         // ======== Callbacks ========
@@ -325,12 +331,6 @@ namespace RotoChips.World
             // do nothing, because a gallery scene is going to be loaded
         }
         */
-
-        // this method is a callback called after selector has flashed
-        public void selectorFlashed()
-        {
-            // do nothing, because a level or a gallery scene is going to be loaded
-        }
 
         // this method is a callback called after a hint is removed
         public void HintRemoved()
@@ -535,40 +535,6 @@ namespace RotoChips.World
             */
         }
 
-        // this method just rotates the world sphere when the player slides his finger on screen 
-        void rotateWorld()
-        {
-            /*
-            float cameraDistance = Camera.main.transform.position.z;
-            Vector3 delta = new Vector3();
-            delta = puzzleInput.moveDelta();
-            delta.z = delta.x;
-            delta.x = delta.y * cameraDistance * worldRotateFactor;
-            delta.y = -delta.z * cameraDistance * worldRotateFactor;
-            delta.z = 0;
-            //Vector3 delta = new Vector3(-Input.GetTouch(0).deltaPosition.y * cameraDistance / 100, Input.GetTouch(0).deltaPosition.x * cameraDistance / 100, 0f);
-            wsm.rotateByAngle(delta);
-            */
-        }
-
-        // this method rotates the world sphere around the z-axis when the player rotates its two-finger touch
-        void rotateWorldByZ()
-        {
-            /*
-            wsm.rotateZByAngle(puzzleInput.angleDelta());
-            */
-        }
-
-        // this method just stops world and camera rotation
-        void stopRotation()
-        {
-            /*
-            // this method stops the rotation of both the world sphere and the gallery satellite
-            wsm.stopRotation();
-            ss.stopRotation();
-            */
-        }
-
         // this method zooms the camera in and out
         void zoomCamera(bool keepStatus = false)
         {
@@ -624,73 +590,6 @@ namespace RotoChips.World
             Fader.SetColor(Color.white);
             Fader.FadeOut(GalleryScene);
             // do nothing, because a level scene is going to be loaded
-            */
-        }
-
-        void tuneLight()
-        {
-            /*
-            switch (puzzleInput.checkInput())
-            {
-                case PuzzleInput.inputStatus.inputSinglePress:
-                    WorldLight.GetComponent<WorldLightSettings>().getLight(out colorTuning, out intensityTuning);
-                    break;
-                case PuzzleInput.inputStatus.inputSingleMove:
-                    Vector2 pos = puzzleInput.touchPoint();
-                    Vector2 delta = puzzleInput.moveDelta();
-                    float x = (float)(Screen.width);
-                    float y = (float)(Screen.height);
-                    //Debug.Log ("delta=" + delta.ToString () + ", pos=" + pos.ToString () + ", x=" + x.ToString () + ", y=" + y.ToString ());
-                    if (status == eWorldStatus.ColorTuning)
-                    {
-                        if (pos.x < x / 3)
-                        {
-                            colorTuning.r += delta.y / y;
-                            if (colorTuning.r < 0)
-                            {
-                                colorTuning.r = 0;
-                            }
-                            if (colorTuning.r > 1f)
-                            {
-                                colorTuning.r = 1f;
-                            }
-                        }
-                        else if (pos.x >= x / 3 && pos.x < 2 * x / 3)
-                        {
-                            colorTuning.g += delta.y / y;
-                            if (colorTuning.g < 0)
-                            {
-                                colorTuning.g = 0;
-                            }
-                            if (colorTuning.g > 1f)
-                            {
-                                colorTuning.g = 1f;
-                            }
-                        }
-                        else if (pos.x >= 2 * x / 3)
-                        {
-                            colorTuning.b += delta.y / y;
-                            if (colorTuning.b < 0)
-                            {
-                                colorTuning.b = 0;
-                            }
-                            if (colorTuning.b > 1f)
-                            {
-                                colorTuning.b = 1f;
-                            }
-                        }
-                        colorTuning.a = 1f;
-                    }
-                    else if (status == eWorldStatus.IntensityTuning)
-                    {
-                        intensityTuning += delta.y / y;
-                    }
-                    WorldLight.GetComponent<WorldLightSettings>().setLight(colorTuning, intensityTuning);
-                    Color32 c32 = (Color32)colorTuning;
-                    LightValueText.GetComponent<Text>().text = "#" + c32.r.ToString("X2") + c32.g.ToString("X2") + c32.b.ToString("X2") + c32.a.ToString("X2");
-                    LightIntensityText.GetComponent<Text>().text = intensityTuning.ToString();
-                    break;
-            }
             */
         }
 
@@ -829,13 +728,61 @@ namespace RotoChips.World
     */
         }
 
+        // message handling
+        void OnSteadyMouseUpAsButton(object sender, InstantMessageArgs args)
+        {
+            if ((GameObject)args.arg == gameObject)
+            {
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldGlobePressed, this);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            registrator.UnregisterHandlers();
+        }
+
+        [SerializeField]
+        protected float worldRotateFactor;
+
+        void EnableRotation(bool on)
+        {
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, on);
+        }
+
+        void ProcessInput()
+        {
+            switch (GlobalManager.MInput.CheckInput())
+            {
+                case TouchInput.InputStatus.SinglePress:
+                case TouchInput.InputStatus.DoublePress:
+                    EnableRotation(false);
+                    EnableRotation(true);
+                    break;
+
+                case TouchInput.InputStatus.SingleMove:
+                    // rotate the world to the direction of a finger/mouse move
+                    EnableRotation(false);
+                    Vector3 moveDelta = GlobalManager.MInput.MoveDelta;
+                    float cameraDistance = Camera.main.transform.position.z;
+                    Vector3 rotateDelta = new Vector3(moveDelta.y, -moveDelta.x, 0) * cameraDistance * worldRotateFactor;
+                    transform.Rotate(rotateDelta, Space.World);
+                    EnableRotation(true);
+                    break;
+
+                case TouchInput.InputStatus.DoubleMove:
+                    // rotate the world around z-axis
+                    EnableRotation(false);
+                    transform.Rotate(new Vector3(0, 0, GlobalManager.MInput.AngleDelta), Space.World);
+                    EnableRotation(true);
+                    break;
+
+            }
+        }
         // Update is called once per frame
         void Update()
         {
-            /*
-            ProcessHints();
-            processStatus();
-            */
+            ProcessInput();
         }
 
     }

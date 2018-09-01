@@ -59,18 +59,20 @@ namespace RotoChips.UI
         }
 
         // an event handler. It just redraws the text in the new system language
-        void OnLanguageChange(object sender, InstantMessageManager.InstantMessageArgs args)
+        void OnLanguageChange(object sender, InstantMessageArgs args)
         {
             Value = argValue;
         }
 
+        MessageRegistrator registrator;
         void Init()
         {
             if (textControl == null)
             {
                 textControl = GetComponent<Text>();
                 Value = argValue;  // default text value
-                GlobalManager.MInstantMessage.AddListener(languageChangedEvent, OnLanguageChange);
+                registrator = new MessageRegistrator(InstantMessageType.LanguageChanged, (InstantMessageHandler)OnLanguageChange);
+                registrator.RegisterHandlers();
             }
         }
 
@@ -86,7 +88,7 @@ namespace RotoChips.UI
 
         private void OnDestroy()
         {
-            GlobalManager.MInstantMessage.RemoveListener(languageChangedEvent, OnLanguageChange);
+            registrator.UnregisterHandlers();
         }
 
     }

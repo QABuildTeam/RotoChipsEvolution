@@ -15,6 +15,7 @@ namespace RotoChips.Management
 {
     public class StorageManager : GenericManager
     {
+        [System.Serializable]
         public class Storage
         {
             public bool gameStarted;            // the game has already started for at least once
@@ -265,7 +266,7 @@ namespace RotoChips.Management
             Storage tempStorage = new Storage
             {
                 gameStarted = false,
-                selectedLevel = -1,
+                selectedLevel = 0,
                 galleryLevel = -1,
                 currentPoints = 0,
                 totalPoints = 0,

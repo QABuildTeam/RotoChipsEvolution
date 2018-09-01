@@ -6,10 +6,11 @@
  */
 using UnityEngine;
 using System.Collections;
+using RotoChips.Generic;
 
-namespace RotoChips.Generic
+namespace RotoChips.Management
 {
-    public class TouchInput : MonoBehaviour
+    public class TouchInput : GenericManager
     {
 
         public enum InputStatus
@@ -55,8 +56,7 @@ namespace RotoChips.Generic
         InputData[] input;
         int touchesDetected;
 
-        // Use this for initialization
-        void Start()
+        public override void MakeInitial()
         {
             input = new InputData[2]
             {
@@ -70,6 +70,7 @@ namespace RotoChips.Generic
             AngleDelta = 0f;
             initialTwoTouchDistance = 0;
             startAngleVector = Vector2.zero;
+            base.MakeInitial();
         }
 
         // this method checks user's input
@@ -82,7 +83,8 @@ namespace RotoChips.Generic
                 if (Input.GetMouseButtonDown(1))        // right mouse button pressed
                 {
                     input[1].phase = TouchPhase.Began;
-                    input[1].position = input[0].position = position;
+                    input[1].position = position;
+                    input[0].position = -position;
                     input[1].delta = input[0].delta = Vector2.zero;
                     touchesDetected = 2;
                 }

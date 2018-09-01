@@ -19,8 +19,8 @@ public class CameraController : MonoBehaviour {
     float maxCameraDistance;                        // maximum (nearest) vertical camera distance from the tile array
     float screenAspectRatio;                        // screen aspect ratio: width/height
     float fovFactor;                                // = Mathf.Tan(Camera.main.fieldOfView * Mathf.PI / (180 * 2))
-    private Vector3 llc,                            /* lower left corner of the game field and its screen version*/
-                    urc                             /* upper right corner of the game field and its screen version*/ ;
+    private Vector3 llc,                            // lower left corner of the game field and its screen version
+                    urc;                            // upper right corner of the game field and its screen version
 
     // Use this for initialization
     void Start () {

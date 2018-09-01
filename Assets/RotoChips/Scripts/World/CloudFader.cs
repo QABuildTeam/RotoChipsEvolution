@@ -15,14 +15,10 @@ namespace RotoChips.World
 
         ParticleSystem clouds;
         public float fadeDelta;     // wait a little bit more
-                                    // Use this for initialization
-        void Start()
-        {
-            clouds = GetComponent<ParticleSystem>();
-        }
 
         public void FadeOut()
         {
+            clouds = GetComponent<ParticleSystem>();
             StartCoroutine(FadeCloudsOut());
         }
 

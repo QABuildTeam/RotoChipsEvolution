@@ -52,10 +52,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7d374f2bfa8f445daa724fe62e68bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LowAlpha: 0
-  HighAlpha: 0
-  UpSteps: 0
-  DownSteps: 0
+  flashRange:
+    min: 0
+    max: 0
+  flashDuration:
+    min: 0
+    max: 0
 --- !u!212 &212663177293538296
 SpriteRenderer:
   m_ObjectHideFlags: 1

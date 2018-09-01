@@ -114,6 +114,19 @@ namespace RotoChips.Management
             }
         }
 
+        protected TouchInput mInput;
+        public static TouchInput MInput
+        {
+            get
+            {
+                return Instance.mInput;
+            }
+            set
+            {
+                Instance.mInput = value;
+            }
+        }
+
         public bool Initialized
         {
             get; private set;
@@ -154,6 +167,7 @@ namespace RotoChips.Management
                 MLevel = (LevelDataManager)LocateManager(typeof(LevelDataManager));
                 MStressImage = (StressImageCreator)LocateManager(typeof(StressImageCreator));
                 MStorage = (StorageManager)LocateManager(typeof(StorageManager));
+                MInput = (TouchInput)LocateManager(typeof(TouchInput));
 
                 Debug.Log("Submanagers are linked");
 
@@ -286,8 +300,8 @@ namespace RotoChips.Management
             }
             catch (System.Exception e)
             {
-                Debug.Log("GlobalManager.Load failed: " + e.ToString());
-                throw;
+                Debug.Log("Exception: GlobalManager.Load failed: " + e.ToString());
+                //throw;
             }
             return statusSaver;
         }

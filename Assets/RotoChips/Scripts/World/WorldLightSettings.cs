@@ -16,7 +16,7 @@ namespace RotoChips.World
     {
 
         // Use this for initialization
-        void Start()
+        void Awake()
         {
             int currentRealm = GlobalManager.MLevel.LastOpenRealm();
             Color lihgtColor = RealmData.initializers[currentRealm].worldLightColor;

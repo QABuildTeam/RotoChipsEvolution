@@ -16,10 +16,6 @@ namespace RotoChips.Data
             public int width;
             public float srcXYScale;            // x/y ratio for 'source' image
             public float finalXYScale;          // x/y ratio for 'final' image
-                                                /*
-                                                public float selectLongitude;       // world longitude for level 'select' button
-                                                public float selectLatitude;        // world latitude for level 'select' button
-                                                */
             public float eulerX;                // world euler rotation angle by X-axis for level 'select' button
             public float eulerY;                // world euler rotation angle by Y-axis for level 'select' button
             public float eulerZ;                // world euler rotation angle by Z-axis for level 'select' button

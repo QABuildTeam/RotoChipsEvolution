@@ -37,23 +37,25 @@ namespace RotoChips.UI
         }
 
         [SerializeField]
-        bool fadeIn = true;
+        protected bool fadeIn = true;
         [SerializeField]
-        bool fadeOut = true;
+        protected bool fadeOut = true;
 
-        // Use this for initialization
+        MessageRegistrator registrator;
         void Start()
         {
+            registrator = new MessageRegistrator(InstantMessageType.GUIFadeOutWhiteCurtain, (InstantMessageHandler)OnFadeOutWhiteCurtain);
             fader = GetComponentInChildren<Image>();
             flashRange.min = 0;
             flashRange.max = 1;
             if (fadeOut)
             {
-                RegisterHandlers();
+                registrator.RegisterHandlers();
+                Debug.Log("WCF: Registered handlers");
             }
             if (fadeIn)
             {
-                FadeIn();
+                Fade(false);
             }
             else
             {
@@ -77,54 +79,32 @@ namespace RotoChips.UI
         protected override void PeriodFinished(bool up)
         {
             gameObject.SetActive(up);
-            if (GlobalManager.Instance != null)
-            {
-                UnregisterHandlers();
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIWhiteCurtainFaded, gameObject, up);
-            }
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIWhiteCurtainFaded, gameObject, up);
         }
 
-        // this method fades an image from opaque initial color into full transparency
-        protected void FadeIn()
+        // this method starts fading transparency in or out
+        protected void Fade(bool fadeOut)
         {
-            Visualize(flashRange.max);
+            Visualize(fadeOut ? flashRange.min : flashRange.max);
             gameObject.SetActive(true);
-            StartFlash(false);
+            StartFlash(fadeOut);
         }
 
-        // this method sets full transparency out to an opaque finishing color
-        protected void FadeOut()
+        // these methods are overridden from FlashingObject
+        protected override bool IsValidPeriod(int periodCounter)
         {
-            Visualize(flashRange.min);
-            gameObject.SetActive(true);
-            StartFlash(true);
+            return periodCounter == 0;    // this fader progresses for only one period
         }
 
-        protected override bool IsValidPeriod(int periodIndex)
+        public void OnFadeOutWhiteCurtain(object sender, InstantMessageArgs args)
         {
-            return periodIndex == 0;    // this fader progresses only one period
+            Fade(true);
         }
 
-        public void OnFadeOutWhiteCurtain(object sender, InstantMessageManager.InstantMessageArgs args)
+        private void OnDestroy()
         {
-            FadeOut();
+            registrator.UnregisterHandlers();
+            Debug.Log("WCF: Unregistered handlers");
         }
-
-        void RegisterHandlers()
-        {
-            if (GlobalManager.Instance != null)
-            {
-                GlobalManager.MInstantMessage.AddListener(InstantMessageType.GUIFadeOutWhiteCurtain, OnFadeOutWhiteCurtain);
-            }
-        }
-
-        void UnregisterHandlers()
-        {
-            if (GlobalManager.Instance != null)
-            {
-                GlobalManager.MInstantMessage.RemoveListener(InstantMessageType.GUIFadeOutWhiteCurtain, OnFadeOutWhiteCurtain);
-            }
-        }
-
     }
 }

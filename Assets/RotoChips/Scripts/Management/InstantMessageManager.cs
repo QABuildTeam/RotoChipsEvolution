@@ -19,16 +19,20 @@ namespace RotoChips.Management
         Unknown,
 
         // World scene messages
-        WorldSelectStarted,             // Notification: Method Start() of the scene World has just finished its execution
-        WorldSelectButtonPressed,       // Notification: Some cube-like selector above the world globe has just been pressed (either by mouse or by finger)
-        WorldSelectSatellitePressed,    // Notification: Satellite object above the world globe has just been pressed (either by mouse or by finger)
-        WorldSelectRotoChipsPressed,    // Notification: RotoChips indicator on the scene World has just been pressed (either by mouse or by finger)
-        WorldSelectRotoCoinsPressed,    // Notification: RotoCoins indicator on the scene World has just been pressed (either by mouse or by finger)
+        WorldStarted,                   // Notification: Method Start() of the scene World has just finished its execution
+        WorldSelectorPressed,           // Notification: Some cube-like selector above the world globe has just been pressed (either by mouse or by finger)
+        WorldSatellitePressed,          // Notification: Satellite object above the world globe has just been pressed (either by mouse or by finger)
+        WorldRotoChipsPressed,          // Notification: RotoChips indicator on the scene World has just been pressed (either by mouse or by finger)
+        WorldRotoCoinsPressed,          // Notification: RotoCoins indicator on the scene World has just been pressed (either by mouse or by finger)
+        WorldGlobePressed,              // Notification: world globe has just been pressed
         WorldRotationEnable,            // Command: Enable (argument = true) or disable (argument = false) the rotation of the world globe and the satellite
-        WorldMoveCameraUp,              // Command: Move the camera above the world globe up (increase distance)
-        WorldMoveCameraDown,            // Command: Move the camera above the world globe down (decrease distance)
-        WorldCameraMovedUp,             // Notification: The camera above the world globe has just moved to the farthest position above the latter
-        WorldCameraMovedDown,           // Notification: The camera above the world globe has just moved to the nearest position above the latter
+        WorldRotateToObject,            // Command: Rotate the world globe so that the particular object is set just before the player's view
+        WorldRotatedToObject,           // Notification: The world globe has just rotated to the particular object
+        WorldZoomCameraAtMin,           // Command: Move the camera above the world globe down (decrease distance)
+        WorldZoomCameraAtMax,           // Command: Move the camera above the world globe up (increase distance)
+        WorldAutoZoomCamera,            // Command: zoom the camera in or out
+        WorldCameraZoomedAtMin,         // Notification: The camera above the world globe has just moved to the nearest position above the latter
+        WorldCameraZoomedAtMax,         // Notification: The camera above the world globe has just moved to the farthest position above the latter
 
         // Puzzle scene messages
         PuzzleStarted,                  // Notification: Method Start() of the scene Puzzle has just finished its execution
@@ -45,22 +49,26 @@ namespace RotoChips.Management
         GUIFadeOutWhiteCurtain,         // Command: Fade the entire screen out to white
         GUIWhiteCurtainFaded,           // Notification: The entire screen has just faded to white
 
-        // Global
-        LanguageChanged                 // System language has changed
+        // General
+        LanguageChanged,                // Notification: System language has changed
+        SteadyMouseUpAsButton,          // Notification: A pointer (mouse/touch) has been pressed and released on an object without moving
+        RotoChipsChanged,               // Notification: Per puzzle/total amount of RotoChips has changed
+        RotoCoinsChanged                // Notification: Amout of RotoCoins has changed
     }
+
+    // a generic class of game event arguments
+    // arg field can be anything derived from System.Object
+    public class InstantMessageArgs : EventArgs
+    {
+        public InstantMessageType type;
+        public object arg;
+    }
+    public delegate void InstantMessageHandler(object sender, InstantMessageArgs args);
 
     public class InstantMessageManager : GenericManager
     {
 
-        // a generic class of game event arguments
-        // arg field can be anything derived from System.Object
-        public class InstantMessageArgs : EventArgs
-        {
-            public InstantMessageType type;
-            public object arg;
-        }
-
-        protected Dictionary<InstantMessageType, EventHandler<InstantMessageArgs>> handlerRegistry;
+        protected Dictionary<InstantMessageType, InstantMessageHandler> handlerRegistry;
 
         public override void MakeInitial()
         {
@@ -71,7 +79,7 @@ namespace RotoChips.Management
 
         void InitRegistry()
         {
-            handlerRegistry = new Dictionary<InstantMessageType, EventHandler<InstantMessageArgs>>();
+            handlerRegistry = new Dictionary<InstantMessageType, InstantMessageHandler>();
             foreach (InstantMessageType type in Enum.GetValues(typeof(InstantMessageType)))
             {
                 handlerRegistry.Add(type, null);
@@ -84,10 +92,10 @@ namespace RotoChips.Management
             {
                 foreach (InstantMessageType type in handlerRegistry.Keys)
                 {
-                    EventHandler<InstantMessageArgs> messageHandler = handlerRegistry[type];
+                    InstantMessageHandler messageHandler = handlerRegistry[type];
                     if (messageHandler != null)
                     {
-                        foreach (EventHandler<InstantMessageArgs> handler in messageHandler.GetInvocationList())
+                        foreach (InstantMessageHandler handler in messageHandler.GetInvocationList())
                         {
                             messageHandler -= handler;
                         }
@@ -97,9 +105,9 @@ namespace RotoChips.Management
             }
         }
 
-        public void AddListener(InstantMessageType type, EventHandler<InstantMessageArgs> handler)
+        public void AddListener(InstantMessageType type, InstantMessageHandler handler)
         {
-            EventHandler<InstantMessageArgs> messageHandler;
+            InstantMessageHandler messageHandler;
             if (handlerRegistry.TryGetValue(type, out messageHandler))
             {
                 if (messageHandler == null)
@@ -115,9 +123,9 @@ namespace RotoChips.Management
             }
         }
 
-        public void RemoveListener(InstantMessageType type, EventHandler<InstantMessageArgs> handler)
+        public void RemoveListener(InstantMessageType type, InstantMessageHandler handler)
         {
-            EventHandler<InstantMessageArgs> messageHandler;
+            InstantMessageHandler messageHandler;
             if (handlerRegistry.TryGetValue(type, out messageHandler))
             {
                 if (messageHandler != null)
@@ -130,7 +138,7 @@ namespace RotoChips.Management
 
         public void DeliverMessage(InstantMessageType aType, object sender, object anArg = null)
         {
-            EventHandler<InstantMessageArgs> messageHandler;
+            InstantMessageHandler messageHandler;
             if (handlerRegistry.TryGetValue(aType, out messageHandler))
             {
                 if (messageHandler != null)
@@ -146,4 +154,59 @@ namespace RotoChips.Management
         }
 
     }
+
+    // utility class for registering and unregistering message handlers in classes
+    public class MessageRegistrator
+    {
+        protected class RegistrationTuple
+        {
+            public InstantMessageType type;
+            public InstantMessageHandler handler;
+        }
+
+        List<RegistrationTuple> registry;
+
+        public MessageRegistrator(params object[] regparams)
+        {
+            registry = new List<RegistrationTuple>();
+            for (int i = 0; i < regparams.Length; i += 2)
+            {
+                InstantMessageType regtype = (InstantMessageType)regparams[i];
+                if (i + 1 < regparams.Length)
+                {
+                    InstantMessageHandler reghandler = (InstantMessageHandler)regparams[i + 1];
+                    if (reghandler != null)
+                    {
+                        registry.Add(new RegistrationTuple
+                        {
+                            type = regtype,
+                            handler = reghandler
+                        });
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+        }
+
+        public void RegisterHandlers()
+        {
+            foreach (RegistrationTuple reg in registry)
+            {
+                GlobalManager.MInstantMessage.AddListener(reg.type, reg.handler);
+            }
+        }
+
+        public void UnregisterHandlers()
+        {
+            foreach (RegistrationTuple reg in registry)
+            {
+                GlobalManager.MInstantMessage.RemoveListener(reg.type, reg.handler);
+            }
+        }
+    }
+
 }

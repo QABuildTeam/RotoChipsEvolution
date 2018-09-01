@@ -27,19 +27,30 @@ namespace RotoChips.World
     public class WorldSelectorController : FlashingObject
     {
         protected LevelDataManager.Descriptor levelDescriptor;
+        public LevelDataManager.Descriptor LevelDescriptor
+        {
+            get
+            {
+                return levelDescriptor;
+            }
+        }
+
         [SerializeField]
         protected SpriteRenderer iconRenderer;
         [SerializeField]
         protected GameObject lightBeacon;
         protected MeshRenderer meshRenderer;
+        MessageRegistrator registrator;
 
         public void Init(LevelDataManager.Descriptor descriptor, SelectorPrefab prefab)
         {
+            registrator = new MessageRegistrator(InstantMessageType.SteadyMouseUpAsButton, (InstantMessageHandler)OnSteadyMouseUpAsButton);
+            registrator.RegisterHandlers();
             levelDescriptor = descriptor;
             meshRenderer = GetComponent<MeshRenderer>();
             if (!levelDescriptor.state.Revealed)
             {
-                //gameObject.SetActive(false);
+                gameObject.SetActive(false);
             }
             else
             {
@@ -50,8 +61,8 @@ namespace RotoChips.World
                 if (levelDescriptor.state.Playable)
                 {
                     iconPath += "/icon";
-                    //if (levelDescriptor.init.id == GlobalManager.MStorage.SelectedLevel)
-                    if (true)
+                    if (levelDescriptor.init.id == GlobalManager.MStorage.SelectedLevel)
+                    //if (true)
                     {
                         materials[0] = prefab.glowMaterial;
                         lightBeacon.SetActive(true);
@@ -70,6 +81,7 @@ namespace RotoChips.World
                 }
                 meshRenderer.materials = materials;
                 iconRenderer.sprite = Resources.Load<Sprite>(iconPath);
+                //Debug.Log("WSC.Init: loaded #" + levelDescriptor.init.id.ToString() + " sprite from " + iconPath + " as " + (iconRenderer.sprite == null ? "null" : iconRenderer.sprite.ToString()));
                 if (glow)
                 {
                     StartCoroutine(Flash());
@@ -77,15 +89,23 @@ namespace RotoChips.World
             }
         }
 
-        private void OnMouseUpAsButton()
+        void OnSteadyMouseUpAsButton(object sender, InstantMessageArgs args)
         {
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldSelectButtonPressed, this, levelDescriptor.init.id);
+            if ((GameObject)args.arg == gameObject)
+            {
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldSelectorPressed, this, levelDescriptor);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            registrator.UnregisterHandlers();
         }
 
         protected override void Visualize(float factor)
         {
             Material[] materials = meshRenderer.materials;
-            materials[0].SetFloat("_MKGlowTextureStrength", factor);
+            materials[0].SetFloat("_MKGlowTexStrength", factor);
         }
     }
 }

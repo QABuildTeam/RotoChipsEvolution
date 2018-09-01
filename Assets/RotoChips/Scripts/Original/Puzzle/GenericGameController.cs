@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using RotoChips.Generic;
 using RotoChips.UI;
 using RotoChips.Data;
+using RotoChips.Management;
 
 public class GenericGameController : MonoBehaviour {
 

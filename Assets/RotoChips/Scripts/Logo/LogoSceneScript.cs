@@ -52,10 +52,12 @@ namespace RotoChips.Logo
         public string NextScene;
 
         // Use this for initialization
+        MessageRegistrator registrator;
         void Start()
         {
+            registrator = new MessageRegistrator(InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnWhiteCurtainFaded);
+            registrator.RegisterHandlers();
             LogoText.SetActive(false);
-            RegisterHandlers();
             StartCoroutine(LogoAnimation());
         }
 
@@ -115,34 +117,22 @@ namespace RotoChips.Logo
             StartText.GetComponent<StartTextScript>().StartFlash();
         }
 
-        void RegisterHandlers()
-        {
-            if (GlobalManager.Instance != null)
-            {
-                GlobalManager.MInstantMessage.AddListener(InstantMessageType.GUIWhiteCurtainFaded, OnWhiteCurtainFaded);
-            }
-        }
-
-        void UnregisterHandlers()
-        {
-            if (GlobalManager.Instance != null)
-            {
-                GlobalManager.MInstantMessage.RemoveListener(InstantMessageType.GUIWhiteCurtainFaded, OnWhiteCurtainFaded);
-            }
-        }
-
         // InstantMessage handler
-        void OnWhiteCurtainFaded(object sender, InstantMessageManager.InstantMessageArgs args)
+        void OnWhiteCurtainFaded(object sender, InstantMessageArgs args)
         {
             bool up = (bool)args.arg;
             if (up)
             {
                 if (!string.IsNullOrEmpty(NextScene))
                 {
-                    UnregisterHandlers();
                     SceneManager.LoadScene(NextScene);
                 }
             }
+        }
+
+        private void OnDestroy()
+        {
+            registrator.UnregisterHandlers();
         }
 
         // Button handler

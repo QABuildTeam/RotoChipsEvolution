@@ -14,6 +14,33 @@ namespace RotoChips.World
     public class WorldCameraController : MonoBehaviour
     {
 
+        public enum ZoomStatus
+        {
+            ZoomAtMax,      // camera at max distance
+            ZoomAtMin,      // camera at min distance
+            Middle          // camera is in between
+        }
+        public ZoomStatus Zoom
+        {
+            get; private set;
+        }
+
+        protected void SetZoomStatus(float zCoord)
+        {
+            if (zCoord == minDistance)
+            {
+                Zoom = ZoomStatus.ZoomAtMin;
+            }
+            else if (zCoord == maxDistance)
+            {
+                Zoom = ZoomStatus.ZoomAtMax;
+            }
+            else
+            {
+                Zoom = ZoomStatus.Middle;
+            }
+        }
+
         public float maxDistance;
         public float minDistance;
         public float smoothMoveDuration;
@@ -32,25 +59,27 @@ namespace RotoChips.World
                 if (cameraPosition.z != previousPosition)
                 {
                     controlledCamera.transform.position = cameraPosition;
-                    if (cameraPosition.z == maxDistance)
+                    SetZoomStatus(cameraPosition.z);
+                    switch (Zoom)
                     {
-                        GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldCameraMovedDown, this);
-                    }
-                    else if (cameraPosition.z == minDistance)
-                    {
-                        GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldCameraMovedUp, this);
+                        case ZoomStatus.ZoomAtMin:
+                            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldCameraZoomedAtMin, this);
+                            break;
+                        case ZoomStatus.ZoomAtMax:
+                            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldCameraZoomedAtMax, this);
+                            break;
                     }
                 }
             }
         }
 
         // this method performs an automatic camera movement (up or down, between cameraMaxDistance (far from the world) and cameraMinDistance (near the world))
-        IEnumerator SmoothCameraMover(bool up)
+        IEnumerator SmoothCameraMover(ZoomStatus zoomStatus)
         {
             Vector3 cameraPosition = controlledCamera.transform.position;
             float startPosition = cameraPosition.z;
             float currentPosition = cameraPosition.z;
-            float endPosition = up ? minDistance : maxDistance;
+            float endPosition = zoomStatus == ZoomStatus.ZoomAtMin ? minDistance : maxDistance;
             float currentTime = 0;
             while (currentPosition != endPosition)
             {
@@ -59,45 +88,58 @@ namespace RotoChips.World
                 currentPosition = Mathf.Clamp(Mathf.Lerp(startPosition, endPosition, currentTime / smoothMoveDuration), maxDistance, minDistance);
                 cameraPosition.z = currentPosition;
                 controlledCamera.transform.position = cameraPosition;
+                SetZoomStatus(cameraPosition.z);
             }
-            GlobalManager.MInstantMessage.DeliverMessage(up ? InstantMessageType.WorldCameraMovedUp : InstantMessageType.WorldCameraMovedDown, this);
+            GlobalManager.MInstantMessage.DeliverMessage(zoomStatus == ZoomStatus.ZoomAtMin ? InstantMessageType.WorldCameraZoomedAtMin : InstantMessageType.WorldCameraZoomedAtMax, this);
         }
 
         // message handling
-        void OnWorldMoveCamera(object sender, InstantMessageManager.InstantMessageArgs args)
+        void OnWorldZoomCamera(object sender, InstantMessageArgs args)
         {
-            bool up = args.type == InstantMessageType.WorldMoveCameraUp;
-            StartCoroutine(SmoothCameraMover(up));
+            ZoomStatus zoomStatus = args.type == InstantMessageType.WorldZoomCameraAtMin ? ZoomStatus.ZoomAtMin : ZoomStatus.ZoomAtMax;
+            StartCoroutine(SmoothCameraMover(zoomStatus));
         }
 
-        void RegisterHandlers()
+        void OnWorldAutoZoomCamera(object sender, InstantMessageArgs args)
         {
-            if (GlobalManager.Instance != null)
-            {
-                GlobalManager.MInstantMessage.AddListener(InstantMessageType.WorldMoveCameraUp, OnWorldMoveCamera);
-                GlobalManager.MInstantMessage.AddListener(InstantMessageType.WorldMoveCameraDown, OnWorldMoveCamera);
-            }
+            ZoomStatus zoomStatus = Zoom == ZoomStatus.ZoomAtMin ? ZoomStatus.ZoomAtMax : ZoomStatus.ZoomAtMin;
+            StartCoroutine(SmoothCameraMover(zoomStatus));
         }
 
-        void UnregisterHandlers()
-        {
-            if (GlobalManager.Instance != null)
-            {
-                GlobalManager.MInstantMessage.RemoveListener(InstantMessageType.WorldMoveCameraUp, OnWorldMoveCamera);
-                GlobalManager.MInstantMessage.RemoveListener(InstantMessageType.WorldMoveCameraDown, OnWorldMoveCamera);
-            }
-        }
-
+        MessageRegistrator registrator;
         private void Awake()
         {
             controlledCamera = GetComponent<Camera>();
-            RegisterHandlers();
+            Vector3 position = controlledCamera.transform.position;
+            position.z = Mathf.Clamp(position.z, maxDistance, minDistance);
+            controlledCamera.transform.position = position;
+            SetZoomStatus(position.z);
+            registrator = new MessageRegistrator(
+                InstantMessageType.WorldZoomCameraAtMin, (InstantMessageHandler)OnWorldZoomCamera,
+                InstantMessageType.WorldZoomCameraAtMax, (InstantMessageHandler)OnWorldZoomCamera,
+                InstantMessageType.WorldAutoZoomCamera, (InstantMessageHandler)OnWorldAutoZoomCamera
+            );
+            registrator.RegisterHandlers();
         }
 
         private void OnDestroy()
         {
-            UnregisterHandlers();
+            registrator.UnregisterHandlers();
         }
 
+        void ProcessInput()
+        {
+            switch (GlobalManager.MInput.CheckInput())
+            {
+                case TouchInput.InputStatus.DoubleMove:
+                    ManualZoom(GlobalManager.MInput.MoveDelta);
+                    break;
+            }
+        }
+
+        private void Update()
+        {
+            ProcessInput();
+        }
     }
 }

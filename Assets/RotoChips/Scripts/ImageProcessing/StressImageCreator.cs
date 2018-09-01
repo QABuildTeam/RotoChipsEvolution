@@ -60,7 +60,7 @@ namespace RotoChips.ImageProcessing
             float startTime = Time.realtimeSinceStartup;
             string sourceGraphicResource = LevelDataManager.GraphicsResource(level) + "/smooth";
             originalImage = Resources.Load<Texture2D>(sourceGraphicResource);
-            Debug.Log("StressImageCreator.BgStressImage: creating STRESS image from " + sourceGraphicResource + " as " + originalImage.ToString());
+            Debug.Log("StressImageCreator.BgStressImage: creating STRESS image from " + sourceGraphicResource + " as " + (originalImage == null ? "null" : originalImage.ToString()));
             int w = originalImage.width;
             int h = originalImage.height;
             stressedImage = new Texture2D(w, h, originalImage.format, false);
@@ -226,7 +226,7 @@ namespace RotoChips.ImageProcessing
                     // every n-th pixel do a break for the next frame
                     if (coffset % breakCycle == breakCycle - 1)
                     {
-                        Debug.Log("STRESS pixel " + coffset.ToString());
+                        //Debug.Log("STRESS pixel " + coffset.ToString());
                         //yield return new WaitForFixedUpdate();
                         yield return null;
                     }
