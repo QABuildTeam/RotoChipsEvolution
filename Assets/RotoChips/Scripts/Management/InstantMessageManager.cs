@@ -40,6 +40,8 @@ namespace RotoChips.Management
         PuzzleButtonRotated,            // Notification: A puzzle button and a quad of its neighbour square tiles have just rotated a quarter clockwise
         PuzzleRotoChipsPressed,         // Notification: RotoChips indicator on the scene Puzzle has just been pressed (either by mouse or by finger)
         PuzzleRotoCoinsPressed,         // Notification: RotoCoins indicator on the scene Puzzle has just been pressed (either by mouse or by finger)
+        PuzzleFlashTile,                // Command: Flash the tiles which are in their places
+        PuzzleTileFlashed,              // Notification: tiles flashed
 
         // GUI messages
         GUIBackButtonPressed,           // Notification: Back button has just been pressed

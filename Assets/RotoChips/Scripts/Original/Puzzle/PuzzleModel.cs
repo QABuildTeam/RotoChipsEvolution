@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RotoChips.Management;
 using RotoChips.ImageProcessing;
+using RotoChips.Puzzle;
 
 public class PuzzleModel : MonoBehaviour {
     private LevelDataManager.Descriptor ld;
@@ -21,6 +22,7 @@ public class PuzzleModel : MonoBehaviour {
         public int globalID;
         public int angleID;
     };
+
     private TileID[,] tileNeighbours;               // a two-dimensional array which represents an image of the puzzle
 
     // tuning parameters
@@ -158,7 +160,7 @@ public class PuzzleModel : MonoBehaviour {
                 tileArray[tileIndex].transform.position += tilePosition;
                 tileNeighbours[y, x].globalID = tileIndex;
                 tileNeighbours[y, x].angleID = 0;
-                tileArray[tileIndex].GetComponent<TileFlasher>().setFlashListener(puzzleListener);
+                //tileArray[tileIndex].GetComponent<TileFlasher>().setFlashListener(puzzleListener);
                 tilePosition.x += TileSize;
             }
             tilePosition.y -= TileSize;
@@ -574,18 +576,18 @@ public class PuzzleModel : MonoBehaviour {
                 {
                     if (initId == currentId && angle == 0)  // current tile is in its place
                     {
-                        tileArray[y * PuzzleWidth + x].GetComponent<TileFlasher>().FlashGood();
+                        //tileArray[y * PuzzleWidth + x].GetComponent<TileFlasher>().FlashGood();
                     }
                     else
                     {
                         idOk = false;                       // current tile is not in its place, so all subsequent tiles are not in their places too
-                        tileArray[y * PuzzleWidth + x].GetComponent<TileFlasher>().StopFlashing();
+                        //tileArray[y * PuzzleWidth + x].GetComponent<TileFlasher>().StopFlashing();
                     }
                 }
                 else
                 {
                     // some of previous tiles are not in their places
-                    tileArray[y * PuzzleWidth + x].GetComponent<TileFlasher>().StopFlashing();
+                    //tileArray[y * PuzzleWidth + x].GetComponent<TileFlasher>().StopFlashing();
                 }
             }
         }
@@ -598,7 +600,7 @@ public class PuzzleModel : MonoBehaviour {
         {
             for (int x = 0; x < PuzzleWidth; ++x)
             {
-                tileArray[y * PuzzleWidth + x].GetComponent<TileFlasher>().StopFlashing();
+                //tileArray[y * PuzzleWidth + x].GetComponent<TileFlasher>().StopFlashing();
             }
         }
     }
@@ -608,7 +610,7 @@ public class PuzzleModel : MonoBehaviour {
     {
         if (id >= 0 && id < PuzzleHeight * PuzzleWidth)
         {
-            tileArray[id].GetComponent<TileFlasher>().FlashBad();
+            //tileArray[id].GetComponent<TileFlasher>().FlashBad();
         }
     }
 

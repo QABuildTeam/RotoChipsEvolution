@@ -56,7 +56,7 @@ public class GenericGameController : MonoBehaviour {
 	RotationReason rotationReason;
 
     TouchInput puzzleInput;
-    CameraController cameraController;
+    //CameraController cameraController;
     PuzzleModel puzzleModel;
     //WhiteCurtainFader fader;
     GameObject SourceImageCanvas;   // a reference to the game object which shows the source image
@@ -86,7 +86,7 @@ public class GenericGameController : MonoBehaviour {
         status = PuzzleStatus.None;
         puzzleInput = gameObject.GetComponent<TouchInput>();
         puzzleModel = gameObject.GetComponent<PuzzleModel>();
-        cameraController = gameObject.GetComponent<CameraController>();
+        //cameraController = gameObject.GetComponent<CameraController>();
         //fader = GameObject.Find("LevelTransition").GetComponent<WhiteCurtainFader>();
         //vss = GameObject.Find("VibeAudioObject").GetComponent<VibeSoundScript>();
         FanfareAudioObject = GameObject.Find("FanfareAudioObject");
@@ -741,11 +741,11 @@ public class GenericGameController : MonoBehaviour {
 						break;
 
 					case TouchInput.InputStatus.SingleMove:   // both of these input statuses allow to move or scale the puzzle
-                        cameraController.KeepSoftBoundaries(puzzleInput.MoveDelta);  // just move, do not unpress
+                        //cameraController.KeepSoftBoundaries(puzzleInput.MoveDelta);  // just move, do not unpress
                         break;
 					case TouchInput.InputStatus.DoubleMove:   // scale the puzzle
 						puzzleModel.unpressButton();
-						cameraController.KeepSoftBoundaries(puzzleInput.MoveDelta);  // perform moving/scaling
+						//cameraController.KeepSoftBoundaries(puzzleInput.MoveDelta);  // perform moving/scaling
 						status = PuzzleStatus.ButtonNeutral; // and unpress the button
 						break;
 

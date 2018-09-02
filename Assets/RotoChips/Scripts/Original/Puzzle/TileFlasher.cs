@@ -1,148 +1,84 @@
-﻿using UnityEngine;
+﻿/*
+ * File:        PuzzleBuilder.cs
+ * Author:      Igor Spiridonov
+ * Descrpition: Class PuzzleBuilder creates the puzzle field
+ * Created:     02.09.2018
+ */
+using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using RotoChips.Management;
+using RotoChips.Generic;
 
-public class TileFlasher : MonoBehaviour {
-
-    public Color GoodFlashColor;
-    public Color BadFlashColor;
-    public float flashPeriod;
-    public int flashCount;
-
-    int flashPhase;
-    Color currentColor;
-    Color colorDelta;
-    Color whiteColor;
-    int currentFlash;
-    int maxFlashStep;
-    int flashStep;
-    SpriteRenderer spriteColor;
-
-    GameObject flashListener;
-
-	// Use this for initialization
-	void Start () {
-        flashPhase = 0;
-        currentFlash = -1;
-        whiteColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-        currentColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-        colorDelta = new Color(0f, 0f, 0f, 0f);
-        maxFlashStep = 0;
-        flashStep = 0;
-        spriteColor = gameObject.GetComponent<SpriteRenderer>();
-	}
-
-    public void setFlashListener(GameObject aListener)
+namespace RotoChips.Puzzle
+{
+    public class TileFlasher : FlashingObject
     {
-        flashListener = aListener;
-    }
-
-    void initFlashing(int newFlashPhase)
-    {
-        currentFlash = 0;
-        currentColor.r = 1.0f;
-        currentColor.g = 1.0f;
-        currentColor.b = 1.0f;
-        currentColor.a = 1.0f;
-        colorDelta.r = 0f;
-        colorDelta.g = 0f;
-        colorDelta.b = 0f;
-        colorDelta.a = 0f;
-        float deltaTime = Time.deltaTime;
-        maxFlashStep = (int)(flashPeriod / deltaTime)+1;
-        flashStep = 0;
-        switch (newFlashPhase)
+        public enum FlashType
         {
-            case 1:     // flash from white to good color
-            case 2:     // flash from good to white color
-                colorDelta.r = (1.0f - GoodFlashColor.r) / flashPeriod * deltaTime; //all color delta component values are positive
-                colorDelta.g = (1.0f - GoodFlashColor.g) / flashPeriod * deltaTime;
-                colorDelta.b = (1.0f - GoodFlashColor.b) / flashPeriod * deltaTime;
-                colorDelta.a = (1.0f - GoodFlashColor.a) / flashPeriod * deltaTime;
-                break;
-            case 3:     // flash from white to bad color
-            case 4:     // flash from bad to white color
-                colorDelta.r = (1.0f - BadFlashColor.r) / flashPeriod * deltaTime;
-                colorDelta.g = (1.0f - BadFlashColor.g) / flashPeriod * deltaTime;
-                colorDelta.b = (1.0f - BadFlashColor.b) / flashPeriod * deltaTime;
-                colorDelta.a = (1.0f - BadFlashColor.a) / flashPeriod * deltaTime;
-                break;
+            None,
+            Good,
+            Bad
         }
-        //Debug.Log("deltaTime: " + deltaTime.ToString() + "; maxFlashStep: " + maxFlashStep.ToString() + ", colorDelta: " + colorDelta.ToString());
-        flashPhase = newFlashPhase;
-    }
+        FlashType type = FlashType.None;
 
-    public void FlashGood()
-// this method makes the tile flashing with "good" color
-    {
-        //Debug.Log("Flashing good.");
-        initFlashing(1);
-    }
+        [SerializeField]
+        protected Color goodColor;
+        [SerializeField]
+        protected Color badColor;
+        [SerializeField]
+        protected int flashCount;
 
-    public void FlashBad()
-// this method makes the tile flashing with "bad" color
-    {
-        //Debug.Log("Flashing bad.");
-        initFlashing(3);
-    }
+        SpriteRenderer spriteRenderer;
 
-    public void StopFlashing()
-// this method prevents the tile from flashing, returning its color to the original white
-    {
-        //Debug.Log("Stop flashing.");
-        initFlashing(0);
-        spriteColor.color = whiteColor;
-    }
+        GameObject flashListener;
 
-    void FixedUpdate()
-    {
-        if (flashPhase == 0)
-            return;
-        switch (flashPhase)
+        MessageRegistrator registrator;
+        private void Awake()
         {
-            case 1:
-            case 3:
-                currentColor = currentColor - colorDelta;
-                break;
-            case 2:
-            case 4:
-                currentColor = currentColor + colorDelta;
-                break;
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            registrator = new MessageRegistrator(
+                InstantMessageType.PuzzleFlashTile, (InstantMessageHandler)OnPuzzleFlashTile
+            );
+            registrator.RegisterHandlers();
         }
-        ++flashStep;
-        if (flashStep >= maxFlashStep)
+
+        // message handling
+        void OnPuzzleFlashTile(object sender, InstantMessageArgs args)
         {
-            flashStep = 0;
-            ++currentFlash;
-            if (currentFlash >= flashCount * 2)
+            if (type == FlashType.None)
             {
-                currentColor = whiteColor;
-                flashPhase = 0;
-                flashListener.SendMessage("flashStopped");
+                type = (FlashType)args.arg;
+                StartCoroutine(Flash());
+            }
+        }
+
+        private void OnDestroy()
+        {
+            registrator.UnregisterHandlers();
+        }
+
+        protected override bool IsValidPeriod(int periodCounter)
+        {
+            if (periodCounter < flashCount * 2)
+            {
+                return true;
             }
             else
             {
-                switch (flashPhase)
-                {
-                    case 1:
-                        currentColor = GoodFlashColor;
-                        flashPhase = 2;
-                        break;
-                    case 3:
-                        currentColor = BadFlashColor;
-                        flashPhase = 4;
-                        break;
-                    case 2:
-                        currentColor = whiteColor;
-                        flashPhase = 1;
-                        break;
-                    case 4:
-                        currentColor = whiteColor;
-                        flashPhase = 3;
-                        break;
-                }
+                type = FlashType.None;
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleTileFlashed, this);
+                return false;
             }
         }
-        spriteColor.color = currentColor;
+
+        protected override void Visualize(float factor)
+        {
+            if (type != FlashType.None)
+            {
+                spriteRenderer.color = Color.Lerp(Color.white, type == FlashType.Good ? goodColor : badColor, factor);
+            }
+        }
+
     }
 }
