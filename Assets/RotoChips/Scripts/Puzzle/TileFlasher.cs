@@ -12,14 +12,21 @@ using RotoChips.Generic;
 
 namespace RotoChips.Puzzle
 {
+    public enum FlashType
+    {
+        None,
+        Good,
+        Bad
+    }
+
+    public class TileFlashArgs
+    {
+        public Vector2Int maxId;
+        public FlashType type;
+    }
+
     public class TileFlasher : FlashingObject
     {
-        public enum FlashType
-        {
-            None,
-            Good,
-            Bad
-        }
         FlashType type = FlashType.None;
 
         [SerializeField]
@@ -29,14 +36,16 @@ namespace RotoChips.Puzzle
         [SerializeField]
         protected int flashCount;
 
-        SpriteRenderer spriteRenderer;
-
-        GameObject flashListener;
+        protected Vector2Int tileId;
+        MeshRenderer meshRenderer;
 
         MessageRegistrator registrator;
-        private void Awake()
+        public void Init(Vector2Int id)
         {
-            spriteRenderer = GetComponent<SpriteRenderer>();
+            tileId = id;
+            meshRenderer = GetComponent<MeshRenderer>();
+            type = FlashType.None;
+            Visualize(0);
             registrator = new MessageRegistrator(
                 InstantMessageType.PuzzleFlashTile, (InstantMessageHandler)OnPuzzleFlashTile
             );
@@ -44,12 +53,29 @@ namespace RotoChips.Puzzle
         }
 
         // message handling
+        Coroutine flashCoroutine;
         void OnPuzzleFlashTile(object sender, InstantMessageArgs args)
         {
-            if (type == FlashType.None)
+            TileFlashArgs flashArgs = (TileFlashArgs)args.arg;
+            if (flashArgs.maxId.y > tileId.y || (flashArgs.maxId.y == tileId.y && flashArgs.maxId.x >= tileId.x))
             {
-                type = (FlashType)args.arg;
-                StartCoroutine(Flash());
+                if (type == FlashType.None)
+                {
+                    type = flashArgs.type;
+                    if (type == FlashType.None)
+                    {
+                        if (flashCoroutine != null)
+                        {
+                            StopCoroutine(flashCoroutine);
+                            flashCoroutine = null;
+                        }
+                        Visualize(0);
+                    }
+                    else
+                    {
+                        flashCoroutine = StartCoroutine(Flash());
+                    }
+                }
             }
         }
 
@@ -76,7 +102,9 @@ namespace RotoChips.Puzzle
         {
             if (type != FlashType.None)
             {
-                spriteRenderer.color = Color.Lerp(Color.white, type == FlashType.Good ? goodColor : badColor, factor);
+                Material[] materials = meshRenderer.materials;
+                materials[0].SetColor("_EmissionColor", Color.Lerp(Color.black, type == FlashType.Good ? goodColor : badColor, factor));
+                meshRenderer.materials = materials;
             }
         }
 

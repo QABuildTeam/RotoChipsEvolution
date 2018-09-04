@@ -43,7 +43,7 @@ namespace RotoChips.ImageProcessing
             painterFinished = false;
             stopScaling = true;
             int currentGalleryLevel = GlobalManager.MStorage.GalleryLevel;
-            LevelDataManager.Descriptor ld = GlobalManager.MLevel.GetLevelDescriptor(currentGalleryLevel);
+            LevelDataManager.Descriptor ld = GlobalManager.MLevel.GetDescriptor(currentGalleryLevel);
 
             // calculate x and y scaling factors of both images (they are the same)
             finalXYScale = ld.init.finalXYScale;

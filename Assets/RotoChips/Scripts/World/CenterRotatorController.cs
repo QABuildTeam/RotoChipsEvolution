@@ -18,7 +18,7 @@ namespace RotoChips.World
         // Use this for initialization
         void Awake()
         {
-            bool active = GlobalManager.MLevel.GetLevelDescriptor(0).state.Complete;
+            bool active = GlobalManager.MLevel.GetDescriptor(0).state.Complete;
             gameObject.SetActive(true);
         }
 

@@ -327,7 +327,7 @@ Prefab:
     - target: {fileID: 114175489794122368, guid: 67fb27ab1b2112d4c9790219b348398e,
         type: 2}
       propertyPath: puzzleScene
-      value: Logo
+      value: Puzzle
       objectReference: {fileID: 0}
     - target: {fileID: 114175489794122368, guid: 67fb27ab1b2112d4c9790219b348398e,
         type: 2}

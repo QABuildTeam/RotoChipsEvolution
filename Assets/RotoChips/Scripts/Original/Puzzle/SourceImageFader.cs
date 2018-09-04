@@ -25,7 +25,7 @@ public class SourceImageFader : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		LevelDataManager.Descriptor ld = GlobalManager.MLevel.GetLevelDescriptor(GlobalManager.MStorage.SelectedLevel);
+		LevelDataManager.Descriptor ld = GlobalManager.MLevel.GetDescriptor(GlobalManager.MStorage.SelectedLevel);
         screenAspectRatio = (float)(Screen.width) / (float)(Screen.height);
         float sizeFactor = srcSizeFactor * originalScreenAspectRatio / screenAspectRatio;
         if (screenAspectRatio > ld.init.srcXYScale)
@@ -44,9 +44,10 @@ public class SourceImageFader : MonoBehaviour {
 		SourceTextOutline = GameObject.Find ("SourceImageText").GetComponent<Outline> ();
         SourceImageBackground = GameObject.Find("SourceImageBackground").GetComponentInChildren<Image>();
         //SourceImage.sprite = Resources.Load<Sprite>(ld.GraphicsResource + "/source");
-		// create "source" image from the "final" image on the fly
-		Texture2D tex = SourceImageCreator.instance.GetSourceImage (ld.init.id);
-		Rect r = new Rect (new Vector2 (0, 0), new Vector2 (tex.width, tex.height));
+        // create "source" image from the "final" image on the fly
+        //Texture2D tex = SourceImageCreator.instance.GetSourceImage (ld.init.id);
+        Texture2D tex = new Texture2D(ld.init.width, ld.init.height);
+        Rect r = new Rect (new Vector2 (0, 0), new Vector2 (tex.width, tex.height));
 		SourceImage.sprite = Sprite.Create (tex, r, Vector2.zero);
         SourceImageSprite.GetComponent<RectTransform>().localScale = new Vector3(sourceImageWidth, sourceImageHeight, 1.0f);
 

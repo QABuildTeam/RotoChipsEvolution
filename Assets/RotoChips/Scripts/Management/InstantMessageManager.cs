@@ -20,6 +20,7 @@ namespace RotoChips.Management
 
         // World scene messages
         WorldStarted,                   // Notification: Method Start() of the scene World has just finished its execution
+        WorldRotateToSelected,          // Command: rotate the world globe to the currently active level selector
         WorldSelectorPressed,           // Notification: Some cube-like selector above the world globe has just been pressed (either by mouse or by finger)
         WorldSatellitePressed,          // Notification: Satellite object above the world globe has just been pressed (either by mouse or by finger)
         WorldRotoChipsPressed,          // Notification: RotoChips indicator on the scene World has just been pressed (either by mouse or by finger)
@@ -37,6 +38,7 @@ namespace RotoChips.Management
         // Puzzle scene messages
         PuzzleStarted,                  // Notification: Method Start() of the scene Puzzle has just finished its execution
         PuzzleButtonPressed,            // Notification: Some puzzle button has just been pressed (either by mouse or by finger)
+        PuzzlePressButton,              // Command: Press a puzzle button
         PuzzleButtonRotated,            // Notification: A puzzle button and a quad of its neighbour square tiles have just rotated a quarter clockwise
         PuzzleRotoChipsPressed,         // Notification: RotoChips indicator on the scene Puzzle has just been pressed (either by mouse or by finger)
         PuzzleRotoCoinsPressed,         // Notification: RotoCoins indicator on the scene Puzzle has just been pressed (either by mouse or by finger)

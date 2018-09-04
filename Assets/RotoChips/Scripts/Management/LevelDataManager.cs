@@ -4,6 +4,7 @@
  * Descrpition: Class LevelDataManager manages loading and saving immutable and modifiable data for game levels
  * Created:     27.08.2018
  */
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,22 +15,243 @@ namespace RotoChips.Management
 {
     public class LevelDataManager : GenericManager
     {
-        [System.Serializable]
-        public class State                      // this is a structure of modifiable data which changes along the course of the game
+        [Serializable]
+        public class State                          // this is a structure of modifiable data which changes along the course of the game
         {
-            public int id;                      // level id
-            public string CurrentState;         // current level state
-            public string LastGoodState;        // last good level state
-            public string CurrentButtonState;   // current button rotation angles;
-            public string LastGoodButtonState;  // last good button rotation angles
-            public bool Revealed;               // this level is visible on the world map, but cannot be selected/played
-            public bool Playable;               // this level has been revealed on the world map; it can be played, bu it's not yet complete
-            public bool Complete;               // this level has been completed at least once; this flag cannot be reset in the course of a single game
-            public bool AutocompleteUsed;       // autocompletion feature was used while completing this level; this flag can be reset while resetting the puzzle
-            public int NextPlayableId;          // an id of the next playable level
-            public int NextCompleteId;          // an id of the next complete level
-            public long EarnedPoints;           // an amount of points earned in the level by the player before autocomplete has been used
+
+            [HideInInspector]
+            protected int id;                       // level id
+            public int Id
+            {
+                get
+                {
+                    return id;
+                }
+                set
+                {
+                    if (id != value)
+                    {
+                        id = value;
+                        GlobalManager.Instance.Save();
+                    }
+                }
+            }
+
+            [HideInInspector]
+            protected string currentState;          // current level state
+            public string CurrentState
+            {
+                get
+                {
+                    return currentState;
+                }
+                set
+                {
+                    if (currentState != value)
+                    {
+                        currentState = value;
+                        GlobalManager.Instance.Save();
+                    }
+                }
+            }
+
+            [HideInInspector]
+            protected string lastGoodState;         // last good level state
+            public string LastGoodState
+            {
+                get
+                {
+                    return lastGoodState;
+                }
+                set
+                {
+                    if (lastGoodState != value)
+                    {
+                        lastGoodState = value;
+                        GlobalManager.Instance.Save();
+                    }
+                }
+            }
+
+            [HideInInspector]
+            protected string currentButtonState;    // current button rotation angles;
+            public string CurrentButtonState
+            {
+                get
+                {
+                    return currentButtonState;
+                }
+                set
+                {
+                    if (currentButtonState != value)
+                    {
+                        currentButtonState = value;
+                        GlobalManager.Instance.Save();
+                    }
+                }
+            }
+
+            [HideInInspector]
+            protected string lastGoodButtonState;   // last good button rotation angles
+            public string LastGoodButtonState
+            {
+                get
+                {
+                    return lastGoodButtonState;
+                }
+                set
+                {
+                    if (lastGoodButtonState != value)
+                    {
+                        lastGoodButtonState = value;
+                        GlobalManager.Instance.Save();
+                    }
+                }
+            }
+
+            [HideInInspector]
+            protected bool revealed;                // this level is visible on the world map, but cannot be selected/played
+            public bool Revealed
+            {
+                get
+                {
+                    return revealed;
+                }
+                set
+                {
+                    if (revealed != value)
+                    {
+                        revealed = value;
+                    }
+                }
+            }
+
+            [HideInInspector]
+            protected bool playable;                // this level has been revealed on the world map; it can be played, but it's not yet complete
+            public bool Playable
+            {
+                get
+                {
+                    return playable;
+                }
+                set
+                {
+                    if (playable != value)
+                    {
+                        playable = value;
+                        GlobalManager.Instance.Save();
+                    }
+                }
+            }
+
+            [HideInInspector]
+            protected bool complete;                // this level has been completed at least once; this flag cannot be reset in the course of a single game
+            public bool Complete
+            {
+                get
+                {
+                    return complete;
+                }
+                set
+                {
+                    if (complete != value)
+                    {
+                        complete = value;
+                        GlobalManager.Instance.Save();
+                    }
+                }
+            }
+
+            [HideInInspector]
+            protected bool autocompleteUsed;        // autocompletion feature was used while completing this level; this flag can be reset while resetting the puzzle
+            public bool AutocompleteUsed
+            {
+                get
+                {
+                    return autocompleteUsed;
+                }
+                set
+                {
+                    if (autocompleteUsed != value)
+                    {
+                        autocompleteUsed = value;
+                        GlobalManager.Instance.Save();
+                    }
+                }
+            }
+
+            [HideInInspector]
+            protected int nextPlayableId;           // an id of the next playable level
+            public int NextPlayableId
+            {
+                get
+                {
+                    return nextPlayableId;
+                }
+                set
+                {
+                    if (nextPlayableId != value)
+                    {
+                        nextPlayableId = value;
+                        GlobalManager.Instance.Save();
+                    }
+                }
+            }
+
+            [HideInInspector]
+            protected int nextCompleteId;           // an id of the next complete level
+            public int NextCompleteId
+            {
+                get
+                {
+                    return nextCompleteId;
+                }
+                set
+                {
+                    if (nextCompleteId != value)
+                    {
+                        nextCompleteId = value;
+                        GlobalManager.Instance.Save();
+                    }
+                }
+            }
+
+            [HideInInspector]
+            protected long earnedPoints;            // an amount of points earned in the level by the player before autocomplete has been used
+            public long EarnedPoints
+            {
+                get
+                {
+                    return earnedPoints;
+                }
+                set
+                {
+                    if (earnedPoints != value)
+                    {
+                        earnedPoints = value;
+                        GlobalManager.Instance.Save();
+                    }
+                }
+            }
+            public State(int anId)
+            {
+                id = anId;
+                currentState = "";
+                lastGoodState = "";
+                currentButtonState = "";
+                lastGoodButtonState = "";
+                //revealed = anId == 0;
+                revealed = true;
+                complete = false;
+                //playable = anId == 0;
+                playable = true;
+                autocompleteUsed = false;
+                nextCompleteId = -1;
+                nextPlayableId = -1;
+                earnedPoints = 0;
+            }
         };
+
         public class Descriptor                 // this is a structure of current level status; modifying its components will not change the original data, though
         {
             public LevelData.Init init;
@@ -46,21 +268,7 @@ namespace RotoChips.Management
             for (int i = 0; i < LevelData.initializers.Length; i++)
             {
                 int levelId = LevelData.initializers[i].id;
-                State state = new State
-                {
-                    id = levelId,
-                    CurrentState = "",
-                    LastGoodState = "",
-                    CurrentButtonState = "",
-                    LastGoodButtonState = "",
-                    Revealed = levelId == 0,
-                    Complete = false,
-                    Playable = levelId == 0,
-                    AutocompleteUsed = false,
-                    NextCompleteId = -1,
-                    NextPlayableId = -1,
-                    EarnedPoints = 0
-                };
+                State state = new State(levelId);
                 levelInits.Add(levelId, i);
                 levelStates.Add(levelId, state);
             }
@@ -92,7 +300,7 @@ namespace RotoChips.Management
             return levelStates;
         }
 
-        public Descriptor GetLevelDescriptor(int levelId)
+        public Descriptor GetDescriptor(int levelId)
         {
             int initializersId;
             if (levelInits != null && levelInits.TryGetValue(levelId, out initializersId))
@@ -120,7 +328,7 @@ namespace RotoChips.Management
         {
             foreach (int levelId in levelInits.Keys)
             {
-                yield return GetLevelDescriptor(levelId);
+                yield return GetDescriptor(levelId);
             }
         }
 

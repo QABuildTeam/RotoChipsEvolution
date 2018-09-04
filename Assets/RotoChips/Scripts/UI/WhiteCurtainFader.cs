@@ -51,7 +51,7 @@ namespace RotoChips.UI
             if (fadeOut)
             {
                 registrator.RegisterHandlers();
-                Debug.Log("WCF: Registered handlers");
+                //Debug.Log("WCF: Registered handlers");
             }
             if (fadeIn)
             {
@@ -104,7 +104,7 @@ namespace RotoChips.UI
         private void OnDestroy()
         {
             registrator.UnregisterHandlers();
-            Debug.Log("WCF: Unregistered handlers");
+            //Debug.Log("WCF: Unregistered handlers");
         }
     }
 }

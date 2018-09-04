@@ -29,17 +29,10 @@ namespace RotoChips.World
         protected FloatRange selectorHeight;
         [SerializeField]
         protected GameObject ConnectLinePrefab;
-        [SerializeField]
-        protected int cameraStepsCount;
-
-        MessageRegistrator registrator;
 
         // this method constructs the level selection objects on the world sphere
         void Awake()
         {
-            registrator = new MessageRegistrator(InstantMessageType.WorldRotateToObject, (InstantMessageHandler)OnWorldRotateToObject);
-            registrator.RegisterHandlers();
-
             GameObject clouds;
             bool fadeClouds = false;
 
@@ -127,52 +120,6 @@ namespace RotoChips.World
             }
             // set the world sphere to the initial position
             transform.rotation = Quaternion.Euler(0, 0, 0);
-            // let the rotation go
-            //EnableRotation(true);
-        }
-
-        /*
-        void EnableRotation(bool on)
-        {
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, on);
-        }
-        */
-
-        // and this method performs such a rotation
-        IEnumerator RotateToSphereZero(GameObject rotateTarget)
-        {
-            // this method rotates the world sphere so that the selected spike would stop right before the player's eyes
-            Vector3 pos = rotateTarget.transform.position;  // a vector that points to rotateTarget
-            Vector3 viewer = Vector3.back;                  // a vector that points to the player
-            float angle = Vector3.Angle(pos, viewer);       // a flat angle between start (pos) and end (viewer) vectors
-            if (Math.Abs(angle) > 0.5f)                     // do not rotate if the angle is too small
-            {
-                Vector3 cross = Vector3.Cross(pos, viewer); // cross product of pos and viewer
-                float deltaAngle = angle / cameraStepsCount;
-                yield return new WaitForFixedUpdate();
-                for (int i = 0; i < cameraStepsCount; ++i)
-                {
-                    //transform.Rotate(cross, Space.World);
-                    transform.Rotate(cross, deltaAngle, Space.World);
-                    yield return new WaitForFixedUpdate();
-                }
-            }
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotatedToObject, this, rotateTarget);
-        }
-
-        // message handling
-        void OnWorldRotateToObject(object sender, InstantMessageArgs args)
-        {
-            GameObject rotateTarget = (GameObject)args.arg;
-            if (rotateTarget != null)
-            {
-                StartCoroutine(RotateToSphereZero(rotateTarget));
-            }
-        }
-
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
 
     }

@@ -66,8 +66,9 @@ public class PuzzleModel : MonoBehaviour {
 	// this auxillary method creates tile textures out from the "source" image texture
 	// by cutting it into width x height square pieces
 	void prepareTileTextures(int level, int width, int height) {
+        /*
 		tileTextures = new Texture2D[width, height];
-		Texture2D sourceTexture = SourceImageCreator.instance.GetSourceImage(level);
+		//Texture2D sourceTexture = SourceImageCreator.instance.GetSourceImage(level);
 		int startY = 0;
 		int dX = sourceTexture.width / width;
 		int dY = sourceTexture.height / height;
@@ -92,13 +93,14 @@ public class PuzzleModel : MonoBehaviour {
 				tileTextures [x, y].Apply ();
 			}
 		}
+        */
 	}
 
     // Use this for initialization
     void Start()
     {
 		// get level parameters for the puzzle initialization
-		ld = GlobalManager.MLevel.GetLevelDescriptor(GlobalManager.MStorage.SelectedLevel);		// LevelDesc data
+		ld = GlobalManager.MLevel.GetDescriptor(GlobalManager.MStorage.SelectedLevel);		// LevelDesc data
 
         // puzzle dimensions
         PuzzleHeight = ld.init.height;
@@ -330,7 +332,7 @@ public class PuzzleModel : MonoBehaviour {
     // from its current or the last good record
     public restoreStatus restoreState(bool toGood)
     {
-		ld = GlobalManager.MLevel.GetLevelDescriptor(GlobalManager.MStorage.SelectedLevel);		// LevelDesc data
+		ld = GlobalManager.MLevel.GetDescriptor(GlobalManager.MStorage.SelectedLevel);		// LevelDesc data
         string targetState = toGood ? ld.state.LastGoodState : ld.state.CurrentState;
         string buttonState = toGood ? ld.state.LastGoodButtonState : ld.state.CurrentButtonState;
         //Debug.Log("Restoring state for level " + PlayerStat.instance.CurrentLevel.ToString() + ": '" + targetState + "'");

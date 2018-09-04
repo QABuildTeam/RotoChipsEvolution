@@ -130,6 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 999757adb9f6a46e7803f852c8bc3ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotationTime: 0.8
   worldRotateFactor: 0.01
 --- !u!114 &114455358524942742
 MonoBehaviour:
@@ -218,7 +219,6 @@ MonoBehaviour:
     max: 1
   ConnectLinePrefab: {fileID: 1140642612385548, guid: af218ef87cb35974fb587324fd2f2dc0,
     type: 2}
-  cameraStepsCount: 48
 --- !u!114 &114747399134505296
 MonoBehaviour:
   m_ObjectHideFlags: 1

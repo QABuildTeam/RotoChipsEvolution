@@ -43,32 +43,33 @@ namespace RotoChips.Puzzle
 
         FloatRange CameraDistance()
         {
-            float aspect = controlledCamera.aspect;
-            float fov = controlledCamera.fieldOfView;
+            float aspect = ControlledCamera.aspect;
+            float fov = ControlledCamera.fieldOfView;
+            float fovFactor = Mathf.Tan(fov * Mathf.PI / (180 * 2));
             FloatRange distance = new FloatRange
             {
                 // minimum (nearest) vertical camera distance from the tile array; negative
-                min = -(PuzzleBuilder.TileSize * (1 + screenMarginPart)) / (2 * controlledCamera.aspect),
+                min = -(PuzzleBuilder.TileSize * (1 + screenMarginPart)) / (2 * fovFactor),
                 // maximum (farthest) vertical camera distance from the tile array; negative
-                max = -(Mathf.Max(PuzzleBuilder.TileSize * descriptor.init.height * (1 + screenMarginPart), PuzzleBuilder.TileSize * descriptor.init.width / aspect * (1 + screenMarginPart))) / (2 * fov)
+                max = -(Mathf.Max(PuzzleBuilder.TileSize * descriptor.init.height * (1 + screenMarginPart), PuzzleBuilder.TileSize * descriptor.init.width / aspect * (1 + screenMarginPart))) / (2 * fovFactor)
             };  // actually, max is less than min becasuse they are both negative
             return distance;
         }
 
         void Awake()
         {
-            descriptor = GlobalManager.MLevel.GetLevelDescriptor(GlobalManager.MStorage.SelectedLevel); // load player state for current level
+            descriptor = GlobalManager.MLevel.GetDescriptor(GlobalManager.MStorage.SelectedLevel); // load player state for current level
             fieldSize = new Vector2(descriptor.init.width * PuzzleBuilder.TileSize, descriptor.init.height * PuzzleBuilder.TileSize);
 
-            controlledCamera.transform.position = new Vector3(0, 0, CameraDistance().max);
+            ControlledCamera.transform.position = new Vector3(0, 0, CameraDistance().max);
 
         }
 
         // this method updates the camera position so that the game field is always inside the camera field of view
         void NormalizeCameraField(ref Vector3 cameraPosition)
         {
-            float aspect = controlledCamera.aspect;
-            float fov = controlledCamera.fieldOfView;
+            float aspect = ControlledCamera.aspect;
+            float fov = ControlledCamera.fieldOfView;
             FloatRange distance = CameraDistance();
             cameraPosition.z = Mathf.Clamp(cameraPosition.z, distance.max, distance.min);
 
@@ -88,9 +89,9 @@ namespace RotoChips.Puzzle
             {
                 case TouchInput.InputStatus.SingleMove:
                 case TouchInput.InputStatus.DoubleMove:
-                    cameraPosition += GlobalManager.MInput.MoveDelta * moveFactor;
+                    cameraPosition -= GlobalManager.MInput.MoveDelta * moveFactor;
                     NormalizeCameraField(ref cameraPosition);
-                    controlledCamera.transform.position = cameraPosition;
+                    ControlledCamera.transform.position = cameraPosition;
                     break;
             }
         }

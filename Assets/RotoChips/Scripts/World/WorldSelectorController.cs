@@ -44,7 +44,10 @@ namespace RotoChips.World
 
         public void Init(LevelDataManager.Descriptor descriptor, SelectorPrefab prefab)
         {
-            registrator = new MessageRegistrator(InstantMessageType.SteadyMouseUpAsButton, (InstantMessageHandler)OnSteadyMouseUpAsButton);
+            registrator = new MessageRegistrator(
+                InstantMessageType.SteadyMouseUpAsButton, (InstantMessageHandler)OnSteadyMouseUpAsButton,
+                InstantMessageType.WorldRotateToSelected, (InstantMessageHandler)OnWorldRotateToSelected
+            );
             registrator.RegisterHandlers();
             levelDescriptor = descriptor;
             meshRenderer = GetComponent<MeshRenderer>();
@@ -81,17 +84,30 @@ namespace RotoChips.World
                 }
                 meshRenderer.materials = materials;
                 iconRenderer.sprite = Resources.Load<Sprite>(iconPath);
-                //Debug.Log("WSC.Init: loaded #" + levelDescriptor.init.id.ToString() + " sprite from " + iconPath + " as " + (iconRenderer.sprite == null ? "null" : iconRenderer.sprite.ToString()));
                 if (glow)
                 {
                     StartCoroutine(Flash());
                 }
+                else
+                {
+                    Visualize(flashRange.min);
+                }
             }
         }
 
+        // the selector is touched and released once (no moving)
         void OnSteadyMouseUpAsButton(object sender, InstantMessageArgs args)
         {
             if ((GameObject)args.arg == gameObject)
+            {
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldSelectorPressed, this, levelDescriptor);
+            }
+        }
+
+        // special message, only received at the start of the World scene
+        void OnWorldRotateToSelected(object sender, InstantMessageArgs args)
+        {
+            if (GlobalManager.MStorage.SelectedLevel == levelDescriptor.init.id)
             {
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldSelectorPressed, this, levelDescriptor);
             }

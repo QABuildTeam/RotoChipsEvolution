@@ -46,6 +46,16 @@ namespace RotoChips.World
             // update RotoChips and RotoCoins indicators
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this);
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this);
+            // rotate the world to the currently active level selector
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotateToSelected, this);
+        }
+
+        void RotateWorldToZero(GameObject targetObject)
+        {
+            worldRotated = false;
+            cameraZoomed = false;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldZoomCameraAtMin, this);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotateToObject, this, targetObject);
         }
 
         // message handling
@@ -76,10 +86,7 @@ namespace RotoChips.World
             GameObject targetObject = ((Component)sender).gameObject;
             if (cameraController.Zoom != WorldCameraController.ZoomStatus.ZoomAtMin)
             {
-                worldRotated = false;
-                cameraZoomed = false;
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldZoomCameraAtMin, this);
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotateToObject, this, targetObject);
+                RotateWorldToZero(targetObject);
             }
             else
             {
@@ -112,11 +119,8 @@ namespace RotoChips.World
 
         IEnumerator YieldToScene(GameObject initiator, string sceneName)
         {
-            worldRotated = false;
-            cameraZoomed = false;
+            RotateWorldToZero(initiator);
             curtainFaded = false;
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldZoomCameraAtMin, this);
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotateToObject, this, initiator);
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeOutWhiteCurtain, this);
             while (!curtainFaded)
             {
