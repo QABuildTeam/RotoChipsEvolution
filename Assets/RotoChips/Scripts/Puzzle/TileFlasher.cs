@@ -37,6 +37,13 @@ namespace RotoChips.Puzzle
         protected int flashCount;
 
         protected Vector2Int tileId;
+        public Vector2Int TileId
+        {
+            get
+            {
+                return tileId;
+            }
+        }
         MeshRenderer meshRenderer;
 
         MessageRegistrator registrator;
@@ -57,7 +64,7 @@ namespace RotoChips.Puzzle
         void OnPuzzleFlashTile(object sender, InstantMessageArgs args)
         {
             TileFlashArgs flashArgs = (TileFlashArgs)args.arg;
-            if (flashArgs.maxId.y > tileId.y || (flashArgs.maxId.y == tileId.y && flashArgs.maxId.x >= tileId.x))
+            if (flashArgs.maxId.y > tileId.y || (flashArgs.maxId.y == tileId.y && flashArgs.maxId.x > tileId.x))
             {
                 if (type == FlashType.None)
                 {

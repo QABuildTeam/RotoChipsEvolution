@@ -73,13 +73,14 @@ namespace RotoChips.Puzzle
             FloatRange distance = CameraDistance();
             cameraPosition.z = Mathf.Clamp(cameraPosition.z, distance.max, distance.min);
 
-            Vector2 position = cameraPosition;
+            // puzzle field is centered at (0,0)
             float fovTangentY = Mathf.Abs(cameraPosition.z) * Mathf.Tan(Mathf.Deg2Rad * fov / 2);
-            Vector2 screenBordersDistance = (Vector2)fieldSize / 2 + new Vector2(fovTangentY * aspect, fovTangentY) * (1 + screenMarginPart);
-            Vector2 llCorner = position - screenBordersDistance;
-            Vector2 urCorner = position + screenBordersDistance;
-            cameraPosition.x = Mathf.Clamp(cameraPosition.x, llCorner.x, urCorner.x);
-            cameraPosition.y = Mathf.Clamp(cameraPosition.y, llCorner.y, urCorner.y);
+            Vector2 screenBordersDistance = new Vector2(fovTangentY * aspect, fovTangentY);
+            Vector2 halfFieldSize = (Vector2)fieldSize * (1 + screenMarginPart) / 2;
+            Vector2 llCorner = -halfFieldSize + screenBordersDistance;
+            Vector2 urCorner = halfFieldSize - screenBordersDistance;
+            cameraPosition.x = Mathf.Clamp(cameraPosition.x, Mathf.Min(0, llCorner.x), Mathf.Max(0, urCorner.x));
+            cameraPosition.y = Mathf.Clamp(cameraPosition.y, Mathf.Min(0, llCorner.y), Mathf.Max(0, urCorner.y));
         }
 
         private void Update()
@@ -88,8 +89,12 @@ namespace RotoChips.Puzzle
             switch (GlobalManager.MInput.CheckInput())
             {
                 case TouchInput.InputStatus.SingleMove:
-                case TouchInput.InputStatus.DoubleMove:
                     cameraPosition -= GlobalManager.MInput.MoveDelta * moveFactor;
+                    NormalizeCameraField(ref cameraPosition);
+                    ControlledCamera.transform.position = cameraPosition;
+                    break;
+                case TouchInput.InputStatus.DoubleMove:
+                    cameraPosition -= GlobalManager.MInput.MoveDelta * scaleFactor;
                     NormalizeCameraField(ref cameraPosition);
                     ControlledCamera.transform.position = cameraPosition;
                     break;

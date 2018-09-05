@@ -52,7 +52,6 @@ namespace RotoChips.Puzzle
         {
             if ((GameObject)args.arg == gameObject)
             {
-                Debug.Log("PuzzleButtonController: notifying");
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleButtonPressed, this, buttonId);
             }
         }
@@ -68,7 +67,7 @@ namespace RotoChips.Puzzle
 
         protected static float MoveWithin(float delta, float start, float end)
         {
-            return Mathf.Clamp(Mathf.Lerp(delta, start, end), Mathf.Min(start, end), Mathf.Max(start, end));
+            return Mathf.Clamp(Mathf.Lerp(start, end, delta), Mathf.Min(start, end), Mathf.Max(start, end));
         }
 
         IEnumerator AnimatePress(float fastFactor)
@@ -79,7 +78,6 @@ namespace RotoChips.Puzzle
                 Vector3 position = transform.position;
                 float currentTime = 0;
                 // press the button
-                Debug.Log("Button: pressing for " + (pressTime * fastFactor).ToString() + " seconds");
                 while (currentTime < pressTime * fastFactor)
                 {
                     yield return null;
@@ -91,7 +89,6 @@ namespace RotoChips.Puzzle
                 transform.position = position;
                 currentTime -= pressTime;
                 // release the button
-                Debug.Log("Button: releasing for " + (releaseTime * fastFactor).ToString() + " seconds");
                 while (currentTime < releaseTime * fastFactor)
                 {
                     yield return null;
@@ -104,23 +101,21 @@ namespace RotoChips.Puzzle
                 currentTime -= releaseTime;
                 // rotate the button
                 float rotationAngle = 0;
-                Debug.Log("Button: rotating for " + (rotateTime * fastFactor).ToString() + " seconds");
                 while (currentTime < rotateTime * fastFactor)
                 {
                     yield return null;
                     currentTime += Time.deltaTime;
-                    float deltaAngle = 90 * Time.deltaTime;
+                    float deltaAngle = 90 * Time.deltaTime / rotateTime;
                     rotationAngle += deltaAngle;
-                    transform.Rotate(Vector3.back, deltaAngle, Space.Self);
+                    transform.Rotate(Vector3.forward, deltaAngle, Space.Self);
                 }
                 rotationAngle -= 90;    // adjust the angle
                 if (rotationAngle != 0)
                 {
-                    transform.Rotate(Vector3.back, -rotationAngle, Space.Self);
+                    transform.Rotate(Vector3.forward, -rotationAngle, Space.Self);
                 }
                 currentTime -= rotateTime;
                 // unpress the button
-                Debug.Log("Button: unpressing for " + (backTime * fastFactor).ToString() + " seconds");
                 while (currentTime < backTime * fastFactor)
                 {
                     yield return null;

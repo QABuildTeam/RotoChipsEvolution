@@ -59,13 +59,13 @@ namespace RotoChips.Puzzle
             };
             Vector2 texScale = new Vector2
             {
-                x = -texFactor.x / (float)width,
-                y = -texFactor.y / (float)height
+                x = texFactor.x / (float)width,
+                y = texFactor.y / (float)height
             };
             Vector2 texOffsetStart = new Vector2
             {
-                x = (1f - texFactor.x) / 2 + texFactor.x / (float)width,
-                y = (1f - texFactor.y) / 2
+                x = (1f - texFactor.x) / 2,
+                y = (1f - texFactor.y) / 2 - texFactor.y / (float)height
             };
             Vector2 texOffsetStep = new Vector2
             {
@@ -96,15 +96,12 @@ namespace RotoChips.Puzzle
 
             // create tiles
             tiles = new GameObject[width, height];
-            float tileStartX = -(width - 1 - tileGap) * TileSize / 2;
-            Vector3 tilePosition = new Vector3(tileStartX, (height - 1 - tileGap) * TileSize / 2, neutralTileZ);
             Vector2 texOffset = texOffsetStart;
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
                     GameObject tile = (GameObject)Instantiate(tilePrefab);
-                    tile.transform.position = tilePosition;
                     // downscale the tile a bit
                     Vector3 tileScale = tile.transform.localScale;
                     tileScale *= 1 - tileGap / 2;
@@ -118,36 +115,36 @@ namespace RotoChips.Puzzle
                     meshRenderer.materials = materials;
                     tile.GetComponent<TileFlasher>().Init(new Vector2Int(x, y));
                     tiles[x, y] = tile;
-                    tilePosition.x += TileSize;
                     texOffset.x += texOffsetStep.x;
                 }
-                tilePosition.x = tileStartX;
-                tilePosition.y -= TileSize;
                 texOffset.x = texOffsetStart.x;
                 texOffset.y += texOffsetStep.y;
             }
         }
 
+        // restore tiles' positions and angles
         public void RestoreTileStatuses(TileStatus[,] tileNeighbours)
         {
             int width = descriptor.init.width;
             int height = descriptor.init.height;
-            float tileStartX = -(width - 1 - tileGap) * TileSize / 2;
-            Vector3 tilePosition = new Vector3(tileStartX, (height - 1 - tileGap) * TileSize / 2, neutralTileZ);
-            Vector3 tileDelta = new Vector3(TileSize, -TileSize, 0);
+            float tileStartX = -(width - 1) * TileSize / 2;
+            Vector3 tilePosition = new Vector3(tileStartX, (height - 1) * TileSize / 2, neutralTileZ);
             for (int y = 0; y < tileNeighbours.GetUpperBound(1) + 1; y++)
             {
-                for(int x = 0; x < tileNeighbours.GetUpperBound(0) + 1; x++)
+                for (int x = 0; x < tileNeighbours.GetUpperBound(0) + 1; x++)
                 {
                     TileStatus tileStatus = tileNeighbours[x, y];
-                    GameObject tile = tiles[x, y];
-                    Vector3 scale = new Vector3(tileStatus.id.x, tileStatus.id.y, 0);
-                    tile.transform.position = tilePosition + Vector3.Scale(tileDelta, scale);
-                    tile.transform.Rotate(Vector3.back, 90f * tileStatus.angle);
+                    GameObject tile = tiles[tileStatus.id.x, tileStatus.id.y];
+                    tile.transform.position = tilePosition;
+                    tile.transform.Rotate(Vector3.forward, 90f * tileStatus.angle);
+                    tilePosition.x += TileSize;
                 }
+                tilePosition.y -= TileSize;
+                tilePosition.x = tileStartX;
             }
         }
 
+        // restore buttons' angles
         public void RestoreButtonStatuses(int[,] buttonAngles)
         {
             for (int y = 0; y < buttonAngles.GetUpperBound(1) + 1; y++)
@@ -155,7 +152,7 @@ namespace RotoChips.Puzzle
                 for (int x = 0; x < buttonAngles.GetUpperBound(0) + 1; x++)
                 {
                     GameObject button = buttons[x, y].button;
-                    button.transform.Rotate(Vector3.back, 90f * buttonAngles[x, y]);
+                    button.transform.Rotate(Vector3.forward, 90f * buttonAngles[x, y]);
                 }
             }
         }
@@ -164,11 +161,12 @@ namespace RotoChips.Puzzle
         {
             ButtonCluster button = buttons[buttonId.x, buttonId.y];
             Transform parent = button.button.transform;
-            for(int i = 0; i < tileIds.Length; i++)
+            for (int i = 0; i < tileIds.Length; i++)
             {
                 GameObject tile = tiles[tileIds[i].x, tileIds[i].y];
                 tile.transform.SetParent(parent);
                 button.tiles[i] = tile;
+                TileFlasher tf = tile.GetComponent<TileFlasher>();
             }
         }
 
@@ -176,10 +174,11 @@ namespace RotoChips.Puzzle
         {
             Transform noparent = gameObject.transform;
             GameObject[] subtiles = buttons[buttonId.x, buttonId.y].tiles;
-            for(int i = 0; i < subtiles.Length; i++)
+            for (int i = 0; i < subtiles.Length; i++)
             {
                 if (subtiles[i] != null)
                 {
+                    TileFlasher tf = subtiles[i].GetComponent<TileFlasher>();
                     subtiles[i].transform.SetParent(noparent);
                     subtiles[i] = null;
                 }

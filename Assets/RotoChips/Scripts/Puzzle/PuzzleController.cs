@@ -82,36 +82,37 @@ namespace RotoChips.Puzzle
 
         void SaveTileStatuses()
         {
-            string tileStatuses = "";
+            string statusString = "";
             for (int y = 0; y < descriptor.init.height; y++)
             {
                 for (int x = 0; x < descriptor.init.width; x++)
                 {
-                    if (tileStatuses != "")
+                    if (statusString != "")
                     {
-                        tileStatuses += ".";
+                        statusString += ".";
                     }
                     TileStatus tileStatus = tileNeighbours[x, y];
-                    tileStatuses += tileStatus.id.x.ToString() + "," + tileStatus.id.y.ToString() + "," + tileStatus.angle.ToString();
+                    statusString += tileStatus.id.x.ToString() + "," + tileStatus.id.y.ToString() + "," + tileStatus.angle.ToString();
                 }
             }
-            descriptor.state.CurrentState = tileStatuses;
+            descriptor.state.CurrentState = statusString;
         }
 
         void SaveButtonStatuses()
         {
-            string buttonStatuses = "";
+            string statusString = "";
             for (int y = 0; y < descriptor.init.height - 1; y++)
             {
                 for (int x = 0; x < descriptor.init.width - 1; x++)
                 {
-                    if (buttonStatuses != "")
+                    if (statusString != "")
                     {
-                        buttonStatuses += ".";
+                        statusString += ".";
                     }
-                    buttonStatuses += buttonAngles[x, y].ToString();
+                    statusString += buttonAngles[x, y].ToString();
                 }
             }
+            descriptor.state.CurrentButtonState = statusString;
         }
 
         void RestoreTileStatuses()
@@ -167,7 +168,15 @@ namespace RotoChips.Puzzle
         void RotateTilesWith(Vector2Int buttonId)
         {
             // update tiles
-            TileStatus temp = tileNeighbours[buttonId.x, buttonId.y];
+            TileStatus temp = new TileStatus
+            {
+                id = new Vector2Int
+                {
+                    x = tileNeighbours[buttonId.x, buttonId.y].id.x,
+                    y = tileNeighbours[buttonId.x, buttonId.y].id.y
+                },
+                angle = tileNeighbours[buttonId.x, buttonId.y].angle
+            };
 
             tileNeighbours[buttonId.x, buttonId.y].id.x = tileNeighbours[buttonId.x, buttonId.y + 1].id.x;
             tileNeighbours[buttonId.x, buttonId.y].id.y = tileNeighbours[buttonId.x, buttonId.y + 1].id.y;
@@ -190,6 +199,7 @@ namespace RotoChips.Puzzle
 
             SaveTileStatuses();
             SaveButtonStatuses();
+            Debug.Log("PuzzleController: after rotate " + descriptor.state.CurrentState + "; " + descriptor.state.CurrentButtonState);
         }
 
         void RotateButton(PuzzleButtonController.PuzzleButtonArgs buttonArgs)
@@ -199,8 +209,8 @@ namespace RotoChips.Puzzle
             {
                 maxId = new Vector2Int
                 {
-                    x = descriptor.init.width - 1,
-                    y = descriptor.init.height - 1
+                    x = descriptor.init.width,
+                    y = descriptor.init.height
                 },
                 type = FlashType.None
             };
@@ -219,6 +229,7 @@ namespace RotoChips.Puzzle
                         x = tileNeighbours[buttonId.x + x, buttonId.y + y].id.x,
                         y = tileNeighbours[buttonId.x + x, buttonId.y + y].id.y
                     };
+                    Debug.Log("Attaching tile " + tileIds[i].ToString());
                 }
             }
 
@@ -231,7 +242,6 @@ namespace RotoChips.Puzzle
         // message handling
         void OnPuzzleButtonPressed(object sender, InstantMessageArgs args)
         {
-            Debug.Log("PuzzleController: button " + ((Vector2Int)args.arg).ToString() + " pressed");
             if (!puzzleBusy)
             {
                 puzzleBusy = true;
@@ -241,7 +251,6 @@ namespace RotoChips.Puzzle
                     id = buttonId,
                     fast = 1
                 };
-                Debug.Log("PuzzleController: rotating button");
                 RotateButton(buttonArgs);
                 StartCoroutine(WaitForButtonPress());
             }
@@ -260,11 +269,45 @@ namespace RotoChips.Puzzle
         {
             builder.DetachTilesFromButton((Vector2Int)args.arg);
             buttonRotated = true;
+            FlashTilesInPlaces();
         }
 
         private void OnDestroy()
         {
             registrator.UnregisterHandlers();
+        }
+
+        // logic checking
+        void FlashTilesInPlaces()
+        {
+            Vector2Int proper = new Vector2Int(0, 0);
+            bool idOk = true;
+            for (int y = 0; y < descriptor.init.height; y++)
+            {
+                for (int x = 0; x < descriptor.init.width; x++)
+                {
+                    TileStatus tileStatus = tileNeighbours[x, y];
+                    if (tileStatus.id != proper || tileStatus.angle != 0)
+                    {
+                        idOk = false;
+                        break;
+                    }
+                    proper.x++;
+                }
+                if (!idOk)
+                {
+                    break;
+                }
+                proper.x = 0;
+                proper.y++;
+            }
+            // all tiles before the proper should flash good color
+            TileFlashArgs flashArgs = new TileFlashArgs
+            {
+                maxId = proper,
+                type = FlashType.Good
+            };
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleFlashTile, this, flashArgs);
         }
     }
 }
