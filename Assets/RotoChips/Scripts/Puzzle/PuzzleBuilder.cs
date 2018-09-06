@@ -65,7 +65,7 @@ namespace RotoChips.Puzzle
             Vector2 texOffsetStart = new Vector2
             {
                 x = (1f - texFactor.x) / 2,
-                y = (1f - texFactor.y) / 2 - texFactor.y / (float)height
+                y = (1f - texFactor.y) / 2 + texFactor.y * (float)(height - 1) / (float)height
             };
             Vector2 texOffsetStep = new Vector2
             {

@@ -43,15 +43,19 @@ namespace RotoChips.Management
         PuzzleRotoChipsPressed,         // Notification: RotoChips indicator on the scene Puzzle has just been pressed (either by mouse or by finger)
         PuzzleRotoCoinsPressed,         // Notification: RotoCoins indicator on the scene Puzzle has just been pressed (either by mouse or by finger)
         PuzzleFlashTile,                // Command: Flash the tiles which are in their places
-        PuzzleTileFlashed,              // Notification: tiles flashed
+        PuzzleTileFlashed,              // Notification: Tiles flashed
+        PuzzleViewSourceImage,          // Command: Show a source image of the current puzzle
 
         // GUI messages
+        GUIStartDialogOKCancel,         // Command: Start a DialogOKCancel if present
         GUIBackButtonPressed,           // Notification: Back button has just been pressed
         GUIRestartButtonPressed,        // Notification: Restart button has just been pressed
         GUIViewButtonPressed,           // Notification: View button has just been pressed
         GUIMagicButtonPressed,          // Notification: Magic button has just been pressed
         GUIFadeOutWhiteCurtain,         // Command: Fade the entire screen out to white
         GUIWhiteCurtainFaded,           // Notification: The entire screen has just faded to white
+        GUIOKButtonPressed,             // Notification: OK button pressed in a DialogOKCancel
+        GUICancelButtonPressed,         // Notification: Cancel button pressed in a DialogOKCancel
 
         // General
         LanguageChanged,                // Notification: System language has changed

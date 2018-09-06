@@ -648,7 +648,7 @@ public class GenericGameController : MonoBehaviour {
     {
         //SourceImageCanvas.GetComponent<SourceImageFader>().ShowSourceImage(xltRestoreStatusToStr(puzzleModel.restoreState(false)));
         // restore the puzzle state and set the source image canvas text according to the restoration result
-        SourceImageCanvas.GetComponent<SourceImageFader>().setInitialText(XltRestoreStatusToStr(puzzleModel.restoreState(false)));
+        //SourceImageCanvas.GetComponent<SourceImageFader>().setInitialText(XltRestoreStatusToStr(puzzleModel.restoreState(false)));
         // alse set the score
         SetScore();
     }
