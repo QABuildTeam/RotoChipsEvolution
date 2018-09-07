@@ -45,6 +45,7 @@ namespace RotoChips.Management
         PuzzleFlashTile,                // Command: Flash the tiles which are in their places
         PuzzleTileFlashed,              // Notification: Tiles flashed
         PuzzleViewSourceImage,          // Command: Show a source image of the current puzzle
+        PuzzleReset,                    // Command: Reset the puzzle to the initial state
 
         // GUI messages
         GUIStartDialogOKCancel,         // Command: Start a DialogOKCancel if present

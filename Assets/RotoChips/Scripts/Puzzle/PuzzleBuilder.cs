@@ -41,6 +41,10 @@ namespace RotoChips.Puzzle
         [SerializeField]
         protected float tileGap = 0.1f;
 
+        // special restoration variables
+        Quaternion initialButtonRotation;
+        Quaternion initialTileRotation;
+
         private void Awake()
         {
             descriptor = GlobalManager.MLevel.GetDescriptor(GlobalManager.MStorage.SelectedLevel);
@@ -81,6 +85,7 @@ namespace RotoChips.Puzzle
                 for (int x = 0; x < width - 1; x++)
                 {
                     GameObject button = (GameObject)Instantiate(buttonPrefab);
+                    initialButtonRotation = button.transform.localRotation;
                     button.transform.position = buttonPosition;
                     button.GetComponent<PuzzleButtonController>().Init(new Vector2Int(x, y), neutralButtonZ, pressedButtonZ, releasedButtonZ);
                     buttons[x, y] = new ButtonCluster
@@ -102,6 +107,7 @@ namespace RotoChips.Puzzle
                 for (int x = 0; x < width; x++)
                 {
                     GameObject tile = (GameObject)Instantiate(tilePrefab);
+                    initialTileRotation = tile.transform.localRotation;
                     // downscale the tile a bit
                     Vector3 tileScale = tile.transform.localScale;
                     tileScale *= 1 - tileGap / 2;
@@ -136,6 +142,7 @@ namespace RotoChips.Puzzle
                     TileStatus tileStatus = tileNeighbours[x, y];
                     GameObject tile = tiles[tileStatus.id.x, tileStatus.id.y];
                     tile.transform.position = tilePosition;
+                    tile.transform.localRotation = initialTileRotation;
                     tile.transform.Rotate(Vector3.forward, 90f * tileStatus.angle);
                     tilePosition.x += TileSize;
                 }
@@ -152,6 +159,7 @@ namespace RotoChips.Puzzle
                 for (int x = 0; x < buttonAngles.GetUpperBound(0) + 1; x++)
                 {
                     GameObject button = buttons[x, y].button;
+                    button.transform.localRotation = initialButtonRotation;
                     button.transform.Rotate(Vector3.forward, 90f * buttonAngles[x, y]);
                 }
             }

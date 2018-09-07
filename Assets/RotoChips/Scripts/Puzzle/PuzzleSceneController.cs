@@ -18,7 +18,8 @@ namespace RotoChips.Puzzle
         protected enum DialogOKCancelMode
         {
             None,
-            Back
+            Back,
+            Reset
         }
         protected DialogOKCancelMode dialogMode;
 
@@ -33,6 +34,7 @@ namespace RotoChips.Puzzle
                 InstantMessageType.GUIBackButtonPressed, (InstantMessageHandler)OnGUIBackButtonPressed,
                 InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded,
                 InstantMessageType.GUIViewButtonPressed, (InstantMessageHandler)OnGUIViewButtonPressed,
+                InstantMessageType.GUIRestartButtonPressed, (InstantMessageHandler)OnGUIRestartButtonPressed,
                 InstantMessageType.GUIOKButtonPressed, (InstantMessageHandler)OnGUIOKButtonPressed
             );
             registrator.RegisterHandlers();
@@ -56,6 +58,10 @@ namespace RotoChips.Puzzle
                     dialogMode = DialogOKCancelMode.None;
                     GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeOutWhiteCurtain, this);
                     break;
+                case DialogOKCancelMode.Reset:
+                    dialogMode = DialogOKCancelMode.None;
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleReset, this);
+                    break;
             }
         }
 
@@ -72,6 +78,14 @@ namespace RotoChips.Puzzle
         void OnGUIViewButtonPressed(object sender, InstantMessageArgs args)
         {
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleViewSourceImage, this);
+        }
+
+        [SerializeField]
+        protected string restartlevelQuestionId = "idGUIRestartLevelQuestion";
+        void OnGUIRestartButtonPressed(object sender, InstantMessageArgs args)
+        {
+            dialogMode = DialogOKCancelMode.Reset;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIStartDialogOKCancel, this, restartlevelQuestionId);
         }
 
         private void OnDestroy()

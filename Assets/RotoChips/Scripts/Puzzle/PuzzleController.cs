@@ -44,7 +44,9 @@ namespace RotoChips.Puzzle
             builder.RestoreButtonStatuses(buttonAngles);
             registrator = new MessageRegistrator(
                 InstantMessageType.PuzzleButtonPressed, (InstantMessageHandler)OnPuzzleButtonPressed,
-                InstantMessageType.PuzzleButtonRotated, (InstantMessageHandler)OnPuzzleButtonRotated
+                InstantMessageType.PuzzleButtonRotated, (InstantMessageHandler)OnPuzzleButtonRotated,
+                InstantMessageType.PuzzleTileFlashed,
+                InstantMessageType.PuzzleReset, (InstantMessageHandler)OnPuzzleReset
             );
             registrator.RegisterHandlers();
         }
@@ -199,7 +201,6 @@ namespace RotoChips.Puzzle
 
             SaveTileStatuses();
             SaveButtonStatuses();
-            Debug.Log("PuzzleController: after rotate " + descriptor.state.CurrentState + "; " + descriptor.state.CurrentButtonState);
         }
 
         void RotateButton(PuzzleButtonController.PuzzleButtonArgs buttonArgs)
@@ -239,6 +240,22 @@ namespace RotoChips.Puzzle
             builder.RotateButtonWithTiles(buttonArgs);
         }
 
+        void ResetPuzzle()
+        {
+            descriptor.state.CurrentState = "";
+            descriptor.state.CurrentButtonState = "";
+            descriptor.state.LastGoodState = "";
+            descriptor.state.LastGoodButtonState = "";
+            descriptor.state.AutocompleteUsed = false;
+            descriptor.state.EarnedPoints = 0;
+            ResetTileStatuses();
+            ResetButtonStatuses();
+            RestoreTileStatuses();
+            RestoreButtonStatuses();
+            builder.RestoreTileStatuses(tileNeighbours);
+            builder.RestoreButtonStatuses(buttonAngles);
+        }
+
         // message handling
         void OnPuzzleButtonPressed(object sender, InstantMessageArgs args)
         {
@@ -269,7 +286,20 @@ namespace RotoChips.Puzzle
         {
             builder.DetachTilesFromButton((Vector2Int)args.arg);
             buttonRotated = true;
-            FlashTilesInPlaces();
+            CheckTilesInPlaces();
+        }
+
+        void OnPuzzleTileFlashed(object sender, InstantMessageArgs args)
+        {
+
+        }
+
+        void OnPuzzleReset(object sender, InstantMessageArgs args)
+        {
+            if (!puzzleBusy)
+            {
+                ResetPuzzle();
+            }
         }
 
         private void OnDestroy()
@@ -278,7 +308,7 @@ namespace RotoChips.Puzzle
         }
 
         // logic checking
-        void FlashTilesInPlaces()
+        void CheckTilesInPlaces()
         {
             Vector2Int proper = new Vector2Int(0, 0);
             bool idOk = true;
