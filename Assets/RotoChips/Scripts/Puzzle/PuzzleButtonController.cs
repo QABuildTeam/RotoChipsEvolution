@@ -78,34 +78,37 @@ namespace RotoChips.Puzzle
                 Vector3 position = transform.position;
                 float currentTime = 0;
                 // press the button
-                while (currentTime < pressTime * fastFactor)
+                float phaseTime = pressTime * fastFactor;
+                while (currentTime < phaseTime)
                 {
                     yield return null;
                     currentTime += Time.deltaTime;
-                    position.z = MoveWithin(currentTime / pressTime, neutralZ, pressedZ);
+                    position.z = MoveWithin(currentTime / phaseTime, neutralZ, pressedZ);
                     transform.position = position;
                 }
                 position.z = pressedZ;
                 transform.position = position;
-                currentTime -= pressTime;
+                currentTime -= phaseTime;
                 // release the button
-                while (currentTime < releaseTime * fastFactor)
+                phaseTime = releaseTime * fastFactor;
+                while (currentTime < phaseTime)
                 {
                     yield return null;
                     currentTime += Time.deltaTime;
-                    position.z = MoveWithin(currentTime / releaseTime, pressedZ, releasedZ);
+                    position.z = MoveWithin(currentTime / phaseTime, pressedZ, releasedZ);
                     transform.position = position;
                 }
                 position.z = releasedZ;
                 transform.position = position;
-                currentTime -= releaseTime;
+                currentTime -= phaseTime;
                 // rotate the button
+                phaseTime = rotateTime * fastFactor;
                 float rotationAngle = 0;
-                while (currentTime < rotateTime * fastFactor)
+                while (currentTime < phaseTime)
                 {
                     yield return null;
                     currentTime += Time.deltaTime;
-                    float deltaAngle = 90 * Time.deltaTime / rotateTime;
+                    float deltaAngle = 90 * Time.deltaTime / phaseTime;
                     rotationAngle += deltaAngle;
                     transform.Rotate(Vector3.forward, deltaAngle, Space.Self);
                 }
@@ -114,13 +117,14 @@ namespace RotoChips.Puzzle
                 {
                     transform.Rotate(Vector3.forward, -rotationAngle, Space.Self);
                 }
-                currentTime -= rotateTime;
+                currentTime -= phaseTime;
                 // unpress the button
-                while (currentTime < backTime * fastFactor)
+                phaseTime = backTime * fastFactor;
+                while (currentTime < phaseTime)
                 {
                     yield return null;
                     currentTime += Time.deltaTime;
-                    position.z = MoveWithin(currentTime / backTime, releasedZ, neutralZ);
+                    position.z = MoveWithin(currentTime / phaseTime, releasedZ, neutralZ);
                     transform.position = position;
                 }
                 position.z = neutralZ;

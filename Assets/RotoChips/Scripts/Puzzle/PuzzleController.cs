@@ -27,6 +27,7 @@ namespace RotoChips.Puzzle
         PuzzleBuilder builder;
         bool puzzleBusy;
         bool buttonRotated;
+        bool puzzleComplete;
         // Use this for initialization
         void Start()
         {
@@ -36,6 +37,7 @@ namespace RotoChips.Puzzle
             builder = GetComponent<PuzzleBuilder>();
             puzzleBusy = false;
             buttonRotated = false;
+            puzzleComplete = false;
             ResetTileStatuses();
             ResetButtonStatuses();
             RestoreTileStatuses();
@@ -45,7 +47,8 @@ namespace RotoChips.Puzzle
             registrator = new MessageRegistrator(
                 InstantMessageType.PuzzleButtonPressed, (InstantMessageHandler)OnPuzzleButtonPressed,
                 InstantMessageType.PuzzleButtonRotated, (InstantMessageHandler)OnPuzzleButtonRotated,
-                InstantMessageType.PuzzleTileFlashed,
+                InstantMessageType.PuzzleTileFlashed, (InstantMessageHandler)OnPuzzleTileFlashed,
+                InstantMessageType.PuzzleShuffle, (InstantMessageHandler)OnPuzzleShuffle,
                 InstantMessageType.PuzzleReset, (InstantMessageHandler)OnPuzzleReset
             );
             registrator.RegisterHandlers();
@@ -120,7 +123,7 @@ namespace RotoChips.Puzzle
         void RestoreTileStatuses()
         {
             string tileStatuses = descriptor.state.CurrentState;
-            if (tileStatuses != "")
+            if (!string.IsNullOrEmpty(tileStatuses))
             {
                 string[] parts = tileStatuses.Split('.');
                 int i = 0;
@@ -148,7 +151,7 @@ namespace RotoChips.Puzzle
         void RestoreButtonStatuses()
         {
             string buttonStatuses = descriptor.state.CurrentButtonState;
-            if (buttonStatuses != "")
+            if (!string.IsNullOrEmpty(buttonStatuses))
             {
                 string[] parts = buttonStatuses.Split('.');
                 int i = 0;
@@ -167,7 +170,7 @@ namespace RotoChips.Puzzle
         }
 
         // button rotation
-        void RotateTilesWith(Vector2Int buttonId)
+        void RotateTilesWith(Vector2Int buttonId, bool saveAfterRotation=true)
         {
             // update tiles
             TileStatus temp = new TileStatus
@@ -198,12 +201,18 @@ namespace RotoChips.Puzzle
 
             // update buttons
             buttonAngles[buttonId.x, buttonId.y] = (buttonAngles[buttonId.x, buttonId.y] + 1) % 4;
+            // check if the puzzle is complete after this rotation
+            CheckPuzzleComplete();
 
-            SaveTileStatuses();
-            SaveButtonStatuses();
+            if (saveAfterRotation)
+            {
+                // some modes do not need immediate saving (e. g. shuffle or autosteps)
+                SaveTileStatuses();
+                SaveButtonStatuses();
+            }
         }
 
-        void RotateButton(PuzzleButtonController.PuzzleButtonArgs buttonArgs)
+        void RotateButton(PuzzleButtonController.PuzzleButtonArgs buttonArgs, bool saveAfterRotation = true)
         {
             // stop flashing
             TileFlashArgs flashArgs = new TileFlashArgs
@@ -235,17 +244,17 @@ namespace RotoChips.Puzzle
             }
 
             builder.AttachTilesToButton(buttonId, tileIds);
-            RotateTilesWith(buttonId);
+            RotateTilesWith(buttonId, saveAfterRotation);
             buttonRotated = false;
             builder.RotateButtonWithTiles(buttonArgs);
         }
 
         void ResetPuzzle()
         {
-            descriptor.state.CurrentState = "";
-            descriptor.state.CurrentButtonState = "";
-            descriptor.state.LastGoodState = "";
-            descriptor.state.LastGoodButtonState = "";
+            descriptor.state.CurrentState = string.Empty;
+            descriptor.state.CurrentButtonState = string.Empty;
+            descriptor.state.LastGoodState = string.Empty;
+            descriptor.state.LastGoodButtonState = string.Empty;
             descriptor.state.AutocompleteUsed = false;
             descriptor.state.EarnedPoints = 0;
             ResetTileStatuses();
@@ -254,6 +263,66 @@ namespace RotoChips.Puzzle
             RestoreButtonStatuses();
             builder.RestoreTileStatuses(tileNeighbours);
             builder.RestoreButtonStatuses(buttonAngles);
+            StartCoroutine(ShufflePuzzle());
+        }
+
+        // initial (or after reset) puzzle shuffle
+        // this method can also perform a "precomputed" shuffle using an argument string
+        IEnumerator ShufflePuzzle(string shuffleString = "")
+        {
+            puzzleBusy = true;
+            PuzzleButtonController.PuzzleButtonArgs buttonArgs = new PuzzleButtonController.PuzzleButtonArgs
+            {
+                id = new Vector2Int(0, 0),
+                fast = 0.5f
+            };
+            if (string.IsNullOrEmpty(shuffleString))
+            {
+                // random mode shuffle
+                // do not allow the assembled state after the puzzle initialization
+                puzzleComplete = true;
+                int width = descriptor.init.width;
+                int height = descriptor.init.height;
+                while (puzzleComplete)
+                {
+                    int rotationsCount = (int)((Random.value + 0.7f) * width * height);
+                    for (int i = 0; i < rotationsCount; i++)
+                    {
+                        buttonArgs.id.x = (int)(Random.value * (width - 1));
+                        buttonArgs.id.y = (int)(Random.value * (height - 1));
+                        // do not save puzzle status while shuffling
+                        RotateButton(buttonArgs, false);
+                        while (!buttonRotated)
+                        {
+                            yield return null;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // forced mode shuffle
+                char[] delimiters = { '.' };
+                string[] parts = shuffleString.Split('.');
+                int partsCount = parts.Length;
+                //Debug.Log("Initial shuffle string: " + partsCount.ToString() + " parts");
+                for (int i = 0; i < partsCount; i += 2)
+                {
+                    buttonArgs.id.x = int.Parse(parts[i]);
+                    buttonArgs.id.y = int.Parse(parts[i + 1]);
+                    // do not save puzzle status while shuffling
+                    RotateButton(buttonArgs, false);
+                    while (!buttonRotated)
+                    {
+                        yield return null;
+                    }
+                }
+            }
+            // ok, now it's time to save
+            SaveTileStatuses();
+            SaveButtonStatuses();
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleHasShuffled, this);
+            puzzleBusy = false;
         }
 
         // message handling
@@ -291,7 +360,10 @@ namespace RotoChips.Puzzle
 
         void OnPuzzleTileFlashed(object sender, InstantMessageArgs args)
         {
-
+            if (puzzleComplete)
+            {
+                // ok, the puzzle is complete, the player has won
+            }
         }
 
         void OnPuzzleReset(object sender, InstantMessageArgs args)
@@ -302,12 +374,37 @@ namespace RotoChips.Puzzle
             }
         }
 
+        void OnPuzzleShuffle(object sender, InstantMessageArgs args)
+        {
+            if (string.IsNullOrEmpty(descriptor.state.CurrentState))
+            {
+                // the puzzle has never been solved or has just been reset
+                string shuffleString = (string)args.arg;
+                StartCoroutine(ShufflePuzzle(shuffleString));
+            }
+        }
+
+        void OnGUIWhiteCurtainFaded(object sender, InstantMessageArgs args)
+        {
+            bool up = (bool)args.arg;
+            if (!up)
+            {
+                if (descriptor.state.CurrentState == "")
+                {
+                    // the puzzle has never been solved or has just been reset
+                    StartCoroutine(ShufflePuzzle());
+                }
+            }
+        }
+
         private void OnDestroy()
         {
             registrator.UnregisterHandlers();
         }
 
+        // ---------------------
         // logic checking
+        // ---------------------
         void CheckTilesInPlaces()
         {
             Vector2Int proper = new Vector2Int(0, 0);
@@ -339,5 +436,23 @@ namespace RotoChips.Puzzle
             };
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleFlashTile, this, flashArgs);
         }
+
+        void CheckPuzzleComplete()
+        {
+            for (int y = 0; y < descriptor.init.height; y++)
+            {
+                for (int x = 0; x < descriptor.init.width; x++)
+                {
+                    TileStatus tile = tileNeighbours[x, y];
+                    if (tile.id.x != x || tile.id.y != y || tile.angle != 0)
+                    {
+                        puzzleComplete = false;
+                        return;
+                    }
+                }
+            }
+            puzzleComplete = true;
+        }
+
     }
 }

@@ -18,13 +18,24 @@ namespace RotoChips.Management
     {
         Unknown,
 
+        // GUI messages
+        GUIStartDialogOKCancel,         // Command: Start a DialogOKCancel if present
+        GUIBackButtonPressed,           // Notification: Back button has just been pressed
+        GUIRestartButtonPressed,        // Notification: Restart button has just been pressed
+        GUIViewButtonPressed,           // Notification: View button has just been pressed
+        GUIMagicButtonPressed,          // Notification: Magic button has just been pressed
+        GUIFadeOutWhiteCurtain,         // Command: Fade the entire screen out to white
+        GUIWhiteCurtainFaded,           // Notification: The entire screen has just faded to white
+        GUIOKButtonPressed,             // Notification: OK button pressed in a DialogOKCancel
+        GUICancelButtonPressed,         // Notification: Cancel button pressed in a DialogOKCancel
+        GUIRotoChipsPressed,            // Notification: RotoChips indicator on the scene World has just been pressed (either by mouse or by finger)
+        GUIRotoCoinsPressed,            // Notification: RotoCoins indicator on the scene World has just been pressed (either by mouse or by finger)
+
         // World scene messages
         WorldStarted,                   // Notification: Method Start() of the scene World has just finished its execution
         WorldRotateToSelected,          // Command: rotate the world globe to the currently active level selector
         WorldSelectorPressed,           // Notification: Some cube-like selector above the world globe has just been pressed (either by mouse or by finger)
         WorldSatellitePressed,          // Notification: Satellite object above the world globe has just been pressed (either by mouse or by finger)
-        WorldRotoChipsPressed,          // Notification: RotoChips indicator on the scene World has just been pressed (either by mouse or by finger)
-        WorldRotoCoinsPressed,          // Notification: RotoCoins indicator on the scene World has just been pressed (either by mouse or by finger)
         WorldGlobePressed,              // Notification: world globe has just been pressed
         WorldRotationEnable,            // Command: Enable (argument = true) or disable (argument = false) the rotation of the world globe and the satellite
         WorldRotateToObject,            // Command: Rotate the world globe so that the particular object is set just before the player's view
@@ -46,17 +57,8 @@ namespace RotoChips.Management
         PuzzleTileFlashed,              // Notification: Tiles flashed
         PuzzleViewSourceImage,          // Command: Show a source image of the current puzzle
         PuzzleReset,                    // Command: Reset the puzzle to the initial state
-
-        // GUI messages
-        GUIStartDialogOKCancel,         // Command: Start a DialogOKCancel if present
-        GUIBackButtonPressed,           // Notification: Back button has just been pressed
-        GUIRestartButtonPressed,        // Notification: Restart button has just been pressed
-        GUIViewButtonPressed,           // Notification: View button has just been pressed
-        GUIMagicButtonPressed,          // Notification: Magic button has just been pressed
-        GUIFadeOutWhiteCurtain,         // Command: Fade the entire screen out to white
-        GUIWhiteCurtainFaded,           // Notification: The entire screen has just faded to white
-        GUIOKButtonPressed,             // Notification: OK button pressed in a DialogOKCancel
-        GUICancelButtonPressed,         // Notification: Cancel button pressed in a DialogOKCancel
+        PuzzleShuffle,                  // Command: shuffle the puzzle possibly using a precomputed string of rotations
+        PuzzleHasShuffled,              // Notification: The puzzle has been shuffled after reset
 
         // General
         LanguageChanged,                // Notification: System language has changed

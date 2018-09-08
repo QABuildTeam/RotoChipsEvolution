@@ -70,8 +70,13 @@ namespace RotoChips.Puzzle
             bool up = (bool)args.arg;
             if (up)
             {
+                // faded out, end the scene
                 SceneManager.LoadScene(worldScene);
-
+            }
+            else
+            {
+                // faded in, shuffle the puzzle if necessary
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleShuffle, this, string.Empty);
             }
         }
 

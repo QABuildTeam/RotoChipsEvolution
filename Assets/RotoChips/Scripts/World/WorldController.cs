@@ -31,8 +31,8 @@ namespace RotoChips.World
                 InstantMessageType.WorldGlobePressed, (InstantMessageHandler)OnWorldGlobePressed,
                 InstantMessageType.WorldSelectorPressed, (InstantMessageHandler)OnWorldSelectorPressed,
                 InstantMessageType.WorldRotatedToObject, (InstantMessageHandler)OnWorldRotatedToObject,
-                InstantMessageType.WorldRotoChipsPressed, (InstantMessageHandler)OnWorldRotoChipsPressed,
-                InstantMessageType.WorldRotoCoinsPressed, (InstantMessageHandler)OnWorldRotoCoinsPressed,
+                InstantMessageType.GUIRotoChipsPressed, (InstantMessageHandler)OnWorldRotoChipsPressed,
+                InstantMessageType.GUIRotoCoinsPressed, (InstantMessageHandler)OnWorldRotoCoinsPressed,
                 InstantMessageType.WorldSatellitePressed, (InstantMessageHandler)OnWorldSatellitePressed,
                 InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded
             );
