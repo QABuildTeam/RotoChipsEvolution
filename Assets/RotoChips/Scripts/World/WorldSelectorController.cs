@@ -86,7 +86,7 @@ namespace RotoChips.World
                 iconRenderer.sprite = Resources.Load<Sprite>(iconPath);
                 if (glow)
                 {
-                    StartCoroutine(Flash());
+                    StartFlash();
                 }
                 else
                 {

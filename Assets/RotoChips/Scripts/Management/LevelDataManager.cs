@@ -324,6 +324,11 @@ namespace RotoChips.Management
             return "Textures/Levels/" + levelId.ToString("D3");
         }
 
+        public static string SmoothImageResource(int levelId)
+        {
+            return GraphicsResource(levelId) + "/smooth";
+        }
+
         public IEnumerable LevelDescriptors()
         {
             foreach (int levelId in levelInits.Keys)

@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RotoChips.Management;
+using RotoChips.Data;
 
 namespace RotoChips.Puzzle
 {
@@ -17,6 +18,13 @@ namespace RotoChips.Puzzle
         public Vector2Int id;
         public int angle;
     }
+
+    public class PuzzleCompleteStatus
+    {
+        public int id;
+        public bool firstTime;
+    }
+
     public class PuzzleController : MonoBehaviour
     {
         MessageRegistrator registrator;
@@ -28,6 +36,8 @@ namespace RotoChips.Puzzle
         bool puzzleBusy;
         bool buttonRotated;
         bool puzzleComplete;
+        bool autostepUsed;
+
         // Use this for initialization
         void Start()
         {
@@ -38,54 +48,25 @@ namespace RotoChips.Puzzle
             puzzleBusy = false;
             buttonRotated = false;
             puzzleComplete = false;
-            ResetTileStatuses();
-            ResetButtonStatuses();
-            RestoreTileStatuses();
-            RestoreButtonStatuses();
-            builder.RestoreTileStatuses(tileNeighbours);
-            builder.RestoreButtonStatuses(buttonAngles);
+            autostepUsed = false;
+            RestoreAll();
             registrator = new MessageRegistrator(
                 InstantMessageType.PuzzleButtonPressed, (InstantMessageHandler)OnPuzzleButtonPressed,
                 InstantMessageType.PuzzleButtonRotated, (InstantMessageHandler)OnPuzzleButtonRotated,
                 InstantMessageType.PuzzleTileFlashed, (InstantMessageHandler)OnPuzzleTileFlashed,
+                InstantMessageType.PuzzleAutostepUsed, (InstantMessageHandler)OnPuzzleAutostepUsed,
                 InstantMessageType.PuzzleShuffle, (InstantMessageHandler)OnPuzzleShuffle,
-                InstantMessageType.PuzzleReset, (InstantMessageHandler)OnPuzzleReset
+                InstantMessageType.PuzzleReset, (InstantMessageHandler)OnPuzzleReset,
+                InstantMessageType.PuzzlePrepareAutostep, (InstantMessageHandler)OnPuzzlePrepareAutostep,
+                InstantMessageType.PuzzleAutostep, (InstantMessageHandler)OnPuzzleAutostep,
+                InstantMessageType.PuzzleBusy, (InstantMessageHandler)OnPuzzleBusy
             );
             registrator.RegisterHandlers();
         }
 
-        // tiles and buttons statuses handling
-        void ResetTileStatuses()
-        {
-            for (int y = 0; y < descriptor.init.height; y++)
-            {
-                for (int x = 0; x < descriptor.init.width; x++)
-                {
-                    tileNeighbours[x, y] = new TileStatus
-                    {
-                        id = new Vector2Int
-                        {
-                            x = x,
-                            y = y
-                        },
-                        angle = 0
-                    };
-                }
-            }
-        }
-
-        void ResetButtonStatuses()
-        {
-            for (int y = 0; y < descriptor.init.height - 1; y++)
-            {
-                for (int x = 0; x < descriptor.init.width - 1; x++)
-                {
-                    buttonAngles[x, y] = 0;
-                }
-            }
-        }
-
-        void SaveTileStatuses()
+        #region Status handling
+        // this method creates a status string out from the current status of tiles
+        string BuildStatusString()
         {
             string statusString = "";
             for (int y = 0; y < descriptor.init.height; y++)
@@ -100,10 +81,20 @@ namespace RotoChips.Puzzle
                     statusString += tileStatus.id.x.ToString() + "," + tileStatus.id.y.ToString() + "," + tileStatus.angle.ToString();
                 }
             }
+            return statusString;
+        }
+
+        void SaveTileStatuses(bool good = false)
+        {
+            string statusString = BuildStatusString();
+            if (good)
+            {
+                descriptor.state.LastGoodState = statusString;
+            }
             descriptor.state.CurrentState = statusString;
         }
 
-        void SaveButtonStatuses()
+        void SaveButtonStatuses(bool good = false)
         {
             string statusString = "";
             for (int y = 0; y < descriptor.init.height - 1; y++)
@@ -117,24 +108,49 @@ namespace RotoChips.Puzzle
                     statusString += buttonAngles[x, y].ToString();
                 }
             }
+            if (good)
+            {
+                descriptor.state.LastGoodButtonState = statusString;
+            }
             descriptor.state.CurrentButtonState = statusString;
         }
 
-        void RestoreTileStatuses()
+        void SaveAll()
         {
-            string tileStatuses = descriptor.state.CurrentState;
-            if (!string.IsNullOrEmpty(tileStatuses))
+            Vector2Int thisTile, otherTile;
+            bool good = IsPuzzleStateBetter(descriptor.state.LastGoodState, out thisTile, out otherTile) > 0;
+            SaveButtonStatuses(good);
+            SaveTileStatuses(good);
+        }
+
+        // this method parses a status string and sets a TileStatus array according to it
+        // it also initializes the TileStatus array if it is not yet initialized
+        void ParseStatusString(string statusString, ref TileStatus[,] tiles)
+        {
+            string[] parts = null;
+            if (!string.IsNullOrEmpty(statusString))
             {
-                string[] parts = tileStatuses.Split('.');
-                int i = 0;
-                for (int y = 0; y < descriptor.init.height; y++)
+                parts = statusString.Split('.');
+            }
+            int i = 0;
+            for (int y = 0; y < descriptor.init.height; y++)
+            {
+                for (int x = 0; x < descriptor.init.width; x++, i++)
                 {
-                    for (int x = 0; x < descriptor.init.width; x++, i++)
+                    TileStatus tileStatus = tiles[x, y];
+                    if (tileStatus == null)
+                    {
+                        tiles[x, y] = tileStatus = new TileStatus
+                        {
+                            id = new Vector2Int(x, y),
+                            angle = 0
+                        };
+                    }
+                    if (parts != null && i < parts.Length)
                     {
                         string[] statusparts = parts[i].Split(',');
                         if (statusparts.Length == 3)
                         {
-                            TileStatus tileStatus = tileNeighbours[x, y];
                             int tx, ty, angle;
                             if (int.TryParse(statusparts[0], out tx) && int.TryParse(statusparts[1], out ty) && int.TryParse(statusparts[2], out angle))
                             {
@@ -148,9 +164,15 @@ namespace RotoChips.Puzzle
             }
         }
 
-        void RestoreButtonStatuses()
+        void RestoreTileStatuses(bool good = false)
         {
-            string buttonStatuses = descriptor.state.CurrentButtonState;
+            string tileStatuses = good ? descriptor.state.LastGoodState : descriptor.state.CurrentState;
+            ParseStatusString(tileStatuses, ref tileNeighbours);
+        }
+
+        void RestoreButtonStatuses(bool good = false)
+        {
+            string buttonStatuses = good ? descriptor.state.LastGoodButtonState : descriptor.state.CurrentButtonState;
             if (!string.IsNullOrEmpty(buttonStatuses))
             {
                 string[] parts = buttonStatuses.Split('.');
@@ -169,8 +191,18 @@ namespace RotoChips.Puzzle
             }
         }
 
+        void RestoreAll(bool good = false)
+        {
+            RestoreButtonStatuses(good);
+            RestoreTileStatuses(good);
+            builder.RestoreTileStatuses(tileNeighbours);
+            builder.RestoreButtonStatuses(buttonAngles);
+        }
+        #endregion
+
+        #region Basic button rotation
         // button rotation
-        void RotateTilesWith(Vector2Int buttonId, bool saveAfterRotation=true)
+        void RotateTilesWith(Vector2Int buttonId, bool saveAfterRotation = true)
         {
             // update tiles
             TileStatus temp = new TileStatus
@@ -207,24 +239,27 @@ namespace RotoChips.Puzzle
             if (saveAfterRotation)
             {
                 // some modes do not need immediate saving (e. g. shuffle or autosteps)
-                SaveTileStatuses();
-                SaveButtonStatuses();
+                SaveAll();
             }
         }
 
         void RotateButton(PuzzleButtonController.PuzzleButtonArgs buttonArgs, bool saveAfterRotation = true)
         {
-            // stop flashing
-            TileFlashArgs flashArgs = new TileFlashArgs
+            // stop flashing every tile
+            List<TileFlashArgs> flashList = new List<TileFlashArgs>();
+            for (int y = 0; y < descriptor.init.height; y++)
             {
-                maxId = new Vector2Int
+                for (int x = 0; x < descriptor.init.width; x++)
                 {
-                    x = descriptor.init.width,
-                    y = descriptor.init.height
-                },
-                type = FlashType.None
-            };
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleFlashTile, this, flashArgs);
+                    TileFlashArgs flashArgs = new TileFlashArgs
+                    {
+                        id = new Vector2Int(x, y),
+                        type = FlashType.None
+                    };
+                    flashList.Add(flashArgs);
+                }
+            }
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleFlashTile, this, flashList);
 
             // prepare an array of neighbour tiles
             Vector2Int buttonId = buttonArgs.id;
@@ -239,7 +274,6 @@ namespace RotoChips.Puzzle
                         x = tileNeighbours[buttonId.x + x, buttonId.y + y].id.x,
                         y = tileNeighbours[buttonId.x + x, buttonId.y + y].id.y
                     };
-                    Debug.Log("Attaching tile " + tileIds[i].ToString());
                 }
             }
 
@@ -248,21 +282,22 @@ namespace RotoChips.Puzzle
             buttonRotated = false;
             builder.RotateButtonWithTiles(buttonArgs);
         }
+        #endregion
 
+        #region Reset/shuffle
+        // -----------------------------
+        // Reset and shuffle methods
+        // -----------------------------
         void ResetPuzzle()
         {
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
             descriptor.state.CurrentState = string.Empty;
             descriptor.state.CurrentButtonState = string.Empty;
             descriptor.state.LastGoodState = string.Empty;
             descriptor.state.LastGoodButtonState = string.Empty;
             descriptor.state.AutocompleteUsed = false;
             descriptor.state.EarnedPoints = 0;
-            ResetTileStatuses();
-            ResetButtonStatuses();
-            RestoreTileStatuses();
-            RestoreButtonStatuses();
-            builder.RestoreTileStatuses(tileNeighbours);
-            builder.RestoreButtonStatuses(buttonAngles);
+            RestoreAll();
             StartCoroutine(ShufflePuzzle());
         }
 
@@ -270,7 +305,7 @@ namespace RotoChips.Puzzle
         // this method can also perform a "precomputed" shuffle using an argument string
         IEnumerator ShufflePuzzle(string shuffleString = "")
         {
-            puzzleBusy = true;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
             PuzzleButtonController.PuzzleButtonArgs buttonArgs = new PuzzleButtonController.PuzzleButtonArgs
             {
                 id = new Vector2Int(0, 0),
@@ -319,18 +354,117 @@ namespace RotoChips.Puzzle
                 }
             }
             // ok, now it's time to save
-            SaveTileStatuses();
-            SaveButtonStatuses();
+            SaveAll();
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleHasShuffled, this);
-            puzzleBusy = false;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, false);
+        }
+        #endregion
+
+        #region Autostep
+        // -------------------------
+        // Autostep methods
+        // -------------------------
+        // flash the good and the bad tiles
+        public void FlashBeforeAutostep()
+        {
+            // restore the puzzle state to the last good state
+            SaveAll();
+            RestoreAll();
+            Vector2Int lastGood, nextGood;
+            CheckPuzzleStateComplete(false, out lastGood, out nextGood);
+            List<TileFlashArgs> flashList = new List<TileFlashArgs>();
+            // flash a tile to from to with the bad color
+            TileStatus badTile = tileNeighbours[nextGood.x, nextGood.y];
+            flashList.Add(new TileFlashArgs
+            {
+                id = new Vector2Int(badTile.id.x, badTile.id.y),
+                type = FlashType.Bad
+            });
+            // flash a tile to go to with the good color
+            TileStatus goodTile = tileNeighbours[badTile.id.x, badTile.id.y];
+            flashList.Add(new TileFlashArgs
+            {
+                id = new Vector2Int(goodTile.id.x,goodTile.id.y),
+                type = FlashType.Good
+            });
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleFlashTile, this, flashList);
         }
 
+        void Autostep()
+        {
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
+            autostepUsed = false;
+            StartCoroutine(PerformAutoStep());
+            StartCoroutine(WaitForAutostep());
+        }
+
+        // this method moves one [next] tile to its 'place' automatically
+        IEnumerator PerformAutoStep()
+        {
+            Vector2Int lastGood, nextGood;
+            CheckPuzzleStateComplete(false, out lastGood, out nextGood);
+            TileStatus tileStatus = tileNeighbours[nextGood.x, nextGood.y];
+            byte[] solution = AutoStepSolutions.GetSolution(
+                descriptor.init.height,
+                descriptor.init.width,
+                tileStatus.id.y * descriptor.init.width + tileStatus.id.x,
+                nextGood.y,
+                nextGood.x,
+                tileStatus.angle
+            );
+            if (solution != null)
+            {
+                descriptor.state.AutocompleteUsed = true;
+                PuzzleButtonController.PuzzleButtonArgs buttonArgs = new PuzzleButtonController.PuzzleButtonArgs
+                {
+                    id = new Vector2Int(0, 0),
+                    fast = 0.5f
+                };
+                for (int i = 0; i < solution.Length; i++)
+                {
+                    buttonArgs.id.y = (solution[i] >> 4) & 0xf;
+                    buttonArgs.id.x = solution[i] & 0xf;
+                    RotateButton(buttonArgs, false);
+                    while (!buttonRotated)
+                    {
+                        yield return null;
+                    }
+                }
+                SaveAll();
+                // tight vibe sound
+                //Debug.Log("Playing vibe sound");
+                //vss.playSound();
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutostepUsed, this);
+            }
+        }
+        #endregion
+
+        #region Message handling
         // message handling
+        void OnPuzzleAutostepUsed(object sender, InstantMessageArgs args)
+        {
+            autostepUsed = true;
+        }
+
+        IEnumerator WaitForAutostep()
+        {
+            while (!autostepUsed)
+            {
+                yield return null;
+            }
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, false);
+        }
+
+        void OnPuzzlePrepareAutostep(object sender, InstantMessageArgs args)
+        {
+            FlashBeforeAutostep();
+        }
+
         void OnPuzzleButtonPressed(object sender, InstantMessageArgs args)
         {
             if (!puzzleBusy)
             {
-                puzzleBusy = true;
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
                 Vector2Int buttonId = (Vector2Int)args.arg;
                 PuzzleButtonController.PuzzleButtonArgs buttonArgs = new PuzzleButtonController.PuzzleButtonArgs
                 {
@@ -348,30 +482,36 @@ namespace RotoChips.Puzzle
             {
                 yield return null;
             }
-            puzzleBusy = false;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, false);
         }
 
         void OnPuzzleButtonRotated(object sender, InstantMessageArgs args)
         {
             builder.DetachTilesFromButton((Vector2Int)args.arg);
             buttonRotated = true;
-            CheckTilesInPlaces();
+            FlashTilesInPlaces();
         }
 
         void OnPuzzleTileFlashed(object sender, InstantMessageArgs args)
         {
             if (puzzleComplete)
             {
+                PuzzleCompleteStatus completeStatus = new PuzzleCompleteStatus
+                {
+                    id = descriptor.init.id,
+                    firstTime = !descriptor.state.Complete
+                };
                 // ok, the puzzle is complete, the player has won
+                /**/
+                descriptor.state.Complete = true;
+                /**/
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleComplete, this, completeStatus);
             }
         }
 
         void OnPuzzleReset(object sender, InstantMessageArgs args)
         {
-            if (!puzzleBusy)
-            {
-                ResetPuzzle();
-            }
+            ResetPuzzle();
         }
 
         void OnPuzzleShuffle(object sender, InstantMessageArgs args)
@@ -384,75 +524,153 @@ namespace RotoChips.Puzzle
             }
         }
 
-        void OnGUIWhiteCurtainFaded(object sender, InstantMessageArgs args)
+        void OnPuzzleAutostep(object sender, InstantMessageArgs args)
         {
-            bool up = (bool)args.arg;
-            if (!up)
-            {
-                if (descriptor.state.CurrentState == "")
-                {
-                    // the puzzle has never been solved or has just been reset
-                    StartCoroutine(ShufflePuzzle());
-                }
-            }
+            Autostep();
+        }
+
+        void OnPuzzleBusy(object sender, InstantMessageArgs args)
+        {
+            puzzleBusy = (bool)args.arg;
         }
 
         private void OnDestroy()
         {
             registrator.UnregisterHandlers();
         }
+        #endregion
 
+        #region Logic checking
         // ---------------------
         // logic checking
         // ---------------------
-        void CheckTilesInPlaces()
+        // this method performs several calculations at once:
+        // 1. it checks if the puzzle is assembled, and returns true/false according to the state of completeness
+        // 2. it looks for the latest tile which is already in its place, and returns its position in lastGood
+        // 3. it looks for the tile which should be placed after the lastGood one, and returns its position in nextGood
+        // 4. it alse flashes the already assembled tiles if needed
+        bool CheckPuzzleStateComplete(bool flashTiles, out Vector2Int lastGood, out Vector2Int nextGood)
         {
-            Vector2Int proper = new Vector2Int(0, 0);
-            bool idOk = true;
+            Vector2Int current = new Vector2Int(0, 0);
+            Vector2Int last = new Vector2Int(-1, -1);
+            Vector2Int next = new Vector2Int(0, 0);
+            nextGood = next;
+            bool isComplete = true;
+            List<TileFlashArgs> flashList = new List<TileFlashArgs>();
             for (int y = 0; y < descriptor.init.height; y++)
             {
                 for (int x = 0; x < descriptor.init.width; x++)
                 {
                     TileStatus tileStatus = tileNeighbours[x, y];
-                    if (tileStatus.id != proper || tileStatus.angle != 0)
+                    if (tileStatus.id != current || tileStatus.angle != 0)
                     {
-                        idOk = false;
-                        break;
+                        isComplete = false;
+                        // set the nextGood position
+                        if (tileStatus.id.x == next.x && tileStatus.id.y == next.y)
+                        {
+                            nextGood = new Vector2Int { x = x, y = y };
+                        }
                     }
-                    proper.x++;
+                    else
+                    {
+                        if (isComplete)
+                        {
+                            if (flashTiles)
+                            {
+                                // this tile is in the place, so it should flash
+                                flashList.Add(new TileFlashArgs
+                                {
+                                    id = new Vector2Int(x, y),
+                                    type = FlashType.Good
+                                });
+                            }
+                            last = current;
+                            // calculate the nextGood parameters
+                            if (++next.x >= descriptor.init.width)
+                            {
+                                next.x = 0;
+                                next.y++;
+                            }
+                        }
+                    }
+                    current.x++;
                 }
-                if (!idOk)
-                {
-                    break;
-                }
-                proper.x = 0;
-                proper.y++;
+                current.x = 0;
+                current.y++;
             }
-            // all tiles before the proper should flash good color
-            TileFlashArgs flashArgs = new TileFlashArgs
+            lastGood = last;
+            if (flashTiles)
             {
-                maxId = proper,
-                type = FlashType.Good
-            };
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleFlashTile, this, flashArgs);
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleFlashTile, this, flashList);
+            }
+            return isComplete;
+        }
+
+        void FlashTilesInPlaces()
+        {
+            Vector2Int lastGood, nextGood;
+            CheckPuzzleStateComplete(true, out lastGood, out nextGood);
         }
 
         void CheckPuzzleComplete()
         {
-            for (int y = 0; y < descriptor.init.height; y++)
+            Vector2Int lastGood, nextGood;
+            puzzleComplete = CheckPuzzleStateComplete(false, out lastGood, out nextGood);
+        }
+
+        // this method checks if the current puzzle state is "better" than the one in parameters
+        // this means that the current puzzle state has more first "inplace" tiles than the other
+        // if current puzzle state is better than aState, then return 1
+        // if current puzzle state is worse than aState, then return -1
+        // otherwise, return 0
+        int IsPuzzleStateBetter(string aState, out Vector2Int thisGoodTile, out Vector2Int otherGoodTile)
+        {
+            thisGoodTile = new Vector2Int(-1, -1);
+            otherGoodTile = new Vector2Int(-1, -1);
+            if (string.IsNullOrEmpty(aState))
             {
-                for (int x = 0; x < descriptor.init.width; x++)
+                return 1;
+            }
+            TileStatus[,] otherTiles = new TileStatus[descriptor.init.width, descriptor.init.height];
+            ParseStatusString(aState, ref otherTiles);
+            bool checkThis = true;
+            bool checkOther = true;
+            for (int y = 0; y < descriptor.init.height && !checkThis && !checkOther; y++)
+            {
+                for (int x = 0; x < descriptor.init.width && !checkThis && !checkOther; x++)
                 {
-                    TileStatus tile = tileNeighbours[x, y];
-                    if (tile.id.x != x || tile.id.y != y || tile.angle != 0)
+                    if (checkThis)
                     {
-                        puzzleComplete = false;
-                        return;
+                        TileStatus thisTile = tileNeighbours[x, y];
+                        if (thisTile.id.x == x && thisTile.id.y == y && thisTile.angle == 0)
+                        {
+                            thisGoodTile.x = x;
+                            thisGoodTile.y = y;
+                        }
+                        else
+                        {
+                            checkThis = false;
+                        }
+                    }
+                    if (checkOther)
+                    {
+                        TileStatus otherTile = otherTiles[x, y];
+                        if (otherTile.id.x == x && otherTile.id.y == y && otherTile.angle == 0)
+                        {
+                            otherGoodTile.x = x;
+                            otherGoodTile.y = y;
+                        }
+                        else
+                        {
+                            checkOther = false;
+                        }
                     }
                 }
             }
-            puzzleComplete = true;
+            int thisId = thisGoodTile.y * descriptor.init.width + thisGoodTile.x;
+            int otherId = otherGoodTile.y * descriptor.init.width + otherGoodTile.x;
+            return thisId > otherId ? 1 : (thisId > otherId ? -1 : 0);
         }
-
+        #endregion
     }
 }

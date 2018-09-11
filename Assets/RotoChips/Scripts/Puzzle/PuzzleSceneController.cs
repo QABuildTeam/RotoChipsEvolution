@@ -1,7 +1,7 @@
 ﻿/*
  * File:        PuzzleSceneController.cs
  * Author:      Igor Spiridonov
- * Descrpition: Class PuzzleSceneController controls the entire logic of the Puzzle scene
+ * Descrpition: Class PuzzleSceneController controls the entire UI logic of the Puzzle scene
  * Created:     06.09.2018
  */
 using System.Collections;
@@ -19,23 +19,34 @@ namespace RotoChips.Puzzle
         {
             None,
             Back,
-            Reset
+            Reset,
+            Autostep
         }
         protected DialogOKCancelMode dialogMode;
 
         [SerializeField]
         protected string worldScene = "World";
+        [SerializeField]
+        protected string victoryScene = "Victory";
+
         MessageRegistrator registrator;
+        bool puzzleBusy;
+
         // Use this for initialization
         void Start()
         {
             dialogMode = DialogOKCancelMode.None;
             registrator = new MessageRegistrator(
+                InstantMessageType.PuzzleBusy, (InstantMessageHandler)OnPuzzleBusy,
+                InstantMessageType.PuzzleComplete, (InstantMessageHandler)OnPuzzleComplete,
+                InstantMessageType.PuzzleWinImageStopped, (InstantMessageHandler)OnPuzzleWinImageStopped,
                 InstantMessageType.GUIBackButtonPressed, (InstantMessageHandler)OnGUIBackButtonPressed,
                 InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded,
                 InstantMessageType.GUIViewButtonPressed, (InstantMessageHandler)OnGUIViewButtonPressed,
                 InstantMessageType.GUIRestartButtonPressed, (InstantMessageHandler)OnGUIRestartButtonPressed,
-                InstantMessageType.GUIOKButtonPressed, (InstantMessageHandler)OnGUIOKButtonPressed
+                InstantMessageType.GUIMagicButtonPressed, (InstantMessageHandler)OnGUIMagicButtonPressed,
+                InstantMessageType.GUIOKButtonPressed, (InstantMessageHandler)OnGUIOKButtonPressed,
+                InstantMessageType.GUICancelButtonPressed, (InstantMessageHandler)OnGUICancelButtonPressed
             );
             registrator.RegisterHandlers();
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleStarted, this);
@@ -46,8 +57,46 @@ namespace RotoChips.Puzzle
         protected string backQuestionId = "idGUIBackQuestion";
         void OnGUIBackButtonPressed(object sender, InstantMessageArgs args)
         {
-            dialogMode = DialogOKCancelMode.Back;
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIStartDialogOKCancel, this, backQuestionId);
+            if (!puzzleBusy)
+            {
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
+                dialogMode = DialogOKCancelMode.Back;
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIStartDialogOKCancel, this, backQuestionId);
+            }
+        }
+
+        void OnGUIViewButtonPressed(object sender, InstantMessageArgs args)
+        {
+            if (!puzzleBusy)
+            {
+                // no need to set the puzzle busy because the SourceImage overlaps all the puzzle controls
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleViewSourceImage, this);
+            }
+        }
+
+        [SerializeField]
+        protected string restartlevelQuestionId = "idGUIRestartLevelQuestion";
+        void OnGUIRestartButtonPressed(object sender, InstantMessageArgs args)
+        {
+            if (!puzzleBusy)
+            {
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
+                dialogMode = DialogOKCancelMode.Reset;
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIStartDialogOKCancel, this, restartlevelQuestionId);
+            }
+        }
+
+        [SerializeField]
+        protected string magicQuestionId = "idGUIMagicQuestion";
+        void OnGUIMagicButtonPressed(object sender, InstantMessageArgs args)
+        {
+            if (!puzzleBusy)
+            {
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
+                dialogMode = DialogOKCancelMode.Autostep;
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzlePrepareAutostep, this);
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIStartDialogOKCancel, this, magicQuestionId);
+            }
         }
 
         void OnGUIOKButtonPressed(object sender, InstantMessageArgs args)
@@ -62,7 +111,17 @@ namespace RotoChips.Puzzle
                     dialogMode = DialogOKCancelMode.None;
                     GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleReset, this);
                     break;
+                case DialogOKCancelMode.Autostep:
+                    dialogMode = DialogOKCancelMode.None;
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutostep, this);
+                    break;
             }
+        }
+
+        void OnGUICancelButtonPressed(object sender, InstantMessageArgs args)
+        {
+            dialogMode = DialogOKCancelMode.None;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, false);
         }
 
         void OnGUIWhiteCurtainFaded(object sender, InstantMessageArgs args)
@@ -71,7 +130,7 @@ namespace RotoChips.Puzzle
             if (up)
             {
                 // faded out, end the scene
-                SceneManager.LoadScene(worldScene);
+                SceneManager.LoadScene(victoryScene);
             }
             else
             {
@@ -80,17 +139,26 @@ namespace RotoChips.Puzzle
             }
         }
 
-        void OnGUIViewButtonPressed(object sender, InstantMessageArgs args)
+        void OnPuzzleBusy(object sender, InstantMessageArgs args)
         {
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleViewSourceImage, this);
+            puzzleBusy = (bool)args.arg;
         }
 
         [SerializeField]
-        protected string restartlevelQuestionId = "idGUIRestartLevelQuestion";
-        void OnGUIRestartButtonPressed(object sender, InstantMessageArgs args)
+        protected string victoryId = "idVictory";
+        [SerializeField]
+        protected string levelCompletedOnceAgainId = "idLevelCompletedOnceAgain";
+        void OnPuzzleComplete(object sender, InstantMessageArgs args)
         {
-            dialogMode = DialogOKCancelMode.Reset;
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIStartDialogOKCancel, this, restartlevelQuestionId);
+            PuzzleCompleteStatus completeStatus = (PuzzleCompleteStatus)args.arg;
+            GlobalManager.MStorage.GalleryLevel = completeStatus.id;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleShowWinimage, this, completeStatus.firstTime ? victoryId : levelCompletedOnceAgainId);
+        }
+
+        void OnPuzzleWinImageStopped(object sender, InstantMessageArgs args)
+        {
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeOutWhiteCurtain, this);
         }
 
         private void OnDestroy()

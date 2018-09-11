@@ -1,11 +1,12 @@
 ﻿/*
- * File:        PuzzleBuilder.cs
+ * File:        TileFlasher.cs
  * Author:      Igor Spiridonov
- * Descrpition: Class PuzzleBuilder creates the puzzle field
+ * Descrpition: Class TileFlasher flashes a tile with a good or bad color
  * Created:     02.09.2018
  */
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using RotoChips.Management;
 using RotoChips.Generic;
@@ -21,7 +22,7 @@ namespace RotoChips.Puzzle
 
     public class TileFlashArgs
     {
-        public Vector2Int maxId;
+        public Vector2Int id;
         public FlashType type;
     }
 
@@ -63,24 +64,31 @@ namespace RotoChips.Puzzle
         Coroutine flashCoroutine;
         void OnPuzzleFlashTile(object sender, InstantMessageArgs args)
         {
-            TileFlashArgs flashArgs = (TileFlashArgs)args.arg;
-            if (flashArgs.maxId.y > tileId.y || (flashArgs.maxId.y == tileId.y && flashArgs.maxId.x > tileId.x))
+            List<TileFlashArgs> flashArgsList = (List<TileFlashArgs>)args.arg;
+            if (flashArgsList != null)
             {
-                if (type == FlashType.None)
+                foreach (TileFlashArgs flashArgs in flashArgsList)
                 {
-                    type = flashArgs.type;
-                    if (type == FlashType.None)
+                    if (flashArgs.id.y == tileId.y && flashArgs.id.x == tileId.x)
                     {
-                        if (flashCoroutine != null)
+                        if (type == FlashType.None)
                         {
-                            StopCoroutine(flashCoroutine);
-                            flashCoroutine = null;
+                            type = flashArgs.type;
+                            if (type == FlashType.None)
+                            {
+                                if (flashCoroutine != null)
+                                {
+                                    StopCoroutine(flashCoroutine);
+                                    flashCoroutine = null;
+                                }
+                                Visualize(0);
+                            }
+                            else
+                            {
+                                flashCoroutine = StartCoroutine(Flash());
+                            }
                         }
-                        Visualize(0);
-                    }
-                    else
-                    {
-                        flashCoroutine = StartCoroutine(Flash());
+                        break;
                     }
                 }
             }

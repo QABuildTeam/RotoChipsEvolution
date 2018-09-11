@@ -58,7 +58,7 @@ namespace RotoChips.ImageProcessing
         IEnumerator BgStressImage(int level)
         {
             float startTime = Time.realtimeSinceStartup;
-            string sourceGraphicResource = LevelDataManager.GraphicsResource(level) + "/smooth";
+            string sourceGraphicResource = LevelDataManager.SmoothImageResource(level);
             originalImage = Resources.Load<Texture2D>(sourceGraphicResource);
             Debug.Log("StressImageCreator.BgStressImage: creating STRESS image from " + sourceGraphicResource + " as " + (originalImage == null ? "null" : originalImage.ToString()));
             int w = originalImage.width;

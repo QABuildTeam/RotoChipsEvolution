@@ -59,6 +59,16 @@ namespace RotoChips.Management
         PuzzleReset,                    // Command: Reset the puzzle to the initial state
         PuzzleShuffle,                  // Command: shuffle the puzzle possibly using a precomputed string of rotations
         PuzzleHasShuffled,              // Notification: The puzzle has been shuffled after reset
+        PuzzleBusy,                     // Command: Set or reset the puzzle busy status
+        PuzzleComplete,                 // Notification: The puzzle is assembled
+        PuzzlePrepareAutostep,          // Command: Flash two tiles behind the autostep choice dialog
+        PuzzleAutostep,                 // Command: Use an autostep feature
+        PuzzleAutostepUsed,             // Notification: An autostep feature is used
+        PuzzleAutocomplete,             // Command: Automagically complete the current puzzle
+        PuzzleAutocompleteUsed,         // Notification: The puzzle is automagically complete
+        PuzzleShowWinimage,             // Command: Show a final image of the completed puzzle
+        PuzzleWinImageFinished,         // Notification: Final image fully exhibited
+        PuzzleWinImageStopped,          // Notification: The final image has stopped exhibition (a button has been pressed)
 
         // General
         LanguageChanged,                // Notification: System language has changed

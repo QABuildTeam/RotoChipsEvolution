@@ -144,13 +144,13 @@ namespace RotoChips.Puzzle
             sourceText.text = GlobalManager.MLanguage.Entry(GetSourceTextId());
             sourceButton.interactable = true;
             gameObject.SetActive(true);
-            StartCoroutine(Flash(true));
+            StartFlash(true);
         }
 
         public void CloseSourceImage()
         {
             sourceButton.interactable = false;
-            StartCoroutine(Flash(false));
+            StartFlash(false);
         }
 
         private void OnDestroy()

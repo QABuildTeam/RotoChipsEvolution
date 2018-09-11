@@ -73,7 +73,7 @@ namespace RotoChips.Utility
         {
             get
             {
-                return UnityEngine.Random.Range(min, max);
+                return UnityEngine.Random.Range(Mathf.Min(min, max), Mathf.Max(min, max));
             }
         }
 
@@ -170,7 +170,7 @@ namespace RotoChips.Utility
         {
             get
             {
-                return UnityEngine.Random.Range(min, max);
+                return UnityEngine.Random.Range(Mathf.Min(min, max), Mathf.Max(min, max));
             }
         }
 

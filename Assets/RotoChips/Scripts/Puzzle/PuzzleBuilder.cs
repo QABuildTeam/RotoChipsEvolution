@@ -175,7 +175,6 @@ namespace RotoChips.Puzzle
                 GameObject tile = tiles[tileIds[i].x, tileIds[i].y];
                 tile.transform.SetParent(parent);
                 button.tiles[i] = tile;
-                TileFlasher tf = tile.GetComponent<TileFlasher>();
             }
         }
 
@@ -187,7 +186,6 @@ namespace RotoChips.Puzzle
             {
                 if (subtiles[i] != null)
                 {
-                    TileFlasher tf = subtiles[i].GetComponent<TileFlasher>();
                     subtiles[i].transform.SetParent(noparent);
                     subtiles[i] = null;
                 }
