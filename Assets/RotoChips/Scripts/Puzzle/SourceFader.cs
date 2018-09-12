@@ -116,6 +116,10 @@ namespace RotoChips.Puzzle
         {
             sourceButton.interactable = up;
             gameObject.SetActive(up);
+            if (!up)
+            {
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleSourceImageClosed, this);
+            }
         }
 
         protected override void Visualize(float factor)

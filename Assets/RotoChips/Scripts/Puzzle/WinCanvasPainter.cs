@@ -82,7 +82,8 @@ namespace RotoChips.Puzzle
                     {
                         cX -= deltaX;
                     }
-                    yield return null;
+                    //yield return null;
+                    yield return new WaitForFixedUpdate();
                     // get a part of source texture for upper image into a small buffer sized by brushTexture dimensions
                     Color[] pixelBuffer = painterTexture.GetPixels(cX, cY, brushTexture.width, brushTexture.height);
                     int bufferSize = pixelBuffer.Length;  // optimization
@@ -102,7 +103,10 @@ namespace RotoChips.Puzzle
         // message handling
         void OnPuzzleShowWinimage(object sender, InstantMessageArgs args)
         {
-            gameObject.SetActive(true);
+            if (!gameObject.activeInHierarchy)
+            {
+                gameObject.SetActive(true);
+            }
             StartCoroutine(Painter());
         }
 

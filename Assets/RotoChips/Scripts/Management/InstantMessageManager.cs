@@ -56,6 +56,7 @@ namespace RotoChips.Management
         PuzzleFlashTile,                // Command: Flash the tiles which are in their places
         PuzzleTileFlashed,              // Notification: Tiles flashed
         PuzzleViewSourceImage,          // Command: Show a source image of the current puzzle
+        PuzzleSourceImageClosed,        // Notification: The source image has been closed
         PuzzleReset,                    // Command: Reset the puzzle to the initial state
         PuzzleShuffle,                  // Command: shuffle the puzzle possibly using a precomputed string of rotations
         PuzzleHasShuffled,              // Notification: The puzzle has been shuffled after reset

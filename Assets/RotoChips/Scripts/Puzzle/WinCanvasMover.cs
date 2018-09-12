@@ -148,7 +148,10 @@ namespace RotoChips.Puzzle
         // message handling
         void OnPuzzleShowWinimage(object sender, InstantMessageArgs args)
         {
-            gameObject.SetActive(true);
+            if (!gameObject.activeInHierarchy)
+            {
+                gameObject.SetActive(true);
+            }
             StartFlash();
         }
 

@@ -38,6 +38,8 @@ namespace RotoChips.Puzzle
         bool puzzleComplete;
         bool autostepUsed;
 
+        bool startVictoryScreen;
+
         // Use this for initialization
         void Start()
         {
@@ -49,6 +51,7 @@ namespace RotoChips.Puzzle
             buttonRotated = false;
             puzzleComplete = false;
             autostepUsed = false;
+            startVictoryScreen = true;
             RestoreAll();
             registrator = new MessageRegistrator(
                 InstantMessageType.PuzzleButtonPressed, (InstantMessageHandler)OnPuzzleButtonPressed,
@@ -290,6 +293,7 @@ namespace RotoChips.Puzzle
         // -----------------------------
         void ResetPuzzle()
         {
+            startVictoryScreen = false;
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
             descriptor.state.CurrentState = string.Empty;
             descriptor.state.CurrentButtonState = string.Empty;
@@ -357,6 +361,7 @@ namespace RotoChips.Puzzle
             SaveAll();
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleHasShuffled, this);
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, false);
+            startVictoryScreen = true;
         }
         #endregion
 
@@ -452,7 +457,10 @@ namespace RotoChips.Puzzle
             {
                 yield return null;
             }
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, false);
+            if (!puzzleComplete)
+            {
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, false);
+            }
         }
 
         void OnPuzzlePrepareAutostep(object sender, InstantMessageArgs args)
@@ -482,7 +490,10 @@ namespace RotoChips.Puzzle
             {
                 yield return null;
             }
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, false);
+            if (!puzzleComplete)
+            {
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, false);
+            }
         }
 
         void OnPuzzleButtonRotated(object sender, InstantMessageArgs args)
@@ -494,8 +505,9 @@ namespace RotoChips.Puzzle
 
         void OnPuzzleTileFlashed(object sender, InstantMessageArgs args)
         {
-            if (puzzleComplete)
+            if (puzzleComplete && startVictoryScreen)
             {
+                startVictoryScreen = false;
                 PuzzleCompleteStatus completeStatus = new PuzzleCompleteStatus
                 {
                     id = descriptor.init.id,
@@ -612,10 +624,11 @@ namespace RotoChips.Puzzle
             CheckPuzzleStateComplete(true, out lastGood, out nextGood);
         }
 
-        void CheckPuzzleComplete()
+        bool CheckPuzzleComplete()
         {
             Vector2Int lastGood, nextGood;
             puzzleComplete = CheckPuzzleStateComplete(false, out lastGood, out nextGood);
+            return puzzleComplete;
         }
 
         // this method checks if the current puzzle state is "better" than the one in parameters

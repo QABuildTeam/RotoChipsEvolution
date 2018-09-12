@@ -59,6 +59,7 @@ namespace RotoChips.Puzzle
         }
 
         // message handling
+        int runCounter = 0;
         void OnPuzzleShowWinimage(object sender, InstantMessageArgs args)
         {
             string winTextId = (string)args.arg;
@@ -71,7 +72,10 @@ namespace RotoChips.Puzzle
                 winText.text = string.Empty;
             }
             winButton.interactable = true;
-            gameObject.SetActive(true);
+            if (!gameObject.activeInHierarchy)
+            {
+                gameObject.SetActive(true);
+            }
             StartFlash(true);
         }
 

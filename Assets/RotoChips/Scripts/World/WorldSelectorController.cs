@@ -121,7 +121,8 @@ namespace RotoChips.World
         protected override void Visualize(float factor)
         {
             Material[] materials = meshRenderer.materials;
-            materials[0].SetFloat("_MKGlowTexStrength", factor);
+            //materials[0].SetFloat("_MKGlowTexStrength", factor);
+            materials[0].SetFloat("_MKGlowPower", factor);
         }
     }
 }

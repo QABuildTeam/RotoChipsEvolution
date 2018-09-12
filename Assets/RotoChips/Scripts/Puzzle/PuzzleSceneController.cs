@@ -40,6 +40,7 @@ namespace RotoChips.Puzzle
                 InstantMessageType.PuzzleBusy, (InstantMessageHandler)OnPuzzleBusy,
                 InstantMessageType.PuzzleComplete, (InstantMessageHandler)OnPuzzleComplete,
                 InstantMessageType.PuzzleWinImageStopped, (InstantMessageHandler)OnPuzzleWinImageStopped,
+                InstantMessageType.PuzzleSourceImageClosed, (InstantMessageHandler)OnPuzzleSourceImageClosed,
                 InstantMessageType.GUIBackButtonPressed, (InstantMessageHandler)OnGUIBackButtonPressed,
                 InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded,
                 InstantMessageType.GUIViewButtonPressed, (InstantMessageHandler)OnGUIViewButtonPressed,
@@ -132,11 +133,12 @@ namespace RotoChips.Puzzle
                 // faded out, end the scene
                 SceneManager.LoadScene(victoryScene);
             }
-            else
-            {
-                // faded in, shuffle the puzzle if necessary
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleShuffle, this, string.Empty);
-            }
+        }
+
+        void OnPuzzleSourceImageClosed(object sender, InstantMessageArgs args)
+        {
+            // faded in, shuffle the puzzle if necessary
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleShuffle, this, string.Empty);
         }
 
         void OnPuzzleBusy(object sender, InstantMessageArgs args)

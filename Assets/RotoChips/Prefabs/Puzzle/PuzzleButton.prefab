@@ -97,10 +97,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cc683aa96706ac43967e3acdd2fe5e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pressTime: 0.2
-  releaseTime: 0.2
-  rotateTime: 0.4
-  backTime: 0.2
+  pressTime: 0.1
+  releaseTime: 0.1
+  rotateTime: 0.2
+  backTime: 0.1
 --- !u!114 &114748410036810790
 MonoBehaviour:
   m_ObjectHideFlags: 1
