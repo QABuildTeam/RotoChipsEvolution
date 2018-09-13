@@ -94,6 +94,7 @@ namespace RotoChips.World
                 if (!descriptor.state.Complete)
                 {
                     GlobalManager.MStorage.SelectedLevel = descriptor.init.id;
+                    GlobalManager.MStorage.GalleryLevel = descriptor.init.id;
                     StartCoroutine(YieldToScene(targetObject, puzzleScene));
                 }
             }

@@ -1,7 +1,7 @@
 ﻿/*
  * File:        StartTextScript.cs
  * Author:      Igor Spiridonov
- * Descrpition: Class StartTextScript controls the StartText object on the Logo scene (and its paren button) by flashing its intensity
+ * Descrpition: Class StartTextScript controls the StartText object on the Logo scene (and its parent button) by flashing its intensity
  * Created:     24.08.2018
  */
 using System.Collections;
@@ -17,9 +17,9 @@ namespace RotoChips.Logo
     {
 
         [SerializeField]
-        protected string loadingTextKey = "idLogoLoadingMessage";
+        protected string loadingTextId = "idLogoLoadingMessage";
         [SerializeField]
-        protected string tapToStartTextKey = "idLogoStartMessage";
+        protected string tapToStartTextId = "idLogoStartMessage";
         [SerializeField]
         protected GameObject parentButton;
         protected Text text;
@@ -30,7 +30,7 @@ namespace RotoChips.Logo
             text = GetComponent<Text>();
             flashRange.min = 0;
             flashRange.max = 1;
-            text.text = GlobalManager.MLanguage.Entry(loadingTextKey);
+            text.text = GlobalManager.MLanguage.Entry(loadingTextId);
             parentButton.GetComponent<Button>().interactable = false;
             parentButton.SetActive(false);
         }
@@ -46,7 +46,7 @@ namespace RotoChips.Logo
             {
                 yield return null;
             }
-            text.text = GlobalManager.MLanguage.Entry(tapToStartTextKey);
+            text.text = GlobalManager.MLanguage.Entry(tapToStartTextId);
             parentButton.GetComponent<Button>().interactable = true;
         }
 

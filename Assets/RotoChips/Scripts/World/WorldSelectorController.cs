@@ -21,7 +21,7 @@ namespace RotoChips.World
         public Material opaqueMaterial;
         public Material transparentMaterial;
         public Material glowMaterial;
-        public float maximumGlowStrength;
+        public float maximumGlowPower;
     }
 
     public class WorldSelectorController : FlashingObject
@@ -65,7 +65,6 @@ namespace RotoChips.World
                 {
                     iconPath += "/icon";
                     if (levelDescriptor.init.id == GlobalManager.MStorage.SelectedLevel)
-                    //if (true)
                     {
                         materials[0] = prefab.glowMaterial;
                         lightBeacon.SetActive(true);
@@ -79,8 +78,8 @@ namespace RotoChips.World
                 }
                 else
                 {
-                    materials[0] = prefab.transparentMaterial;
                     iconPath += "/grayicon";
+                    materials[0] = prefab.transparentMaterial;
                 }
                 meshRenderer.materials = materials;
                 iconRenderer.sprite = Resources.Load<Sprite>(iconPath);

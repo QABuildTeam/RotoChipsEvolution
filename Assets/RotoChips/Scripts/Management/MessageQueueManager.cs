@@ -41,7 +41,7 @@ namespace RotoChips.Management
             {
                 return messageQueue.Dequeue();
             }
-            return "";
+            return null;
         }
 
         public void Clear()

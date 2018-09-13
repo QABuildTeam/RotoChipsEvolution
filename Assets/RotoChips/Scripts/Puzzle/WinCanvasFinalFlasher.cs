@@ -22,7 +22,7 @@ namespace RotoChips.Puzzle
         {
             registrator = new MessageRegistrator(InstantMessageType.PuzzleWinImageFinished, (InstantMessageHandler)OnPuzzleWinImageFinished);
             registrator.RegisterHandlers();
-            Visualize(1);
+            Visualize(flashRange.max);
         }
 
         // FlashingObject overrides

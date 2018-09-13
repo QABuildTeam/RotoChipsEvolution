@@ -153,7 +153,7 @@ namespace RotoChips.Puzzle
         void OnPuzzleComplete(object sender, InstantMessageArgs args)
         {
             PuzzleCompleteStatus completeStatus = (PuzzleCompleteStatus)args.arg;
-            GlobalManager.MStorage.GalleryLevel = completeStatus.id;
+            GlobalManager.MStorage.GalleryLevel = completeStatus.descriptor.init.id;
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleShowWinimage, this, completeStatus.firstTime ? victoryId : levelCompletedOnceAgainId);
         }

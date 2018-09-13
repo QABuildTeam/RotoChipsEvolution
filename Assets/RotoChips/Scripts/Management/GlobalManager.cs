@@ -127,6 +127,32 @@ namespace RotoChips.Management
             }
         }
 
+        protected MessageQueueManager mQueue;
+        public static MessageQueueManager MQueue
+        {
+            get
+            {
+                return Instance.mQueue;
+            }
+            set
+            {
+                Instance.mQueue = value;
+            }
+        }
+
+        protected GameManager mGame;
+        public static GameManager MGame
+        {
+            get
+            {
+                return Instance.mGame;
+            }
+            set
+            {
+                Instance.mGame = value;
+            }
+        }
+
         public bool Initialized
         {
             get; private set;
@@ -168,6 +194,8 @@ namespace RotoChips.Management
                 MStressImage = (StressImageCreator)LocateManager(typeof(StressImageCreator));
                 MStorage = (StorageManager)LocateManager(typeof(StorageManager));
                 MInput = (TouchInput)LocateManager(typeof(TouchInput));
+                MQueue = (MessageQueueManager)LocateManager(typeof(MessageQueueManager));
+                MGame = (GameManager)LocateManager(typeof(GameManager));
 
                 Debug.Log("Submanagers are linked");
 

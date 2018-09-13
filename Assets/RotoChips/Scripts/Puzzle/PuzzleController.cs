@@ -21,7 +21,7 @@ namespace RotoChips.Puzzle
 
     public class PuzzleCompleteStatus
     {
-        public int id;
+        public LevelDataManager.Descriptor descriptor;
         public bool firstTime;
     }
 
@@ -510,7 +510,7 @@ namespace RotoChips.Puzzle
                 startVictoryScreen = false;
                 PuzzleCompleteStatus completeStatus = new PuzzleCompleteStatus
                 {
-                    id = descriptor.init.id,
+                    descriptor = descriptor,
                     firstTime = !descriptor.state.Complete
                 };
                 // ok, the puzzle is complete, the player has won

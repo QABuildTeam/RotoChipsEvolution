@@ -53,7 +53,7 @@ namespace RotoChips.Puzzle
             tileId = id;
             meshRenderer = GetComponent<MeshRenderer>();
             type = FlashType.None;
-            Visualize(0);
+            Visualize(flashRange.min);
             registrator = new MessageRegistrator(
                 InstantMessageType.PuzzleFlashTile, (InstantMessageHandler)OnPuzzleFlashTile
             );
@@ -71,22 +71,19 @@ namespace RotoChips.Puzzle
                 {
                     if (flashArgs.id.y == tileId.y && flashArgs.id.x == tileId.x)
                     {
-                        if (type == FlashType.None)
+                        if (type != FlashType.None)
                         {
-                            type = flashArgs.type;
-                            if (type == FlashType.None)
+                            if (flashCoroutine != null)
                             {
-                                if (flashCoroutine != null)
-                                {
-                                    StopCoroutine(flashCoroutine);
-                                    flashCoroutine = null;
-                                }
-                                Visualize(0);
+                                StopCoroutine(flashCoroutine);
+                                flashCoroutine = null;
                             }
-                            else
-                            {
-                                flashCoroutine = StartCoroutine(Flash());
-                            }
+                            Visualize(flashRange.min);
+                        }
+                        type = flashArgs.type;
+                        if (type != FlashType.None)
+                        {
+                            flashCoroutine = StartCoroutine(Flash());
                         }
                         break;
                     }

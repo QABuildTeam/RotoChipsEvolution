@@ -32,7 +32,7 @@ namespace RotoChips.Puzzle
             winButton.interactable = false;
             registrator = new MessageRegistrator(InstantMessageType.PuzzleShowWinimage, (InstantMessageHandler)OnPuzzleShowWinimage);
             registrator.RegisterHandlers();
-            Visualize(0);
+            Visualize(flashRange.min);
             // Debug
             //StartCoroutine(Flash(true));
         }

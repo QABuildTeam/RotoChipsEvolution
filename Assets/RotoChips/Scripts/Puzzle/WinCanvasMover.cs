@@ -124,7 +124,7 @@ namespace RotoChips.Puzzle
                 Vector2 newPosition= imageParams[i].originalPosition + displacement;
                 imageParams[i].movePosition[index] = newPosition;
             }
-            Debug.Log("original=" + imageParams[0].originalPosition.ToString() + "; scale: min=" + currentScale.min.ToString() + ", max=" + currentScale.max.ToString() + "; position: 0=" + imageParams[0].movePosition[0].ToString() + ", 1=" + imageParams[0].movePosition[1].ToString());
+            //Debug.Log("original=" + imageParams[0].originalPosition.ToString() + "; scale: min=" + currentScale.min.ToString() + ", max=" + currentScale.max.ToString() + "; position: 0=" + imageParams[0].movePosition[0].ToString() + ", 1=" + imageParams[0].movePosition[1].ToString());
         }
 
         protected override void Visualize(float factor)

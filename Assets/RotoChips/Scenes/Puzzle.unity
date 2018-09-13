@@ -819,7 +819,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldScene: World
-  victoryScene: World
+  victoryScene: Victory
   backQuestionId: idGUIBackQuestion
   restartlevelQuestionId: idGUIRestartLevelQuestion
   magicQuestionId: idGUIMagicQuestion
