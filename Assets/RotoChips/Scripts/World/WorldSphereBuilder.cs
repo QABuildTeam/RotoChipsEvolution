@@ -29,6 +29,8 @@ namespace RotoChips.World
         protected FloatRange selectorHeight;
         [SerializeField]
         protected GameObject ConnectLinePrefab;
+        [SerializeField]
+        protected bool noStatusCheck = false;
 
         // this method constructs the level selection objects on the world sphere
         void Awake()
@@ -52,9 +54,8 @@ namespace RotoChips.World
 
             foreach (LevelDataManager.Descriptor descriptor in GlobalManager.MLevel.LevelDescriptors())
             {
-                //if (descriptor.state.Revealed)     // the level is visible on the world map
+                if (noStatusCheck || descriptor.state.Revealed)     // the level is visible on the world map
                 {
-                    //Debug.Log("WSB.Start: Creating selector #" + descriptor.init.id.ToString());
                     // set initial rotation for the level button
                     Quaternion rotation = Quaternion.Euler(descriptor.init.eulerX, descriptor.init.eulerY, descriptor.init.eulerZ);
                     transform.rotation = rotation;
@@ -68,15 +69,15 @@ namespace RotoChips.World
                     Vector3 newPosition = position + new Vector3(0, 0, (descriptor.init.id == ri.mainLevelId ? -selectorHeight.max : -selectorHeight.min));
                     selector.transform.position = newPosition;
                     WorldSelectorController wss = selector.GetComponent<WorldSelectorController>();
-                    wss.Init(descriptor, prefab);
+                    wss.Init(descriptor, prefab, noStatusCheck);
                     selector.transform.SetParent(transform);
 
                     // check for clouds effect
-                    if (descriptor.state.Playable)
+                    if (noStatusCheck || descriptor.state.Playable)
                     {
                         if (descriptor.init.id == ri.mainLevelId)
                         {
-                            setClouds = true;
+                            setClouds = !noStatusCheck; // if status is not checked, then the clouds are not instatiated at all
                             cloudsRotation = rotation;
                             visibleSelectors = 0;
                         }
@@ -90,7 +91,7 @@ namespace RotoChips.World
                     }
 
                     // now try to connect current selector with the previous one using glowing lines
-                    if (descriptor.state.Playable && descriptor.state.Complete && descriptor.init.id != ri.mainLevelId)
+                    if (descriptor.init.id != ri.mainLevelId && (noStatusCheck || (descriptor.state.Playable && descriptor.state.Complete)))
                     {
                         GameObject connectorLine = (GameObject)Instantiate(ConnectLinePrefab);
                         connectorLine.transform.position = newPosition;

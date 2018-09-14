@@ -42,7 +42,7 @@ namespace RotoChips.World
         protected MeshRenderer meshRenderer;
         MessageRegistrator registrator;
 
-        public void Init(LevelDataManager.Descriptor descriptor, SelectorPrefab prefab)
+        public void Init(LevelDataManager.Descriptor descriptor, SelectorPrefab prefab, bool noStatusCheck = false)
         {
             registrator = new MessageRegistrator(
                 InstantMessageType.SteadyMouseUpAsButton, (InstantMessageHandler)OnSteadyMouseUpAsButton,
@@ -51,16 +51,19 @@ namespace RotoChips.World
             registrator.RegisterHandlers();
             levelDescriptor = descriptor;
             meshRenderer = GetComponent<MeshRenderer>();
-            if (!levelDescriptor.state.Revealed)
-            {
-                gameObject.SetActive(false);
-            }
-            else
+            if (noStatusCheck || /*levelDescriptor.state.Revealed*/true)
             {
                 // set up height above the world sphere
                 string iconPath = LevelDataManager.GraphicsResource(levelDescriptor.init.id);
                 bool glow = false;
                 Material[] materials = meshRenderer.materials;
+                if (noStatusCheck)
+                {
+                    iconPath += "/icon";
+                    materials[0] = prefab.opaqueMaterial;
+                    lightBeacon.SetActive(false);
+                }
+                else
                 if (levelDescriptor.state.Playable)
                 {
                     iconPath += "/icon";
@@ -91,6 +94,10 @@ namespace RotoChips.World
                 {
                     Visualize(flashRange.min);
                 }
+            }
+            else
+            {
+                gameObject.SetActive(false);
             }
         }
 

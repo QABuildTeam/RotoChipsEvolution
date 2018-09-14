@@ -723,6 +723,11 @@ Prefab:
       propertyPath: flashDuration.max
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 223540462782777390, guid: cfec6373c41a67b4d8e5466dcf114da5,
+        type: 2}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cfec6373c41a67b4d8e5466dcf114da5, type: 2}
   m_IsPrefabAsset: 0

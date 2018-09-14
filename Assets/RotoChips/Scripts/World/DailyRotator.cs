@@ -14,9 +14,10 @@ namespace RotoChips.World
 {
     public class DailyRotator : MonoBehaviour
     {
-
-        public float rotationDeltaAngle;
-        public float selfRotationWaitTime;
+        [SerializeField]
+        protected float rotationDeltaAngle;
+        [SerializeField]
+        protected float selfRotationWaitTime;
 
         bool rotationEnabled;
         bool isRotating;
@@ -27,6 +28,10 @@ namespace RotoChips.World
         {
             registrator = new MessageRegistrator(InstantMessageType.WorldRotationEnable, (InstantMessageHandler)OnWorldRotationEnable);
             registrator.RegisterHandlers();
+        }
+
+        private void Start()
+        {
             EnableRotation(true);
         }
 

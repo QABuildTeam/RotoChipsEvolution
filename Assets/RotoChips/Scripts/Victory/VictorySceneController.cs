@@ -19,7 +19,7 @@ namespace RotoChips.Victory
         [SerializeField]
         protected string worldScene = "World";
         [SerializeField]
-        protected string gameComplete = "Roll";
+        protected string gameComplete = "Finale";
         MessageRegistrator registrator;
 
         private void Awake()

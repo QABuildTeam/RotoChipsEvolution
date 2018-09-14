@@ -177,48 +177,49 @@ MonoBehaviour:
     transparentMaterial: {fileID: 2100000, guid: 5e939f6518e564a40b0e2a0f9955ab01,
       type: 2}
     glowMaterial: {fileID: 2100000, guid: 8dd889ec3ba48de40bbf43a19dcd1e84, type: 2}
-    maximumGlowStrength: 0
+    maximumGlowPower: 0
   - prefab: {fileID: 1364432135049166, guid: 69f24e1f1b8d1f44abd7479fcc147eed, type: 2}
     opaqueMaterial: {fileID: 2100000, guid: 28e80b9baeedd2146a9d0ed79a1dbf19, type: 2}
     transparentMaterial: {fileID: 2100000, guid: 63eeba085d603a64fb24aa2b75c892f0,
       type: 2}
     glowMaterial: {fileID: 2100000, guid: 79c2e9e768e8bc04ba4ea7a7084cf774, type: 2}
-    maximumGlowStrength: 0
+    maximumGlowPower: 0
   - prefab: {fileID: 1640755694643310, guid: 13673c520de602848927a7fa86ed83de, type: 2}
     opaqueMaterial: {fileID: 2100000, guid: 9c9695ef1a3c49f4ca6121c7a8c7a72a, type: 2}
     transparentMaterial: {fileID: 2100000, guid: 9c9695ef1a3c49f4ca6121c7a8c7a72a,
       type: 2}
     glowMaterial: {fileID: 2100000, guid: 8c37bb81482795e47841b2a211b5803e, type: 2}
-    maximumGlowStrength: 0
+    maximumGlowPower: 0
   - prefab: {fileID: 1466173278977806, guid: 1a6e9d3666825754c92a1d70ce81da0b, type: 2}
     opaqueMaterial: {fileID: 2100000, guid: fdffbbd319264834f8bf397d40c8d3ee, type: 2}
     transparentMaterial: {fileID: 2100000, guid: 8ed64f2327054ea41accddbd0a44861a,
       type: 2}
     glowMaterial: {fileID: 2100000, guid: be3546f2da2664343b3255a38d10222c, type: 2}
-    maximumGlowStrength: 0
+    maximumGlowPower: 0
   - prefab: {fileID: 1262678196545724, guid: 0307cfd9c10ba6f4c9f29f27e7b464d2, type: 2}
     opaqueMaterial: {fileID: 2100000, guid: ee4b8acceb06e6340a5a4e83efad95e6, type: 2}
     transparentMaterial: {fileID: 2100000, guid: a3719f884d8569e4fa65b55e2dde3dd4,
       type: 2}
     glowMaterial: {fileID: 2100000, guid: 63e11be31c273314c983fe34725e29dc, type: 2}
-    maximumGlowStrength: 0
+    maximumGlowPower: 0
   - prefab: {fileID: 1913318762810248, guid: f0f39cb78883a4f4b9487dd67e9ee4c5, type: 2}
     opaqueMaterial: {fileID: 2100000, guid: dd205c356fd12614983312897b3beccf, type: 2}
     transparentMaterial: {fileID: 2100000, guid: ff7e46db616fa0d41bf7385cdc320909,
       type: 2}
     glowMaterial: {fileID: 2100000, guid: e04e6d2a66d1b3444a905f4a9ccd875a, type: 2}
-    maximumGlowStrength: 0
+    maximumGlowPower: 0
   - prefab: {fileID: 1132074483746366, guid: 66b053c64b93a134abd475067e5645b4, type: 2}
     opaqueMaterial: {fileID: 2100000, guid: bddd97649f78006489f18a8cc32adee0, type: 2}
     transparentMaterial: {fileID: 2100000, guid: 82b9fba3436ec0a4b98aa086f91ac027,
       type: 2}
     glowMaterial: {fileID: 2100000, guid: 84c6fa064cdb11a44bd5be2a3e97028a, type: 2}
-    maximumGlowStrength: 0
+    maximumGlowPower: 0
   selectorHeight:
     min: 0.5
     max: 1
   ConnectLinePrefab: {fileID: 1140642612385548, guid: af218ef87cb35974fb587324fd2f2dc0,
     type: 2}
+  noStatusCheck: 0
 --- !u!114 &114747399134505296
 MonoBehaviour:
   m_ObjectHideFlags: 1

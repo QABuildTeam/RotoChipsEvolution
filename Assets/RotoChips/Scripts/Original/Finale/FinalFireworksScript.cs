@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WinnerFireworksScript : MonoBehaviour {
+public class FinalFireworksScript : MonoBehaviour {
     public GameObject[] fireworkPrefabs;
-    public GameObject WinnerFader;
+    List<GameObject> levelSelectors;
+    //public GameObject WinnerFader;
+    public float fireworksScale;
     public float waitTimeMin;
     public float waitTimeMax;
 
@@ -14,9 +16,9 @@ public class WinnerFireworksScript : MonoBehaviour {
     }
 
     // Use this for initialization
-	void Start () {
-        initFirework(nextFireworkIndex());
-	}
+	//void Start () {
+    //    initFirework(nextFireworkIndex());
+	//}
 
     Color getFwColor()
     {
@@ -67,6 +69,13 @@ public class WinnerFireworksScript : MonoBehaviour {
         GameObject.Destroy(firework.gameObject);
     }
 
+    GameObject getNextSelector()
+    {
+        int selIndex = (int)(UnityEngine.Random.value * (levelSelectors.Count));
+        GameObject o = levelSelectors[selIndex];
+        return o;
+    }
+
     IEnumerator WaitForNextFirework()
     {
         float waitTime = waitTimeMin + (float)(UnityEngine.Random.value) * (waitTimeMax - waitTimeMin);
@@ -77,16 +86,27 @@ public class WinnerFireworksScript : MonoBehaviour {
     void initFirework(int emitter)
     {
         GameObject firework = (GameObject)Instantiate(fireworkPrefabs[emitter]);
-        firework.transform.position += getFwStartCoord();
+        firework.transform.localScale = new Vector3(fireworksScale, fireworksScale, fireworksScale);
+        firework.transform.SetParent(getNextSelector().transform);
+        firework.transform.localPosition = Vector3.zero;
+        //firework.transform.position += getFwStartCoord();
         firework.transform.rotation = getFwStartRotation(firework.transform.rotation.eulerAngles);
         firework.GetComponentInChildren<AudioSource>().pitch += getInitPitch();
         ParticleSystem fwps = firework.GetComponent<ParticleSystem>();
         ParticleSystem.MainModule main = fwps.main;
         main.startColor = getFwColor();
+        main.gravityModifier = 0;
         fwps.Play();
         //fwps.GetComponent<AudioSource>().Play();
         StartCoroutine(WaitForFinished(fwps));
         StartCoroutine(WaitForNextFirework());
+    }
+
+    public void startFireworks(List<GameObject> aLevelSelectors)
+    //public void startFireworks(GameObject[] aLevelSelectors)
+    {
+        levelSelectors = aLevelSelectors;
+        initFirework(nextFireworkIndex());
     }
 
 }
