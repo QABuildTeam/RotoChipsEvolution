@@ -18,17 +18,29 @@ namespace RotoChips.Management
 
         // GUI messages
         GUIStartDialogOKCancel,         // Command: Start a DialogOKCancel if present
+                                        //      Arguments: None
         GUIBackButtonPressed,           // Notification: Back button has just been pressed
+                                        //      Arguments: None
         GUIRestartButtonPressed,        // Notification: Restart button has just been pressed
+                                        //      Arguments: None
         GUIViewButtonPressed,           // Notification: View button has just been pressed
+                                        //      Arguments: None
         GUIMagicButtonPressed,          // Notification: Magic button has just been pressed
+                                        //      Arguments: None
         GUIFadeOutWhiteCurtain,         // Command: Fade the entire screen out to white
+                                        //      Arguments: None
         GUIWhiteCurtainFaded,           // Notification: The entire screen has just faded to white
+                                        //      Arguments: None
         GUIOKButtonPressed,             // Notification: OK button pressed in a DialogOKCancel
+                                        //      Arguments: None
         GUICancelButtonPressed,         // Notification: Cancel button pressed in a DialogOKCancel
+                                        //      Arguments: None
         GUIRotoChipsPressed,            // Notification: RotoChips indicator on the scene World has just been pressed (either by mouse or by finger)
+                                        //      Arguments: None
         GUIRotoCoinsPressed,            // Notification: RotoCoins indicator on the scene World has just been pressed (either by mouse or by finger)
+                                        //      Arguments: None
         GUIFullScreenButtonPressed,     // Notification: A sole fullscreen button in a scene has been pressed
+                                        //      Arguments: None
 
         // World scene messages
         WorldStarted,                   // Notification: Method Start() of the scene World has just finished its execution
@@ -70,6 +82,20 @@ namespace RotoChips.Management
         PuzzleWinImageFinished,         // Notification: Final image fully exhibited
         PuzzleWinImageStopped,          // Notification: The final image has stopped exhibition (a button has been pressed)
         PuzzleSetVictoryTitle,          // Command: Set the title of a fullscreen button at the Victory scene
+
+        // Finale
+        VictoryStartFireworks,          // Command: Special command to reposition fireworks on the Finale scene adjusting them to selector objects
+                                        //      Arguments:
+                                        //          List<GameObject> selectors - a list of selectors on the Finale scene (if aaplicable)
+        FinaleRollText,                 // Command: Roll the text chunk by its index
+                                        //      Arguments:
+                                        //          int textIndex - an index of a text chunk to roll
+        FinaleTextRolled,               // Notification: A text chunk has rolled into the end position on the Finale scene
+                                        //      Arguments:
+                                        //          int textIndex - an index of a text chunk
+        FinaleTextPostDelayed,          // Notification: Post delay expired after the text chunk movement
+                                        //      Arguments:
+                                        //          int textIndex - an index of a text chunk
 
         // General
         LanguageChanged,                // Notification: System language has changed

@@ -35,6 +35,8 @@ namespace RotoChips.Victory
         void Start()
         {
             SetButtonTitle();
+            // start firework alone
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.VictoryStartFireworks, this, null);
         }
 
         void SetButtonTitle()

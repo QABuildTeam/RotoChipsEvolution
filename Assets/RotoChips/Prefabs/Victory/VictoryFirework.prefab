@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1319629378354378}
+  m_IsPrefabAsset: 1
+--- !u!1 &1319629378354378
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4278503356191866}
+  - component: {fileID: 114371483461155920}
+  m_Layer: 0
+  m_Name: VictoryFirework
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4278503356191866
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1319629378354378}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114371483461155920
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1319629378354378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53e8e83ad526c9842810d93a120007d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireworkPrefabs:
+  - {fileID: 1765040860357984, guid: ed421486ff7901d4880ebb993a762cb2, type: 2}
+  - {fileID: 1042976658382838, guid: e787d9d4ccf62e442b2dc3de1b4df7db, type: 2}
+  - {fileID: 1719055668008708, guid: bedcdab6b7f78294b93cb08802478110, type: 2}
+  waitTime:
+    min: 1
+    max: 2
+  localScale: 1
+  colorPartExpansion: 3
+  colorPartReduction: 0.35
+  maxAngleDelta: 12

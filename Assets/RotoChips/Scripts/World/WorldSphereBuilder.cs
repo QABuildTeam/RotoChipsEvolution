@@ -1,8 +1,7 @@
 /*
  * File:        WorldSphereBuilder.cs
  * Author:      Igor Spiridonov
- * Descrpition: Class WorldSphereBuilder builds level selectors and clouds above the world globe
- *              It also controls daily rotation of the world globe
+ * Descrpition: Class WorldSphereBuilder builds level selectors and clouds above the world globe on the World scene
  * Created:     30.08.2018
  */
 using System;
@@ -46,7 +45,7 @@ namespace RotoChips.World
             selectors = new List<GameObject>();                     // a list of selector objects
             Vector3 position = transform.position;
             position.z = -radius;
-            Vector3 previousPosition = position;
+            GameObject previousSelector = null;     // this one is needed to draw the intercube connector
 
             Quaternion cloudsRotation = Quaternion.Euler(0, 0, 0);
             bool setClouds = false;
@@ -65,8 +64,8 @@ namespace RotoChips.World
                     SelectorPrefab prefab = selectorPrefabs[prefabId];
                     GameObject selector = (GameObject)Instantiate(prefab.prefab);
                     selectors.Add(selector);
-                    RealmData.Init ri = RealmData.initializers[descriptor.init.realmId];
-                    Vector3 newPosition = position + new Vector3(0, 0, (descriptor.init.id == ri.mainLevelId ? -selectorHeight.max : -selectorHeight.min));
+                    RealmData.Init realmData = RealmData.initializers[descriptor.init.realmId];
+                    Vector3 newPosition = position + new Vector3(0, 0, (descriptor.init.id == realmData.mainLevelId ? -selectorHeight.max : -selectorHeight.min));
                     selector.transform.position = newPosition;
                     WorldSelectorController wss = selector.GetComponent<WorldSelectorController>();
                     wss.Init(descriptor, prefab, noStatusCheck);
@@ -75,7 +74,7 @@ namespace RotoChips.World
                     // check for clouds effect
                     if (noStatusCheck || descriptor.state.Playable)
                     {
-                        if (descriptor.init.id == ri.mainLevelId)
+                        if (descriptor.init.id == realmData.mainLevelId)
                         {
                             setClouds = !noStatusCheck; // if status is not checked, then the clouds are not instatiated at all
                             cloudsRotation = rotation;
@@ -91,14 +90,17 @@ namespace RotoChips.World
                     }
 
                     // now try to connect current selector with the previous one using glowing lines
-                    if (descriptor.init.id != ri.mainLevelId && (noStatusCheck || (descriptor.state.Playable && descriptor.state.Complete)))
+                    if (descriptor.init.id != realmData.mainLevelId && (noStatusCheck || (descriptor.state.Playable && descriptor.state.Complete)))
                     {
-                        GameObject connectorLine = (GameObject)Instantiate(ConnectLinePrefab);
-                        connectorLine.transform.position = newPosition;
-                        connectorLine.transform.SetParent(selector.transform);
-                        connectorLine.GetComponent<IntercubeConnectorFlasher>().Init(ri.connectorColor, previousPosition - newPosition);
+                        if (previousSelector != null)
+                        {
+                            GameObject connectorLine = (GameObject)Instantiate(ConnectLinePrefab);
+                            connectorLine.transform.position = newPosition;
+                            connectorLine.transform.SetParent(selector.transform);
+                            connectorLine.GetComponent<IntercubeConnectorFlasher>().Init(realmData.connectorColor, previousSelector.transform.position - newPosition);
+                        }
                     }
-                    previousPosition = newPosition;
+                    previousSelector = selector;
                 }
             }
             if (setClouds && visibleSelectors == 1) // if there is only one visible (playable) selector in the realm (except the main one)
@@ -121,6 +123,12 @@ namespace RotoChips.World
             }
             // set the world sphere to the initial position
             transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+
+        private void Start()
+        {
+            // special command for the Finale scene
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.VictoryStartFireworks, this, selectors);
         }
 
     }

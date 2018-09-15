@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/RotoChips/Scenes/Victory.unity
     guid: dd65d1f16583a8148b33fad4012d012b
+  - enabled: 1
+    path: Assets/RotoChips/Scenes/Finale.unity
+    guid: 99d7641f49829514aa26b01fbafb6ff9
   m_configObjects: {}

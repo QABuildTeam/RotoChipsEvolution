@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RotoChips.Utility;
+using RotoChips.Management;
 
 namespace RotoChips.Victory
 {
@@ -17,16 +18,21 @@ namespace RotoChips.Victory
         protected GameObject[] fireworkPrefabs;
         [SerializeField]
         protected FloatRange waitTime;
+        [SerializeField]
+        protected float localScale;
+
+        List<GameObject> selectors;     // selector objects on the Finale scene; only work on this scene
+
+        MessageRegistrator registrator;
+        private void Awake()
+        {
+            registrator = new MessageRegistrator(InstantMessageType.VictoryStartFireworks, (InstantMessageHandler)OnVictoryStartFireworks);
+            registrator.RegisterHandlers();
+        }
 
         int NextFireworkIndex()
         {
             return Random.Range(0, fireworkPrefabs.Length);
-        }
-
-        // Use this for initialization
-        void Start()
-        {
-            InitFirework(NextFireworkIndex());
         }
 
         [SerializeField]
@@ -83,7 +89,21 @@ namespace RotoChips.Victory
         void InitFirework(int emitter)
         {
             GameObject firework = (GameObject)Instantiate(fireworkPrefabs[emitter]);
-            firework.transform.position += GetFireworkStartCoord();
+            ParticleSystem particleSystem = firework.GetComponent<ParticleSystem>();
+            ParticleSystem.MainModule main = particleSystem.main;
+            firework.transform.localScale = new Vector3(localScale, localScale, localScale);
+            if (selectors != null)
+            {
+                // special repositioning for the Finale scene
+                firework.transform.SetParent(selectors[Random.Range(0, selectors.Count)].transform);
+                firework.transform.localPosition = Vector3.zero;
+                main.gravityModifier = 0;
+            }
+            else
+            {
+                // normal repositioning for the Victory scene
+                firework.transform.position += GetFireworkStartCoord();
+            }
             firework.transform.rotation = GetFireworkStartRotation(firework.transform.rotation.eulerAngles);
             AudioSource audioSource = firework.GetComponent<AudioSource>();
             if (audioSource == null)
@@ -94,18 +114,23 @@ namespace RotoChips.Victory
             {
                 audioSource.pitch += GetInitialPitch();
             }
-            ParticleSystem particleSystem = firework.GetComponent<ParticleSystem>();
-            ParticleSystem.MainModule main = particleSystem.main;
             main.startColor = GetFireworkColor();
             particleSystem.Play();
-            /*
-            if (audioSource != null)
-            {
-                audioSource.Play();
-            }
-            */
             StartCoroutine(WaitWhileFireworkPlays(particleSystem));
             StartCoroutine(WaitForNextFirework());
+        }
+
+        // message handling
+        // special message for the Finale scene
+        void OnVictoryStartFireworks(object sender, InstantMessageArgs args)
+        {
+            selectors = (List<GameObject>)args.arg;
+            InitFirework(NextFireworkIndex());
+        }
+
+        private void OnDestroy()
+        {
+            registrator.UnregisterHandlers();
         }
     }
 }

@@ -24,6 +24,13 @@ namespace RotoChips.Puzzle
         }
         protected DialogOKCancelMode dialogMode;
 
+        protected enum Exitmode
+        {
+            World,
+            Victory
+        }
+        protected Exitmode exitMode;
+
         [SerializeField]
         protected string worldScene = "World";
         [SerializeField]
@@ -36,6 +43,7 @@ namespace RotoChips.Puzzle
         void Start()
         {
             dialogMode = DialogOKCancelMode.None;
+            exitMode = Exitmode.World;
             registrator = new MessageRegistrator(
                 InstantMessageType.PuzzleBusy, (InstantMessageHandler)OnPuzzleBusy,
                 InstantMessageType.PuzzleComplete, (InstantMessageHandler)OnPuzzleComplete,
@@ -131,7 +139,15 @@ namespace RotoChips.Puzzle
             if (up)
             {
                 // faded out, end the scene
-                SceneManager.LoadScene(victoryScene);
+                switch (exitMode)
+                {
+                    case Exitmode.World:
+                        SceneManager.LoadScene(worldScene);
+                        break;
+                    case Exitmode.Victory:
+                        SceneManager.LoadScene(victoryScene);
+                        break;
+                }
             }
         }
 
@@ -152,6 +168,7 @@ namespace RotoChips.Puzzle
         protected string levelCompletedOnceAgainId = "idLevelCompletedOnceAgain";
         void OnPuzzleComplete(object sender, InstantMessageArgs args)
         {
+            exitMode = Exitmode.Victory;
             PuzzleCompleteStatus completeStatus = (PuzzleCompleteStatus)args.arg;
             GlobalManager.MStorage.GalleryLevel = completeStatus.descriptor.init.id;
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);

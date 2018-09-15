@@ -18,6 +18,8 @@ namespace RotoChips.World
         protected float rotationDeltaAngle;
         [SerializeField]
         protected float selfRotationWaitTime;
+        [SerializeField]
+        protected Vector3 rotationAxis = Vector3.up;
 
         bool rotationEnabled;
         bool isRotating;
@@ -53,7 +55,7 @@ namespace RotoChips.World
                     }
                 }
                 if (isRotating)
-                    transform.Rotate(Vector3.up, rotationDeltaAngle, Space.Self);
+                    transform.Rotate(rotationAxis, rotationDeltaAngle, Space.Self);
             }
         }
 
