@@ -555,7 +555,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldScene: World
-  gameComplete: World
+  finaleScene: Finale
 --- !u!1001 &1431584549
 Prefab:
   m_ObjectHideFlags: 0

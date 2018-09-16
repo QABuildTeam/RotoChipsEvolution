@@ -20,12 +20,16 @@ namespace RotoChips.Victory
         protected FloatRange waitTime;
         [SerializeField]
         protected float localScale;
+        [SerializeField]
+        protected int maxSimultaneousFireworks;
+        int currentFireworksCount;
 
         List<GameObject> selectors;     // selector objects on the Finale scene; only work on this scene
 
         MessageRegistrator registrator;
         private void Awake()
         {
+            currentFireworksCount = 0;
             registrator = new MessageRegistrator(InstantMessageType.VictoryStartFireworks, (InstantMessageHandler)OnVictoryStartFireworks);
             registrator.RegisterHandlers();
         }
@@ -78,6 +82,7 @@ namespace RotoChips.Victory
                 yield return null;
             }
             Destroy(firework.gameObject);
+            currentFireworksCount--;
         }
 
         IEnumerator WaitForNextFirework()
@@ -88,36 +93,40 @@ namespace RotoChips.Victory
 
         void InitFirework(int emitter)
         {
-            GameObject firework = (GameObject)Instantiate(fireworkPrefabs[emitter]);
-            ParticleSystem particleSystem = firework.GetComponent<ParticleSystem>();
-            ParticleSystem.MainModule main = particleSystem.main;
-            firework.transform.localScale = new Vector3(localScale, localScale, localScale);
-            if (selectors != null)
+            if (maxSimultaneousFireworks > 0 && currentFireworksCount < maxSimultaneousFireworks)
             {
-                // special repositioning for the Finale scene
-                firework.transform.SetParent(selectors[Random.Range(0, selectors.Count)].transform);
-                firework.transform.localPosition = Vector3.zero;
-                main.gravityModifier = 0;
+                currentFireworksCount++;
+                GameObject firework = (GameObject)Instantiate(fireworkPrefabs[emitter]);
+                ParticleSystem particleSystem = firework.GetComponent<ParticleSystem>();
+                ParticleSystem.MainModule main = particleSystem.main;
+                firework.transform.localScale = new Vector3(localScale, localScale, localScale);
+                if (selectors != null)
+                {
+                    // special repositioning for the Finale scene
+                    firework.transform.SetParent(selectors[Random.Range(0, selectors.Count)].transform);
+                    firework.transform.localPosition = Vector3.zero;
+                    main.gravityModifier = 0;
+                }
+                else
+                {
+                    // normal repositioning for the Victory scene
+                    firework.transform.position += GetFireworkStartCoord();
+                }
+                firework.transform.rotation = GetFireworkStartRotation(firework.transform.rotation.eulerAngles);
+                AudioSource audioSource = firework.GetComponent<AudioSource>();
+                if (audioSource == null)
+                {
+                    audioSource = firework.GetComponentInChildren<AudioSource>();
+                }
+                if (audioSource != null)
+                {
+                    audioSource.pitch += GetInitialPitch();
+                }
+                main.startColor = GetFireworkColor();
+                particleSystem.Play();
+                StartCoroutine(WaitWhileFireworkPlays(particleSystem));
+                StartCoroutine(WaitForNextFirework());
             }
-            else
-            {
-                // normal repositioning for the Victory scene
-                firework.transform.position += GetFireworkStartCoord();
-            }
-            firework.transform.rotation = GetFireworkStartRotation(firework.transform.rotation.eulerAngles);
-            AudioSource audioSource = firework.GetComponent<AudioSource>();
-            if (audioSource == null)
-            {
-                audioSource = firework.GetComponentInChildren<AudioSource>();
-            }
-            if (audioSource != null)
-            {
-                audioSource.pitch += GetInitialPitch();
-            }
-            main.startColor = GetFireworkColor();
-            particleSystem.Play();
-            StartCoroutine(WaitWhileFireworkPlays(particleSystem));
-            StartCoroutine(WaitForNextFirework());
         }
 
         // message handling

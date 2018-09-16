@@ -17,11 +17,9 @@ namespace RotoChips.Finale
 
         [SerializeField]
         protected int[] finaleTextIndexes;
-        int currentIndex;
         MessageRegistrator registrator;
         private void Awake()
         {
-            currentIndex = 0;
             registrator = new MessageRegistrator(
                 InstantMessageType.GUIFullScreenButtonPressed, (InstantMessageHandler)OnGUIFullScreenButtonPressed,
                 InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded,
@@ -35,6 +33,18 @@ namespace RotoChips.Finale
         void Start()
         {
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, true);
+        }
+
+        int IndexByValue(int value)
+        {
+            for(int i = 0; i < finaleTextIndexes.Length; i++)
+            {
+                if (finaleTextIndexes[i] == value)
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         // message handling
@@ -56,26 +66,30 @@ namespace RotoChips.Finale
             else
             {
                 // start the text rolls
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.FinaleRollText, this, finaleTextIndexes[currentIndex]);
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.FinaleRollText, this, finaleTextIndexes[0]);
             }
         }
 
         void OnFinaleTextRolled(object sender, InstantMessageArgs args)
         {
-            if (currentIndex < finaleTextIndexes.Length - 1)
+            int i = IndexByValue((int)args.arg);
+            if (i < finaleTextIndexes.Length - 1)
             {
-                currentIndex++;
+                i++;
                 // start the next text rolls
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.FinaleRollText, this, finaleTextIndexes[currentIndex]);
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.FinaleRollText, this, finaleTextIndexes[i]);
             }
         }
 
         void OnFinaleTextPostDelayed(object sender, InstantMessageArgs args)
         {
-            if (currentIndex >= finaleTextIndexes.Length - 1)
+            int i = IndexByValue((int)args.arg);
+            if (i >= finaleTextIndexes.Length - 1)
             {
-                currentIndex = 0;
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.FinaleRollText, this, finaleTextIndexes[currentIndex]);
+                // reset text positions
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.FinaleRollText, this, 0);
+                // reset text index
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.FinaleRollText, this, finaleTextIndexes[0]);
             }
         }
 

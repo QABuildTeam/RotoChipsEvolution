@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RotoChips.Management;
+using RotoChips.Audio;
 
 namespace RotoChips.Puzzle
 {
@@ -34,6 +35,14 @@ namespace RotoChips.Puzzle
         [SerializeField]
         protected float backTime;
 
+        protected SFXController sfxController;
+        [SerializeField]
+        protected float fastThreshold = 0.75f;
+        [SerializeField]
+        protected int fastSFXIndex;
+        [SerializeField]
+        protected int slowSFXIndex;
+
         public void Init(Vector2Int pos, float aNeutralZ, float aPressedZ, float aReleasedZ)
         {
             buttonId = pos;
@@ -41,6 +50,7 @@ namespace RotoChips.Puzzle
             neutralZ = aNeutralZ;
             pressedZ = aPressedZ;
             releasedZ = aReleasedZ;
+            sfxController = GetComponent<SFXController>();
             registrator = new MessageRegistrator(
                 InstantMessageType.SteadyMouseUpAsButton, (InstantMessageHandler)OnSteadyMouseUpAsButton,
                 InstantMessageType.PuzzlePressButton, (InstantMessageHandler)OnPuzzlePressButton
@@ -101,6 +111,18 @@ namespace RotoChips.Puzzle
                 position.z = releasedZ;
                 transform.position = position;
                 currentTime -= phaseTime;
+                // emit rotation sound
+                if (sfxController != null)
+                {
+                    if (fastFactor > fastThreshold)
+                    {
+                        sfxController.Play(slowSFXIndex);
+                    }
+                    else
+                    {
+                        sfxController.Play(fastSFXIndex);
+                    }
+                }
                 // rotate the button
                 phaseTime = rotateTime * fastFactor;
                 float rotationAngle = 0;

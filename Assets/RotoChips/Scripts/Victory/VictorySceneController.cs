@@ -16,14 +16,23 @@ namespace RotoChips.Victory
     public class VictorySceneController : MonoBehaviour
     {
 
+        protected enum ExitMode
+        {
+            World,
+            Finale
+        }
+
+        protected ExitMode exitMode;
+
         [SerializeField]
         protected string worldScene = "World";
         [SerializeField]
-        protected string gameComplete = "Finale";
+        protected string finaleScene = "Finale";
         MessageRegistrator registrator;
 
         private void Awake()
         {
+            exitMode = GlobalManager.MStorage.GameFinished ? ExitMode.Finale : ExitMode.World;
             registrator = new MessageRegistrator(
                 InstantMessageType.GUIFullScreenButtonPressed, (InstantMessageHandler)OnGUIFullScreenButtonPressed,
                 InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded
@@ -65,7 +74,15 @@ namespace RotoChips.Victory
             bool up = (bool)args.arg;
             if (up)
             {
-                SceneManager.LoadScene(worldScene);
+                switch(exitMode)
+                {
+                    case ExitMode.World:
+                        SceneManager.LoadScene(worldScene);
+                        break;
+                    case ExitMode.Finale:
+                        SceneManager.LoadScene(finaleScene);
+                        break;
+                }
             }
         }
 

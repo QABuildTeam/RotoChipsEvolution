@@ -93,10 +93,12 @@ namespace RotoChips.Finale
             {
                 yield return new WaitForSeconds(movementKeys[0].delay);
             }
+            // prepare start and end positions for the text chunk
             Vector2 startLocalPosition = OffsetToPosition(movementKeys[0]);
             Vector2 endLocalPosition = OffsetToPosition(movementKeys[1]);
             transform.localPosition = startLocalPosition;
             float currentTime = 0;
+            // actually roll the text
             while (currentTime < movingTime)
             {
                 yield return null;
@@ -111,7 +113,7 @@ namespace RotoChips.Finale
             {
                 yield return new WaitForSeconds(movementKeys[1].delay);
             }
-            // notify of post-delay
+            // notify of post-delay end
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.FinaleTextPostDelayed, this, finaleTextIndex);
         }
 
