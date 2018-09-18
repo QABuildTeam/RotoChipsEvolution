@@ -91,12 +91,12 @@ namespace RotoChips.Victory
             InitFirework(NextFireworkIndex());
         }
 
-        void InitFirework(int emitter)
+        void InitFirework(int prefabIndex)
         {
             if (maxSimultaneousFireworks > 0 && currentFireworksCount < maxSimultaneousFireworks)
             {
                 currentFireworksCount++;
-                GameObject firework = (GameObject)Instantiate(fireworkPrefabs[emitter]);
+                GameObject firework = (GameObject)Instantiate(fireworkPrefabs[prefabIndex]);
                 ParticleSystem particleSystem = firework.GetComponent<ParticleSystem>();
                 ParticleSystem.MainModule main = particleSystem.main;
                 firework.transform.localScale = new Vector3(localScale, localScale, localScale);

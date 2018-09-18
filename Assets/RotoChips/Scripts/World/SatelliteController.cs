@@ -15,16 +15,22 @@ namespace RotoChips.World
     {
 
         MessageRegistrator registrator;
-        private void Start()
+        private void Awake()
         {
             registrator = new MessageRegistrator(InstantMessageType.SteadyMouseUpAsButton, (InstantMessageHandler)OnSteadyMouseUpAsButton);
             registrator.RegisterHandlers();
         }
 
+        private void Start()
+        {
+            LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(0);
+            gameObject.SetActive(descriptor.state.Complete);
+        }
+
         // message handling
         void OnSteadyMouseUpAsButton(object sender, InstantMessageArgs args)
         {
-            if((GameObject)args.arg == gameObject)
+            if (gameObject.activeInHierarchy && (GameObject)args.arg == gameObject)
             {
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldSatellitePressed, this);
             }

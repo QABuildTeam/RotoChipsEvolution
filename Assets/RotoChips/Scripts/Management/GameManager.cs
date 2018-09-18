@@ -33,31 +33,94 @@ namespace RotoChips.Management
         protected string levelCompletedOnceAgainId = "idLevelCompletedOnceAgain";
         [SerializeField]
         protected string realmRevealedId = "idRealmRevealed";
+        [SerializeField]
+        protected string newLevelPlayableId = "idNewLevelPlayable";
+        [SerializeField]
+        protected string realmCompletedId = "idRealmCompleted";
+        [SerializeField]
+        protected string realmOpenedId = "idRealmOpened";
+        [SerializeField]
+        protected string gameCompletedId = "idGameCompleted";
         void OnPuzzleComplete(object sender, InstantMessageArgs args)
         {
             PuzzleCompleteStatus completeStatus = (PuzzleCompleteStatus)args.arg;
             if (completeStatus != null)
             {
-                if (completeStatus.firstTime)
+                int nextLevelId = GlobalManager.MLevel.NextLevel(completeStatus.descriptor.init.id);
+                int prevLevelId = GlobalManager.MLevel.PreviousLevel(completeStatus.descriptor.init.id);
+                RealmData.Init realmData = RealmData.initializers[completeStatus.descriptor.init.realmId];
+                if (completeStatus.firstTime)   // a puzzle is assembled for the first time
                 {
                     GlobalManager.MQueue.PostMessage(levelCompletedId);
-                    if (completeStatus.descriptor.init.id == 0)
+                    if (completeStatus.descriptor.init.id == 0) // this is the very first puzzle in the game
                     {
-                        GlobalManager.MStorage.GalleryLevel = completeStatus.descriptor.init.id;
-                        GlobalManager.MQueue.PostMessage(galleryOpenedId);
+                        GlobalManager.MStorage.GalleryLevel = completeStatus.descriptor.init.id;    // set the gallery level to the newly completed one
+                        GlobalManager.MStorage.FirstGallery = true;                                 // gallery message should be shown
+                        GlobalManager.MQueue.PostMessage(galleryOpenedId);                          // post a message about the gallery
                     }
-                    if (completeStatus.descriptor.init.realmId >= 0)
+                    if (completeStatus.descriptor.init.realmId >= 0)    // this should always be true, yet...
                     {
-                        RealmData.Init realmData = RealmData.initializers[completeStatus.descriptor.init.realmId];
                         if (realmData.mainLevelId == completeStatus.descriptor.init.id)
                         {
+                            // main (first) level of the realm has been complete
                             GlobalManager.MQueue.PostMessage(realmRevealedId);
                         }
+                    }
+                    if (nextLevelId >= 0)
+                    {
+                        // there is another level to play at
+                        GlobalManager.MQueue.PostMessage(newLevelPlayableId);
                     }
                 }
                 else
                 {
                     GlobalManager.MQueue.PostMessage(levelCompletedOnceAgainId);
+                }
+                completeStatus.descriptor.state.Complete = true;
+                // set all the levels in the current realm revealed
+                bool realmComplete = true;
+                for(int i = 0; i < realmData.members.Length; i++)
+                {
+                    LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(realmData.members[i]);
+                    if (!descriptor.state.Revealed)
+                    {
+                        descriptor.state.Revealed = true;
+                    }
+                    // check if all the levels in the realm are complete
+                    if (!descriptor.state.Complete)
+                    {
+                        realmComplete = false;
+                    }
+                }
+                if (nextLevelId >= 0)
+                {
+                    // make next level revealed and playable
+                    LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(nextLevelId);
+                    descriptor.state.Revealed = true;
+                    descriptor.state.Playable = true;
+                    completeStatus.descriptor.state.NextPlayableId = nextLevelId;
+                    GlobalManager.MStorage.SelectedLevel = nextLevelId;
+                }
+                if (prevLevelId >= 0)
+                {
+                    // link previously completed level to the newly completed one
+                    LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(prevLevelId);
+                    descriptor.state.NextCompleteId = completeStatus.descriptor.init.id;
+                }
+                if (realmComplete)
+                {
+                    GlobalManager.MQueue.PostMessage(realmCompletedId);
+                    if (nextLevelId < 0)    // no more new levels
+                    {
+                        // the game is complete
+                        GlobalManager.MStorage.GameFinished = true;
+                        GlobalManager.MStorage.FirstRound = false;
+                        GlobalManager.MQueue.PostMessage(gameCompletedId);
+                    }
+                    else
+                    {
+                        GlobalManager.MQueue.PostMessage(realmOpenedId);
+                    }
                 }
             }
         }

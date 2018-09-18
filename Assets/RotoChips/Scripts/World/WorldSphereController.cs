@@ -10,80 +10,6 @@ namespace RotoChips.World
 {
     public class WorldSphereController : MonoBehaviour
     {
-        /*
-        bool selectMode;                // view mode in whatever mode (level selection or gallery): false - view mode, true - select mode
-
-        int activeSelector;             // selected level for playing
-        int gallerySelector;
-        int levelSelector;
-        //MusicFader mf;
-
-        public float HintArrowDistance = 20f;   // a temporary solution
-
-        // ----- color debug -----
-        Vector2 colorTuningStart;
-        Color colorTuning;
-        float intensityTuning;
-        public GameObject WorldLight;
-        public GameObject LightValueText;
-        public GameObject LightIntensityText;
-        // -----------------------
-        */
-        public enum eWorldStatus
-        {
-            Init,                       // start up status
-            HintProcessing,             // hint is active
-            FirstWelcomeHint,           // welcome message
-            FirstWelcomeHint2,
-            GalleryOpenedHint,          // gallery opened
-            GameFinishedHint,           // the game has just been finished but not yet restarted
-            RestartGameHint,            // a hint for game restart button
-            GameRollsHint,              // a hint for game rolls button
-            GameFinishedInit,           // game finished
-                                        // ---- debug modes ----
-            ColorTuning,
-            IntensityTuning,
-            // ---------------------
-            WaitingInput,               // waiting for user input in whatever mode
-            UserTap,                    // player's just tapped the screen
-            UserRelease,                // player's just finished the tap
-            WorldRotating,              // the world sphere is rotating to the "zero point"
-            SelectorFlash,              // a selector object (a spike or the satellite) is flashing before running an action
-            FadeToWorld,                // fading from white/black screen to a world view
-            FadeFromWorld,              // fading from a world view to white/black screen
-            RunAction,                  // an external action is performed (a level or a gallery start)
-            RestartDialog,              // dialog started
-            HintActive,                 // non-specific hint is being displyed
-            DescriptionActive           // a completed level description is being displayed
-        };
-        eWorldStatus status;
-        /*
-        public string GalleryScene;
-        public string FinalScene;
-        public string LevelScene;
-        public float worldRotateFactor;  // = 0.01
-
-        GameObject CenterRotator;       // an empty GameObject which rotates the satellite around the world sphere
-        GameObject GallerySatellite;    // satellite
-        bool GallerySatelliteActive;    // satellite is only visible after level 0 completion
-                                        //GameObject LevelGUI;            // gallery GUI link
-        //GameObject LevelGUIAskForRestartButton;
-        //GameObject LevelGUISourceButton;
-        //GameObject LevelGUIAutoStepButton;
-        GameObject Dialog;
-        WhiteCurtainFader Fader;        // fader
-        //GameObject FaderCanvas;		// fader canvas
-
-        LevelSelectScript lss;      // a LevelSelectScript of a selected level button
-        WorldSphereModel wsm;       // a link to the WorldSphereModel script
-        WorldCameraController wcc;  // a link to the WorldCameraController script
-        SatelliteScript ss;         // a link to the SatelliteScript
-        PuzzleInput puzzleInput;    // a link to the PuzzleInput script
-        LevelDescriptionScript lds;	// a link to the LevelDescriptionScript
-
-        bool sphereToZero;          // coroutine flag
-        bool cameraMoved;           // coroutine flag
-        */
 
         [SerializeField]
         protected float rotationTime;
@@ -95,36 +21,6 @@ namespace RotoChips.World
                 InstantMessageType.WorldRotateToObject, (InstantMessageHandler)OnWorldRotateToObject
             );
             registrator.RegisterHandlers();
-            /*
-            status = eWorldStatus.Init;
-            wsm = gameObject.GetComponent<WorldSphereModel>();
-            puzzleInput = gameObject.GetComponent<PuzzleInput>();
-            wcc = gameObject.GetComponent<WorldCameraController>();
-            CenterRotator = GameObject.Find("CenterRotator");
-            GallerySatellite = GameObject.Find("GallerySatellite");
-            // set gallery satellite visibility
-            LevelData.Descriptor ld = LevelData.instance[0];
-            // the satellite is visible if level 0 is complete
-            GallerySatelliteActive = ld.status.Complete;
-            GallerySatellite.SetActive(GallerySatelliteActive);
-            ss = CenterRotator.GetComponent<SatelliteScript>();
-            //mf = gameObject.GetComponent<MusicFader>();
-            lds = GameObject.Find("DescriptionCanvas").GetComponent<LevelDescriptionScript>();
-
-            // set up the dialog links
-            Dialog = GameObject.Find("DialogOkCancel");
-            Dialog.SetActive(false);
-
-            // setup the scene fader
-            //FaderCanvas = GameObject.Find("LevelTransition");
-            Fader = GameObject.Find("LevelTransition").GetComponent<WhiteCurtainFader>();
-            Fader.SetColor(Color.white);
-
-            selectMode = false;
-
-            sphereToZero = false;
-            cameraMoved = false;
-            */
         }
 
         void Start()
@@ -145,25 +41,6 @@ namespace RotoChips.World
         // ======== Callbacks ========
         // -------- Generic callbacks --------
         // this method is a callback for Fader fadein
-        public void FadedIn()
-        {
-            /*
-            switch (status)
-            {
-                case eWorldStatus.FadeToWorld:
-                    //Debug.Log("Faded to world");
-                    status = eWorldStatus.WaitingInput;         // level select or gallery mode; either way, go for player's input
-            */
-            //Debug.Log("deactivating fader");
-            //FaderCanvas.SetActive(false);
-            /*
-                    break;
-                default:
-                    break;
-            }
-            */
-        }
-
         // -------- GUI callbacks -------
         // this method is a callback for AskForRestart GUI button
         // it works in level select mode only
@@ -225,41 +102,6 @@ namespace RotoChips.World
             */
         }
 
-        // ----- debug callbacks ---------
-        // ColorTuning
-        public void AutoStep()
-        {
-            /*
-            if (status != eWorldStatus.ColorTuning)
-            {
-                status = eWorldStatus.ColorTuning;
-                Debug.Log("tuning light color");
-            }
-            else
-            {
-                status = eWorldStatus.WaitingInput;
-            }
-            */
-            //SceneManager.LoadScene("MobileTouchInput");
-        }
-
-        // Intensity tuning
-        public void BackLevel()
-        {
-            /*
-            if (status != eWorldStatus.IntensityTuning)
-            {
-                status = eWorldStatus.IntensityTuning;
-                //Debug.Log("tuning light intensity");
-            }
-            else
-            {
-                status = eWorldStatus.WaitingInput;
-            }
-            */
-        }
-        // -------------------------------
-
         // -- Dialog callbacks --
         // this is a callback method which is called whenever an OK button in the dialog is pressed
         public void OKAction()
@@ -285,57 +127,6 @@ namespace RotoChips.World
             */
         }
 
-
-        // --------- Rotation callbacks -------------
-        // this method is a callback for wsm.rotateToSelected method
-        // it just sets the corresponding flag
-        public void sphereZeroRotated()
-        {
-            /*
-            sphereToZero = true;
-            if (wsm.cloudsFading()) // fade the clouds if needed
-            {
-                //Debug.Log("fading clouds");
-                wsm.fadeCloudsDown();
-            }
-            */
-        }
-
-        // -------- Camera callbacks -------------
-        // this method is just a callback for wcc.pMoveCamera
-        // it just sets the corresponding flag
-        public void cameraMovedDown()
-        {
-            /*
-            cameraMoved = true;
-            selectMode = false; // and set camera mode mode to view mode
-            */
-        }
-
-        // this method is just a callback for wcc.pMoveCamera
-        // it just sets the corresponding flag
-        public void cameraMovedUp()
-        {
-            /*
-            cameraMoved = true;
-            selectMode = true; // and set camera mode mode to select mode
-            */
-        }
-
-        // --------- Selector callbacks -------------
-        // this method is a callback called after satellite has flashed (run from switchToGallery)
-        // it then starts the gallery scene
-        /*
-        public void satelliteFlashed()
-        {
-            status = eWorldStatus.FadeFromWorld;
-            ss.stopRotation();
-            //FaderCanvas.SetActive (true);
-            Fader.SetColor(Color.black);
-            Fader.FadeOut(gameObject);
-            // do nothing, because a gallery scene is going to be loaded
-        }
-        */
 
         // this method is a callback called after a hint is removed
         public void HintRemoved()
@@ -493,140 +284,6 @@ namespace RotoChips.World
 */
         }
 
-        // main status processor
-        void processStatus()
-        {
-            /*
-            switch (status)
-            {
-                case eWorldStatus.ColorTuning:
-                case eWorldStatus.IntensityTuning:
-                    tuneLight();
-                    break;
-                case eWorldStatus.Init:
-                    stopRotation();
-                    */
-            /*
-            if (!ProcessHints())
-            {
-            */
-            /*
-                if (wsm.iActiveSelector() >= 0) // if there is an active selector in the world
-                {
-                    status = eWorldStatus.WorldRotating;    // after initialization focus the world on the selected level button
-                    focusWorld(false);
-                }
-                else
-                {
-                    status = eWorldStatus.WaitingInput;     // no, just go for player's input
-                }
-                */
-            /*
-            }
-            */
-            /*
-            break;
-        case eWorldStatus.WaitingInput:             // waiting for player's input
-            if (GameGUIScript.instance.IsPointerInGUI())    // do not process touches in the GUI area
-                break;
-            switch (puzzleInput.checkInput())       // any mode
-            {
-                case PuzzleInput.inputStatus.inputSinglePress:
-                    stopRotation();
-                    status = eWorldStatus.UserTap;
-                    break;
-                case PuzzleInput.inputStatus.inputSingleMove:
-                    stopRotation();
-                    rotateWorld();
-                    status = eWorldStatus.WaitingInput;
-                    break;
-                case PuzzleInput.inputStatus.inputDoubleMove:
-                    stopRotation();
-                    wcc.manualZoom(puzzleInput.moveDelta());
-                    rotateWorldByZ();
-                    status = eWorldStatus.WaitingInput;
-                    break;
-                case PuzzleInput.inputStatus.inputNone:
-                    break;
-                default:
-                    stopRotation();
-                    break;
-            }
-            break;
-        case eWorldStatus.UserTap:
-            stopRotation();                     // the world rotation should not be started while the player taps the screen
-            switch (puzzleInput.checkInput())
-            {
-                case PuzzleInput.inputStatus.inputSingleRelease:
-                    RaycastHit hit = new RaycastHit();
-                    Ray r = Camera.main.ScreenPointToRay(puzzleInput.touchPoint());
-                    if (Physics.Raycast(r, out hit))
-                    {
-                        GameObject o = hit.transform.gameObject;
-                        if (o == GallerySatellite)      // satellite has been tapped while in level selection mode
-                        {
-                            runGallery();
-                            break;
-                        }
-                        //int activeSelector = -1;
-                        if (wsm.getHitSelector(o, out activeSelector))
-                        {
-                            bool Playable = false;
-                            bool Complete = false;
-                            wsm.getSelectorStatus(activeSelector, out Playable, out Complete);
-                            if (Playable)
-                            {
-                                wsm.setSelectedSelector(activeSelector);    // activate the tapped selector
-                            }
-                            if (selectMode)
-                            {
-                                if (Complete)
-                                {
-                                    status = eWorldStatus.DescriptionActive;
-                                    wsm.disableRotation();
-                                    lds.ShowDescription(wsm.getSelectorLevel(wsm.iActiveSelector()));
-                                }
-                                else
-                                if (Playable)
-                                {
-                                    runPuzzle();
-                                }
-                                else
-                                {
-                                    //status = eWorldStatus.HintActive;
-                                    HintSystemScript.instance.putNextHint(HintSystemScript.Type.LevelNotYetPlayable, HintSystemScript.Environment.World);
-                                    //Debug.Log("Hint for not playable level is placed");
-                                    status = eWorldStatus.WaitingInput;
-                                }
-                                break;
-                            }
-                            else
-                            {
-                                focusWorld(false);
-                            }
-                        }
-                        if (o == gameObject)
-                        {
-                            zoomCamera();
-                            break;
-                        }
-                    }
-                    status = eWorldStatus.WaitingInput;
-                    break;
-                case PuzzleInput.inputStatus.inputSingleMove:
-                    rotateWorld();
-                    status = eWorldStatus.WaitingInput;
-                    break;
-                case PuzzleInput.inputStatus.inputNone:
-                    break;
-                default:
-                    status = eWorldStatus.WaitingInput;
-                    break;
-            }
-            break;
-    }
-    */
-        }
 
         // message handling
         void OnSteadyMouseUpAsButton(object sender, InstantMessageArgs args)

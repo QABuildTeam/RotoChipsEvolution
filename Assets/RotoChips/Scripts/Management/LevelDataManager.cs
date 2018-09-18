@@ -240,11 +240,11 @@ namespace RotoChips.Management
                 lastGoodState = "";
                 currentButtonState = "";
                 lastGoodButtonState = "";
-                //revealed = anId == 0;
-                revealed = true;
+                revealed = anId == 0;
+                //revealed = true;
                 complete = false;
-                //playable = anId == 0;
-                playable = true;
+                playable = anId == 0;
+                //playable = true;
                 autocompleteUsed = false;
                 nextCompleteId = -1;
                 nextPlayableId = -1;
@@ -261,6 +261,8 @@ namespace RotoChips.Management
         SortedDictionary<int, int> levelInits;      // a dictionary of indexes into the LevelData.initializers
         Dictionary<int, State> levelStates;         // a dictionary of level states
 
+        // this method resets all the levels into their initial state
+        // used while initializing or resetting the game
         public void ResetLevels()
         {
             levelInits = new SortedDictionary<int, int>();
@@ -274,6 +276,7 @@ namespace RotoChips.Management
             }
         }
 
+        // GenericManager overrides
         public override void MakeInitial()
         {
             ResetLevels();
@@ -300,6 +303,7 @@ namespace RotoChips.Management
             return levelStates;
         }
 
+        // this method returns a new descriptor with the access to init and state parts of the level description
         public Descriptor GetDescriptor(int levelId)
         {
             int initializersId;
@@ -350,6 +354,40 @@ namespace RotoChips.Management
                 }
             }
             return openRealm;
+        }
+
+        public int NextLevel(int levelId)
+        {
+            bool thisLevel = false;
+            foreach (LevelData.Init levelInit in LevelData.initializers)
+            {
+                if (levelInit.id == levelId)
+                {
+                    thisLevel = true;
+                }
+                else if (thisLevel)
+                {
+                    return levelInit.id;
+                }
+            }
+            return -1;
+        }
+
+        public int PreviousLevel(int levelId)
+        {
+            int previousLevel = -1;
+            foreach (LevelData.Init levelInit in LevelData.initializers)
+            {
+                if (levelInit.id == levelId)
+                {
+                    return previousLevel;
+                }
+                else
+                {
+                    previousLevel = levelInit.id;
+                }
+            }
+            return -1;
         }
 
     }

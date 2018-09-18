@@ -48,7 +48,9 @@ namespace RotoChips.Management
         WorldSelectorPressed,           // Notification: Some cube-like selector above the world globe has just been pressed (either by mouse or by finger)
         WorldSatellitePressed,          // Notification: Satellite object above the world globe has just been pressed (either by mouse or by finger)
         WorldGlobePressed,              // Notification: world globe has just been pressed
-        WorldRotationEnable,            // Command: Enable (argument = true) or disable (argument = false) the rotation of the world globe and the satellite
+        WorldRotationEnable,            // Command: Enable or disable the rotation of the world globe and the satellite
+                                        //      Arguments:
+                                        //          bool on - rotation status: enable (true) or disable (false) rotation
         WorldRotateToObject,            // Command: Rotate the world globe so that the particular object is set just before the player's view
         WorldRotatedToObject,           // Notification: The world globe has just rotated to the particular object
         WorldZoomCameraAtMin,           // Command: Move the camera above the world globe down (decrease distance)
@@ -56,6 +58,11 @@ namespace RotoChips.Management
         WorldAutoZoomCamera,            // Command: zoom the camera in or out
         WorldCameraZoomedAtMin,         // Notification: The camera above the world globe has just moved to the nearest position above the latter
         WorldCameraZoomedAtMax,         // Notification: The camera above the world globe has just moved to the farthest position above the latter
+        WorldShowLevelDescription,      // Command: Show a dialog with the description of a completed level
+                                        //      Arguments:
+                                        //          LevelDataManager.Descriptor descriptor - an descriptor of the level to show
+        WorldLevelDescriptionClosed,    // Notification: A dialog with the level description has been closed
+                                        //      Arguments: none
 
         // Puzzle scene messages
         PuzzleStarted,                  // Notification: Method Start() of the scene Puzzle has just finished its execution

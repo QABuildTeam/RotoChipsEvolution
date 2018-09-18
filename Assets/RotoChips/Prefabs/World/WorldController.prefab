@@ -51,5 +51,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b74aeccb3ade8944cb0965cf25e6aa22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  puzzleScene: 
-  galleryScene: 
+  puzzleScene: Puzzle
+  galleryScene: Gallery
+  finaleScene: Finale

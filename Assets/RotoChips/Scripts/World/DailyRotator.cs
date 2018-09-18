@@ -72,6 +72,7 @@ namespace RotoChips.World
         // message handling
         void OnWorldRotationEnable(object sender, InstantMessageArgs args)
         {
+            Debug.Log("Rotation enabled: " + ((bool)args.arg).ToString());
             EnableRotation((bool)args.arg);
         }
 

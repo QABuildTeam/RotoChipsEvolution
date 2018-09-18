@@ -42,17 +42,16 @@ namespace RotoChips.UI
         protected bool fadeOut = true;
 
         MessageRegistrator registrator;
-        void Start()
+        private void Awake()
         {
             registrator = new MessageRegistrator(InstantMessageType.GUIFadeOutWhiteCurtain, (InstantMessageHandler)OnFadeOutWhiteCurtain);
             fader = GetComponentInChildren<Image>();
             flashRange.min = 0;
             flashRange.max = 1;
-            if (fadeOut)
-            {
-                registrator.RegisterHandlers();
-                //Debug.Log("WCF: Registered handlers");
-            }
+            registrator.RegisterHandlers();
+        }
+        void Start()
+        {
             if (fadeIn)
             {
                 Fade(false);
@@ -98,13 +97,15 @@ namespace RotoChips.UI
 
         public void OnFadeOutWhiteCurtain(object sender, InstantMessageArgs args)
         {
-            Fade(true);
+            if (fadeOut)
+            {
+                Fade(true);
+            }
         }
 
         private void OnDestroy()
         {
             registrator.UnregisterHandlers();
-            //Debug.Log("WCF: Unregistered handlers");
         }
     }
 }

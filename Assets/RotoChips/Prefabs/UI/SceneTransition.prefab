@@ -124,10 +124,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flashRange:
     min: 0
-    max: 0
+    max: 1
   flashDuration:
-    min: 0
-    max: 0
+    min: 1
+    max: 1
   fadeColor: {r: 1, g: 1, b: 1, a: 0}
   fadeIn: 1
   fadeOut: 1

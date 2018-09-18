@@ -51,7 +51,8 @@ namespace RotoChips.World
             registrator.RegisterHandlers();
             levelDescriptor = descriptor;
             meshRenderer = GetComponent<MeshRenderer>();
-            if (noStatusCheck || /*levelDescriptor.state.Revealed*/true)
+            lightBeacon.SetActive(false);
+            if (noStatusCheck || levelDescriptor.state.Revealed)
             {
                 // set up height above the world sphere
                 string iconPath = LevelDataManager.GraphicsResource(levelDescriptor.init.id);
@@ -61,7 +62,6 @@ namespace RotoChips.World
                 {
                     iconPath += "/icon";
                     materials[0] = prefab.opaqueMaterial;
-                    lightBeacon.SetActive(false);
                 }
                 else
                 if (levelDescriptor.state.Playable)
@@ -76,7 +76,6 @@ namespace RotoChips.World
                     else
                     {
                         materials[0] = prefab.opaqueMaterial;
-                        lightBeacon.SetActive(false);
                     }
                 }
                 else
@@ -90,10 +89,12 @@ namespace RotoChips.World
                 {
                     StartFlash();
                 }
+                /*
                 else
                 {
                     Visualize(flashRange.min);
                 }
+                */
             }
             else
             {
@@ -104,7 +105,7 @@ namespace RotoChips.World
         // the selector is touched and released once (no moving)
         void OnSteadyMouseUpAsButton(object sender, InstantMessageArgs args)
         {
-            if ((GameObject)args.arg == gameObject)
+            if (gameObject.activeInHierarchy && (GameObject)args.arg == gameObject)
             {
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldSelectorPressed, this, levelDescriptor);
             }
@@ -113,7 +114,7 @@ namespace RotoChips.World
         // special message, only received at the start of the World scene
         void OnWorldRotateToSelected(object sender, InstantMessageArgs args)
         {
-            if (GlobalManager.MStorage.SelectedLevel == levelDescriptor.init.id)
+            if (gameObject.activeInHierarchy && GlobalManager.MStorage.SelectedLevel == levelDescriptor.init.id)
             {
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldSelectorPressed, this, levelDescriptor);
             }

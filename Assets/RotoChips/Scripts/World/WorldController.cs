@@ -34,7 +34,10 @@ namespace RotoChips.World
                 InstantMessageType.GUIRotoChipsPressed, (InstantMessageHandler)OnWorldRotoChipsPressed,
                 InstantMessageType.GUIRotoCoinsPressed, (InstantMessageHandler)OnWorldRotoCoinsPressed,
                 InstantMessageType.WorldSatellitePressed, (InstantMessageHandler)OnWorldSatellitePressed,
-                InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded
+                InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded,
+                InstantMessageType.GUIRestartButtonPressed, (InstantMessageHandler)OnGUIRestartButtonPressed,
+                InstantMessageType.GUIViewButtonPressed, (InstantMessageHandler)OnGUIViewButtonPressed,
+                InstantMessageType.WorldLevelDescriptionClosed, (InstantMessageHandler)OnWorldLevelDescriptionClosed
             );
             registrator.RegisterHandlers();
         }
@@ -91,11 +94,21 @@ namespace RotoChips.World
             else
             {
                 LevelDataManager.Descriptor descriptor = (LevelDataManager.Descriptor)args.arg;
-                if (!descriptor.state.Complete)
+                if (descriptor.state.Playable)
                 {
-                    GlobalManager.MStorage.SelectedLevel = descriptor.init.id;
-                    GlobalManager.MStorage.GalleryLevel = descriptor.init.id;
-                    StartCoroutine(YieldToScene(targetObject, puzzleScene));
+                    if (descriptor.state.Complete)
+                    {
+                        // show a description of the complete level
+                        GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, false);
+                        GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldShowLevelDescription, this, descriptor);
+                    }
+                    else
+                    {
+                        // start level
+                        GlobalManager.MStorage.SelectedLevel = descriptor.init.id;
+                        GlobalManager.MStorage.GalleryLevel = descriptor.init.id;
+                        StartCoroutine(YieldToScene(targetObject, puzzleScene));
+                    }
                 }
             }
         }
@@ -118,9 +131,24 @@ namespace RotoChips.World
             StartCoroutine(YieldToScene(targetObject, galleryScene));
         }
 
+        void OnGUIRestartButtonPressed(object sender, InstantMessageArgs args)
+        {
+
+        }
+
+        [SerializeField]
+        protected string finaleScene = "Finale";
+        void OnGUIViewButtonPressed(object sender, InstantMessageArgs args)
+        {
+            StartCoroutine(YieldToScene(null, finaleScene));
+        }
+
         IEnumerator YieldToScene(GameObject initiator, string sceneName)
         {
-            RotateWorldToZero(initiator);
+            if (initiator != null)
+            {
+                RotateWorldToZero(initiator);
+            }
             curtainFaded = false;
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeOutWhiteCurtain, this);
             while (!curtainFaded)
@@ -131,6 +159,11 @@ namespace RotoChips.World
             {
                 SceneManager.LoadScene(sceneName);
             }
+        }
+
+        void OnWorldLevelDescriptionClosed(object sender, InstantMessageArgs args)
+        {
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, true);
         }
 
         private void OnDestroy()

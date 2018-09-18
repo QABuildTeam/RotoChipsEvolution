@@ -1,7 +1,7 @@
 ﻿/*
- * File:        SourceFader.cs
+ * File:        DialogOKCancelController.cs
  * Author:      Igor Spiridonov
- * Descrpition: Class SourceFader controls the source image canvas of the Puzzle scene
+ * Descrpition: Class DialogOKCancelController controls overall logic of a standard Ok/Cancel dialog
  * Created:     05.09.2018
  */
 using System.Collections;
