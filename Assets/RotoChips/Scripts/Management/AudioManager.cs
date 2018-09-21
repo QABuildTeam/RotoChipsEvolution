@@ -13,6 +13,14 @@ using RotoChips.Generic;
 namespace RotoChips.Management
 {
 
+    [System.Serializable]
+    public class SFXPlayParams
+    {
+        public SFXEnum id;
+        public float pitchFactor;
+        public float volumeFactor;
+    }
+
     public class AudioManager : GenericManager
     {
         public AudioManagerParams Parameters
@@ -24,17 +32,69 @@ namespace RotoChips.Management
         {
             public AudioSource actualPlayer;        // a reference to an actual AudioSource
             public Coroutine playerCouroutine;      // SubclipPlayer coroutine
+        }
+
+        public class MusicPlayer : AudioPlayer
+        {
             public bool fading;                     // "FadeTrack coroutine is in progress" flag
-            public int track;                       // current AudioTrackControl id (-1 if no tracks)
+            public AudioTrackEnum trackId;          // current AudioTrackControl id (-1 if no tracks)
+            public bool loop;
             public int subclip;                     // current subclip id (-1 if no subclips)
             public int order;                       // current subclip order
             public float startTime;                 // start time of the currently played subclip (used for pausing the play)
             public float endTime;                   // end time of the currently played subclip (used for pausing the play)
         }
 
-        AudioPlayer[] musicPlayers;
-        int currentTrack;
-        int currentMusicPlayer;
+        public class SFXPlayer : AudioPlayer
+        {
+            public SFXEnum clipId;
+        }
+
+        MusicPlayer[] musicPlayers;
+        SFXPlayer[] sfxPlayers;
+        AudioTrackEnum currentTrack;
+        int currentMusicPlayerId;
+        int currentSFXPlayerId;
+
+        Dictionary<AudioTrackEnum, AudioTrackControl> musicTracks;
+        public Dictionary<AudioTrackEnum, AudioTrackControl> MusicTracks
+        {
+            get
+            {
+                if (musicTracks == null)
+                {
+                    musicTracks = new Dictionary<AudioTrackEnum, AudioTrackControl>();
+                    if (Parameters != null)
+                    {
+                        foreach(AudioTrackControl track in Parameters.Tracks)
+                        {
+                            musicTracks.Add(track.id, track);
+                        }
+                    }
+                }
+                return musicTracks;
+            }
+        }
+
+        Dictionary<SFXEnum, SFXControl> sfxClips;
+        public Dictionary<SFXEnum, SFXControl> SFXClips
+        {
+            get
+            {
+                if (musicTracks == null)
+                {
+                    sfxClips = new Dictionary<SFXEnum, SFXControl>();
+                    if (Parameters != null)
+                    {
+                        foreach (SFXControl sfx in Parameters.SFX)
+                        {
+                            sfxClips.Add(sfx.id, sfx);
+                        }
+                    }
+                }
+                return sfxClips;
+            }
+        }
 
         // maximum volume is initially set in Parameters but can be controlld from AudioManager
         public float MaxMusicVolume
@@ -48,7 +108,7 @@ namespace RotoChips.Management
                 if (Parameters != null)
                 {
                     Parameters.MaxMusicVolume = Mathf.Clamp(value, 0, 1);
-                    if (musicPlayers.Length > 0 && currentMusicPlayer >= 0)
+                    if (musicPlayers.Length > 0 && currentMusicPlayerId >= 0)
                     {
                         for (int i = 0; i < musicPlayers.Length; i++)
                         {
@@ -69,30 +129,36 @@ namespace RotoChips.Management
             Parameters = GetComponentInChildren<AudioManagerParams>();
             if (Parameters != null)
             {
-                musicPlayers = new AudioPlayer[2]
+                // set up music players
+                musicPlayers = new MusicPlayer[Parameters.MaxAudioPlayers];
+                for (int i = 0; i < musicPlayers.Length; i++)
                 {
-                        new AudioPlayer
-                        {
-                            actualPlayer=gameObject.AddComponent<AudioSource>(),
-                            track=-1,
-                            subclip=-1,
-                            order=-1
-                        },
-                        new AudioPlayer
-                        {
-                            actualPlayer=gameObject.AddComponent<AudioSource>(),
-                            track=-1,
-                            subclip=-1,
-                            order=-1
-                        }
-                };
-                for (int i = 0; i < musicPlayers.GetUpperBound(0) + 1; i++)
-                {
+                    musicPlayers[i] = new MusicPlayer
+                    {
+                        actualPlayer = gameObject.AddComponent<AudioSource>(),
+                        trackId = AudioTrackEnum.Unknown,
+                        subclip = -1,
+                        order = -1
+                    };
                     musicPlayers[i].actualPlayer.playOnAwake = false;
                     musicPlayers[i].actualPlayer.volume = 0;
                 }
-                currentTrack = -1;
-                currentMusicPlayer = -1;
+                currentTrack = AudioTrackEnum.Unknown;
+                currentMusicPlayerId = -1;
+
+                // set up SFX players
+                sfxPlayers = new SFXPlayer[Parameters.MaxSFXPlayers];
+                for (int i = 0; i < sfxPlayers.Length; i++)
+                {
+                    sfxPlayers[i] = new SFXPlayer
+                    {
+                        actualPlayer = gameObject.AddComponent<AudioSource>(),
+                        clipId = SFXEnum.Unknown
+                    };
+                    sfxPlayers[i].actualPlayer.playOnAwake = false;
+                    sfxPlayers[i].actualPlayer.volume = 0;
+                }
+
                 base.MakeInitial();
             }
             else
@@ -104,154 +170,161 @@ namespace RotoChips.Management
         // this method plays subclips of the currentTrack with currentPlayer using specified subclip order
         // if no subclips or their order defined it plays the full track from its beginning to the end
         // the underlying AudioSource is already playing
-        IEnumerator SubclipPlayer()
+        IEnumerator SubclipMusicPlayer()
         {
             if (Parameters.Tracks.Count > 0)
             {
-                int playerId = currentMusicPlayer;
-                AudioPlayer currentPlayer = musicPlayers[playerId];
-                AudioSource actualPlayer = currentPlayer.actualPlayer;
-                AudioTrackControl track = Parameters.Tracks[currentPlayer.track];
+                int playerId = this.currentMusicPlayerId;
+                MusicPlayer currentMusicPlayer = musicPlayers[playerId];
+                AudioSource actualPlayer = currentMusicPlayer.actualPlayer;
+                AudioTrackControl track = MusicTracks[currentTrack];
                 do
                 {
                     // prepare subclip play parameters
-                    float startTime = currentPlayer.startTime;
-                    float waitTime = currentPlayer.endTime - startTime;
-                    Debug.Log("Playing subclip " + currentPlayer.subclip.ToString() + " from " + startTime.ToString() + ", waiting for " + waitTime.ToString());
+                    float startTime = currentMusicPlayer.startTime;
+                    float waitTime = currentMusicPlayer.endTime - startTime;
+                    Debug.Log("Playing subclip " + currentMusicPlayer.subclip.ToString() + " from " + startTime.ToString() + ", waiting for " + waitTime.ToString());
                     // do the actual play
                     actualPlayer.time = startTime;
-                    // ensure that actual player is reaLLy playing
-                    actualPlayer.Play();
+                    // ensure that actual player is really playing
+                    if (!actualPlayer.isPlaying)
+                    {
+                        actualPlayer.Play();
+                    }
                     yield return new WaitForSeconds(waitTime);
 
                     // move to the next subclip
-                    PromoteToNextSubclip(currentPlayer, track);
-                    Debug.Log("Subclip order " + currentPlayer.order.ToString() + ", total order length: " + track.subclipOrder.Length.ToString());
+                    PromoteToNextMusicSubclip(currentMusicPlayer, track);
+                    Debug.Log("Subclip order " + currentMusicPlayer.order.ToString() + "/" + track.subclipOrder.Length.ToString());
                 }
-                while (track.loop || currentPlayer.order < track.subclipOrder.Length);
+                while (currentMusicPlayer.loop || currentMusicPlayer.order < track.subclipOrder.Length);
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.MusicTrackPlayed, this, track.id);
             }
         }
 
-        void ResetPlayer(AudioPlayer currentPlayer, AudioTrackControl track)
+        void ResetMusicMusicPlayer(MusicPlayer currentMusicPlayer, AudioTrackControl track)
         {
-            currentPlayer.order = -1;
-            currentPlayer.subclip = -1;
-            PromoteToNextSubclip(currentPlayer, track);
+            currentMusicPlayer.order = -1;
+            currentMusicPlayer.subclip = -1;
+            PromoteToNextMusicSubclip(currentMusicPlayer, track);
         }
 
-        void PromoteToNextSubclip(AudioPlayer currentPlayer, AudioTrackControl track)
+        void PromoteToNextMusicSubclip(MusicPlayer currentMusicPlayer, AudioTrackControl track)
         {
             if (track.subclips.Length > 0)
             {
                 if (track.subclipOrder.Length > 0)
                 {
-                    currentPlayer.order = (currentPlayer.order + 1) % track.subclipOrder.Length;
-                    currentPlayer.subclip = track.subclipOrder[currentPlayer.order];
+                    currentMusicPlayer.order = (currentMusicPlayer.order + 1) % track.subclipOrder.Length;
+                    currentMusicPlayer.subclip = track.subclipOrder[currentMusicPlayer.order];
                 }
                 else
                 {
-                    currentPlayer.subclip = 0;
+                    currentMusicPlayer.order = 0;
+                    currentMusicPlayer.subclip = 0;
                 }
-                currentPlayer.startTime = track.subclips[currentPlayer.subclip].min;
-                currentPlayer.endTime = track.subclips[currentPlayer.subclip].max;
+                currentMusicPlayer.startTime = track.subclips[currentMusicPlayer.subclip].min;
+                currentMusicPlayer.endTime = track.subclips[currentMusicPlayer.subclip].max;
             }
             else
             {
-                currentPlayer.startTime = 0;
-                currentPlayer.endTime = track.clip.length;
+                currentMusicPlayer.order = 0;
+                currentMusicPlayer.startTime = 0;
+                currentMusicPlayer.endTime = track.clip.length;
             }
         }
 
         // this method fades the volume of a player with playerId in (start == true) or out (start == false)
         // it also starts playing a track with currentTrack id if start == true
         // and stops playing a current track otherwise
-        IEnumerator FadeTrack(int playerId, bool up = true)
+        IEnumerator FadeMusicTrack(int playerId, bool up, bool loop = false)
         {
-            AudioPlayer currentPlayer = musicPlayers[playerId];
+            MusicPlayer currentPlayer = musicPlayers[playerId];
             currentPlayer.fading = true;
-            currentPlayer.track = currentTrack;
+            currentPlayer.trackId = currentTrack;
             AudioSource actualPlayer = currentPlayer.actualPlayer;
-            AudioTrackControl track = Parameters.Tracks[currentTrack];
-            if (up)
+            if (up || currentPlayer.trackId != AudioTrackEnum.Unknown)
             {
-                if (currentPlayer.playerCouroutine != null)
+                AudioTrackControl track = MusicTracks[currentTrack];
+                if (up)
                 {
-                    StopCoroutine(currentPlayer.playerCouroutine);
+                    if (currentPlayer.playerCouroutine != null)
+                    {
+                        StopCoroutine(currentPlayer.playerCouroutine);
+                    }
+                    if (actualPlayer.isPlaying)
+                    {
+                        actualPlayer.Stop();
+                    }
                 }
-                if (actualPlayer.isPlaying)
+                if (up)
                 {
+                    ResetMusicMusicPlayer(currentPlayer, track);
+                    // set the track and play
+                    currentPlayer.loop = loop;
+                    actualPlayer.clip = track.clip;
+                    actualPlayer.Play();
+                    currentPlayer.playerCouroutine = StartCoroutine(SubclipMusicPlayer());
+                }
+                // now fade the volume
+                float startVolume = actualPlayer.volume;
+                float endVolume = up ? track.volume * MaxMusicVolume : 0;
+                float currentTime = 0;
+                while (currentTime < Parameters.MusicCrossFadeTime)
+                {
+                    currentTime += Time.deltaTime;
+                    actualPlayer.volume = Mathf.Lerp(startVolume, endVolume, currentTime / Parameters.MusicCrossFadeTime);
+                    yield return null;
+                }
+                actualPlayer.volume = endVolume;
+                if (!up)
+                {
+                    if (currentPlayer.playerCouroutine != null)
+                    {
+                        StopCoroutine(currentPlayer.playerCouroutine);
+                    }
+                    currentPlayer.playerCouroutine = null;
                     actualPlayer.Stop();
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.MusicTrackPlayed, this, currentPlayer.trackId);
                 }
+                currentPlayer.fading = false;
             }
-            if (up)
-            {
-                ResetPlayer(currentPlayer, track);
-                // set the track and play
-                actualPlayer.clip = track.clip;
-                actualPlayer.Play();
-                currentPlayer.playerCouroutine = StartCoroutine(SubclipPlayer());
-            }
-            // now fade the volume
-            float currentVolume = actualPlayer.volume;
-            float endVolume = up ? MaxMusicVolume : 0;
-            float volumeDelta = (endVolume - currentVolume) / Parameters.MusicCrossFadeSteps;
-            float timeDelta = Parameters.MusicCrossFadeTime / Parameters.MusicCrossFadeSteps;
-            WaitForSeconds delayStep = new WaitForSeconds(timeDelta);
-            for (int i = 0; i < Parameters.MusicCrossFadeSteps; i++)
-            {
-                currentVolume += volumeDelta;
-                actualPlayer.volume = currentVolume;
-                yield return delayStep;
-            }
-            currentVolume = endVolume;
-            actualPlayer.volume = currentVolume;
-            if (!up)
-            {
-                if (currentPlayer.playerCouroutine != null)
-                {
-                    StopCoroutine(currentPlayer.playerCouroutine);
-                }
-                currentPlayer.playerCouroutine = null;
-                actualPlayer.Stop();
-            }
-            currentPlayer.fading = false;
         }
 
         // play a track w/crossfade
-        public void PlayTrack(int trackNo)
+        public void PlayMusicTrack(AudioTrackEnum trackId, bool loop = false)
         {
             if (Parameters.Tracks.Count > 0)
             {
-                Debug.Log("Playing track " + trackNo.ToString());
-                trackNo = Mathf.Clamp(trackNo, 0, Parameters.Tracks.Count - 1);
-                if (trackNo != currentTrack)
+                if (currentMusicPlayerId >= 0)
                 {
-                    if (currentMusicPlayer >= 0 && currentTrack >= 0)
-                    {
-                        StartCoroutine(FadeTrack(currentMusicPlayer, false));
-                    }
-                    currentMusicPlayer = (currentMusicPlayer + 1) % musicPlayers.Length;
-                    currentTrack = trackNo;
-                    StartCoroutine(FadeTrack(currentMusicPlayer, true));
+                    Debug.Log("Stopping track " + currentTrack.ToString());
+                    // stop the currently playing track
+                    StartCoroutine(FadeMusicTrack(currentMusicPlayerId, false));
+                }
+                Debug.Log("Playing track " + trackId.ToString());
+                if (MusicTracks.ContainsKey(trackId))
+                {
+                    currentMusicPlayerId = (currentMusicPlayerId + 1) % musicPlayers.Length;
+                    currentTrack = trackId;
+                    StartCoroutine(FadeMusicTrack(currentMusicPlayerId, true, loop));
+                }
+                else
+                {
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.MusicTrackPlayed, this, trackId);
                 }
             }
-        }
-
-        // play a next track from the tracklist
-        public void PlayNext()
-        {
-            if (Parameters.Tracks.Count > 0)
+            else
             {
-                int newTrack = (currentTrack + 1) % Parameters.Tracks.Count;
-                PlayTrack(newTrack);
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.MusicTrackPlayed, this, trackId);
             }
         }
 
         public void Pause()
         {
-            if (currentTrack >= 0 && currentMusicPlayer >= 0)
+            if (currentMusicPlayerId >= 0)
             {
-                AudioPlayer currentPlayer = musicPlayers[currentMusicPlayer];
+                MusicPlayer currentPlayer = musicPlayers[currentMusicPlayerId];
                 AudioSource actualPlayer = currentPlayer.actualPlayer;
                 if (actualPlayer.isPlaying && currentPlayer.playerCouroutine != null)
                 {
@@ -265,13 +338,13 @@ namespace RotoChips.Management
 
         public void Unpause()
         {
-            if (currentTrack >= 0 && currentMusicPlayer >= 0)
+            if (currentMusicPlayerId >= 0)
             {
-                AudioPlayer currentPlayer = musicPlayers[currentMusicPlayer];
+                MusicPlayer currentPlayer = musicPlayers[currentMusicPlayerId];
                 AudioSource actualPlayer = currentPlayer.actualPlayer;
                 if (currentPlayer.playerCouroutine == null)
                 {
-                    currentPlayer.playerCouroutine = StartCoroutine(SubclipPlayer());
+                    currentPlayer.playerCouroutine = StartCoroutine(SubclipMusicPlayer());
                     actualPlayer.Play();
                 }
             }
@@ -279,28 +352,34 @@ namespace RotoChips.Management
 
         public void Stop()
         {
-            if (currentTrack >= 0 && currentMusicPlayer >= 0)
+            if (currentMusicPlayerId >= 0)
             {
-                AudioPlayer currentPlayer = musicPlayers[currentMusicPlayer];
+                MusicPlayer currentPlayer = musicPlayers[currentMusicPlayerId];
                 AudioSource actualPlayer = currentPlayer.actualPlayer;
                 if (actualPlayer.isPlaying && currentPlayer.playerCouroutine != null)
                 {
                     StopCoroutine(currentPlayer.playerCouroutine);
                     currentPlayer.playerCouroutine = null;
                     actualPlayer.Stop();
-                    ResetPlayer(currentPlayer, Parameters.Tracks[currentTrack]);
+                    ResetMusicMusicPlayer(currentPlayer, MusicTracks[currentTrack]);
                 }
             }
         }
 
-        public int AddTrackControl(AudioTrackControl control)
+        public void PlaySFX(SFXPlayParams sfxParams)
         {
-            if (control != null)
+            if (sfxParams != null && SFXClips.ContainsKey(sfxParams.id) && sfxPlayers.Length > 0)
             {
-                Parameters.Tracks.Add(control);
-                return Parameters.Tracks.Count - 1;
+                currentSFXPlayerId = (currentSFXPlayerId + 1) % sfxPlayers.Length;
+                SFXPlayer sfxPlayer = sfxPlayers[currentSFXPlayerId];
+                sfxPlayer.actualPlayer.Stop();
+                SFXControl sfxControl = SFXClips[sfxParams.id];
+                sfxPlayer.actualPlayer.clip = sfxControl.clip;
+                sfxPlayer.actualPlayer.loop = sfxControl.loop;
+                sfxPlayer.actualPlayer.pitch = sfxControl.pitch * sfxParams.pitchFactor;
+                sfxPlayer.actualPlayer.volume = sfxControl.volume * sfxParams.volumeFactor;
+                sfxPlayer.actualPlayer.Play();
             }
-            return -1;
         }
 
         private void OnEnable()

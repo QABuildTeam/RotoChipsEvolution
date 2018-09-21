@@ -31,11 +31,13 @@ namespace RotoChips.World
         [SerializeField]
         protected bool noStatusCheck = false;
 
+        GameObject clouds;
+        bool fadeClouds;
+
         // this method constructs the level selection objects on the world sphere
         void Awake()
         {
-            GameObject clouds;
-            bool fadeClouds = false;
+            fadeClouds = false;
 
             //EnableRotation(false);                                  // make sure the sphere does not rotate while constructing spikes
 
@@ -116,10 +118,6 @@ namespace RotoChips.World
                 transform.rotation = cloudsRotation;
                 clouds = (GameObject)Instantiate(cloudsPrefab);
                 clouds.transform.SetParent(transform);
-                if (fadeClouds)
-                {
-                    clouds.GetComponent<CloudFader>().FadeOut();
-                }
             }
             // set the world sphere to the initial position
             transform.rotation = Quaternion.Euler(0, 0, 0);
@@ -128,7 +126,13 @@ namespace RotoChips.World
         private void Start()
         {
             // special command for the Finale scene
+            // if there are no fireworks, the command yields to nothing
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.VictoryStartFireworks, this, selectors);
+            // fade the clouds if necessary
+            if (fadeClouds)
+            {
+                clouds.GetComponent<CloudFader>().FadeOut();
+            }
         }
 
     }

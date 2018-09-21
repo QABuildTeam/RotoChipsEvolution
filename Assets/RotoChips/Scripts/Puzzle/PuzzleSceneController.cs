@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using RotoChips.Management;
+using RotoChips.Audio;
 
 namespace RotoChips.Puzzle
 {
@@ -55,7 +56,8 @@ namespace RotoChips.Puzzle
                 InstantMessageType.GUIRestartButtonPressed, (InstantMessageHandler)OnGUIRestartButtonPressed,
                 InstantMessageType.GUIMagicButtonPressed, (InstantMessageHandler)OnGUIMagicButtonPressed,
                 InstantMessageType.GUIOKButtonPressed, (InstantMessageHandler)OnGUIOKButtonPressed,
-                InstantMessageType.GUICancelButtonPressed, (InstantMessageHandler)OnGUICancelButtonPressed
+                InstantMessageType.GUICancelButtonPressed, (InstantMessageHandler)OnGUICancelButtonPressed,
+                InstantMessageType.MusicTrackPlayed, (InstantMessageHandler)OnMusicTrackPlayed
             );
             registrator.RegisterHandlers();
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleStarted, this);
@@ -145,6 +147,7 @@ namespace RotoChips.Puzzle
                         SceneManager.LoadScene(worldScene);
                         break;
                     case Exitmode.Victory:
+                        GlobalManager.MAudio.PlayMusicTrack(AudioTrackEnum.Unknown);
                         SceneManager.LoadScene(victoryScene);
                         break;
                 }
@@ -166,18 +169,32 @@ namespace RotoChips.Puzzle
         protected string victoryId = "idVictory";
         [SerializeField]
         protected string levelCompletedOnceAgainId = "idLevelCompletedOnceAgain";
+        [SerializeField]
+        protected AudioTrackEnum victoryMusicId = AudioTrackEnum.VictoryTheme;
         void OnPuzzleComplete(object sender, InstantMessageArgs args)
         {
             exitMode = Exitmode.Victory;
             PuzzleCompleteStatus completeStatus = (PuzzleCompleteStatus)args.arg;
             GlobalManager.MStorage.GalleryLevel = completeStatus.descriptor.init.id;
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.BackgroundMusic, this, BackGroundMusicMode.Off);
+            GlobalManager.MAudio.PlayMusicTrack(victoryMusicId, false);
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleShowWinimage, this, completeStatus.firstTime ? victoryId : levelCompletedOnceAgainId);
         }
 
         void OnPuzzleWinImageStopped(object sender, InstantMessageArgs args)
         {
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeOutWhiteCurtain, this);
+        }
+
+        [SerializeField]
+        protected AudioTrackEnum ambienceTrackId = AudioTrackEnum.GalleryAmbience;
+        void OnMusicTrackPlayed(object sender, InstantMessageArgs args)
+        {
+            if ((AudioTrackEnum)args.arg == victoryMusicId)
+            {
+                GlobalManager.MAudio.PlayMusicTrack(ambienceTrackId, true);
+            }
         }
 
         private void OnDestroy()

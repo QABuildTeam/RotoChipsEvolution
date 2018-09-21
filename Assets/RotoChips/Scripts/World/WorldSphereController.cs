@@ -1,3 +1,9 @@
+/*
+ * File:        WorldSphereController.cs
+ * Author:      Igor Spiridonov
+ * Descrpition: Class WorldSphereController controls the world sphere rotation by the player's input on the World scene
+ * Created:     31.08.2018
+ */
 using System.Collections;
 using System;
 using System.Collections.Generic;
@@ -18,7 +24,8 @@ namespace RotoChips.World
         {
             registrator = new MessageRegistrator(
                 InstantMessageType.SteadyMouseUpAsButton, (InstantMessageHandler)OnSteadyMouseUpAsButton,
-                InstantMessageType.WorldRotateToObject, (InstantMessageHandler)OnWorldRotateToObject
+                InstantMessageType.WorldRotateToObject, (InstantMessageHandler)OnWorldRotateToObject,
+                InstantMessageType.WorldRotationEnable, (InstantMessageHandler)OnWorldRotationEnable
             );
             registrator.RegisterHandlers();
         }
@@ -35,7 +42,6 @@ namespace RotoChips.World
             GameGUIScript.instance.setCoinsBalance((decimal)AppData.instance[AppData.Storage.CurrentCoins]);
             GameManager.instance.processGameEvent(GameManager.GameEvents.WorldLoaded);
             */
-
         }
 
         // ======== Callbacks ========
@@ -211,15 +217,6 @@ namespace RotoChips.World
             */
         }
 
-        // -------- LevelDescriptionScript callback -------
-        public void LevelDescriptionClosed()
-        {
-            /*
-            wsm.enableRotation();
-            status = eWorldStatus.WaitingInput;
-            */
-        }
-
         // ======== Hint system handling ==========
         void ProcessHints()
         {
@@ -333,6 +330,11 @@ namespace RotoChips.World
             }
         }
 
+        void OnWorldRotationEnable(object sender, InstantMessageArgs args)
+        {
+            rotationEnabled = (bool)args.arg;
+        }
+
         private void OnDestroy()
         {
             registrator.UnregisterHandlers();
@@ -340,7 +342,7 @@ namespace RotoChips.World
 
         [SerializeField]
         protected float worldRotateFactor;
-
+        bool rotationEnabled;
         void EnableRotation(bool on)
         {
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, on);
@@ -352,25 +354,34 @@ namespace RotoChips.World
             {
                 case TouchInput.InputStatus.SinglePress:
                 case TouchInput.InputStatus.DoublePress:
-                    EnableRotation(false);
-                    EnableRotation(true);
+                    if (rotationEnabled)
+                    {
+                        EnableRotation(false);
+                        EnableRotation(true);
+                    }
                     break;
 
                 case TouchInput.InputStatus.SingleMove:
-                    // rotate the world to the direction of a finger/mouse move
-                    EnableRotation(false);
-                    Vector3 moveDelta = GlobalManager.MInput.MoveDelta;
-                    float cameraDistance = Camera.main.transform.position.z;
-                    Vector3 rotateDelta = new Vector3(moveDelta.y, -moveDelta.x, 0) * cameraDistance * worldRotateFactor;
-                    transform.Rotate(rotateDelta, Space.World);
-                    EnableRotation(true);
+                    if (rotationEnabled)
+                    {
+                        // rotate the world to the direction of a finger/mouse move
+                        EnableRotation(false);
+                        Vector3 moveDelta = GlobalManager.MInput.MoveDelta;
+                        float cameraDistance = Camera.main.transform.position.z;
+                        Vector3 rotateDelta = new Vector3(moveDelta.y, -moveDelta.x, 0) * cameraDistance * worldRotateFactor;
+                        transform.Rotate(rotateDelta, Space.World);
+                        EnableRotation(true);
+                    }
                     break;
 
                 case TouchInput.InputStatus.DoubleMove:
-                    // rotate the world around z-axis
-                    EnableRotation(false);
-                    transform.Rotate(new Vector3(0, 0, GlobalManager.MInput.AngleDelta), Space.World);
-                    EnableRotation(true);
+                    if (rotationEnabled)
+                    {
+                        // rotate the world around z-axis
+                        EnableRotation(false);
+                        transform.Rotate(new Vector3(0, 0, GlobalManager.MInput.AngleDelta), Space.World);
+                        EnableRotation(true);
+                    }
                     break;
 
             }

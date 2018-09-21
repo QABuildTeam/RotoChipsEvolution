@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 223194843814149560}
   - component: {fileID: 114290567566076666}
   - component: {fileID: 114228714735980060}
+  - component: {fileID: 114724217773993308}
   m_Layer: 5
   m_Name: GUICanvas
   m_TagString: Untagged
@@ -659,6 +660,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   messageType: 4
+--- !u!114 &114724217773993308
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1130570220109998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 633b092e296760241af8ff20d4745120, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  restartButton: {fileID: 1716035663433990}
+  viewButton: {fileID: 1708736904961678}
+  backButton: {fileID: 1738156622078884}
+  magicButton: {fileID: 1283814889561886}
+  rotochipsPanel: {fileID: 1503688912055510}
+  rotocoinsPanel: {fileID: 1501079506136718}
 --- !u!114 &114776046161810192
 MonoBehaviour:
   m_ObjectHideFlags: 1

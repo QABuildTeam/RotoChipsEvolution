@@ -11,18 +11,49 @@ using RotoChips.Utility;
 
 namespace RotoChips.Management
 {
-
     [System.Serializable]
     public class AudioTrackControl
     {
+        public AudioTrackEnum id;
+        public AudioClip clip;
+        public float volume;
+        // a track may be partitioned into several subclips which in turn may be played in a specific order
+        public FloatRange[] subclips;   // every subclip has its beginning (subclips[i].min) and its end (subclips[i].max) in seconds
+        public int[] subclipOrder;      // this is an array of indexes into the subclips array
+    }
+
+    [System.Serializable]
+    public class SFXControl
+    {
+        public SFXEnum id;
         public AudioClip clip;
         public bool loop;
-        public FloatRange[] subclips;
-        public int[] subclipOrder;
+        public float pitch;
+        public float volume;
     }
 
     public class AudioManagerParams : MonoBehaviour
     {
+
+        [SerializeField]
+        protected int maxAudioPlayers = 2;
+        public int MaxAudioPlayers
+        {
+            get
+            {
+                return maxAudioPlayers;
+            }
+        }
+
+        [SerializeField]
+        protected int maxSFXPlayers = 5;
+        public int MaxSFXPlayers
+        {
+            get
+            {
+                return maxSFXPlayers;
+            }
+        }
 
         [SerializeField]
         [Range(0, 1)]
@@ -39,7 +70,7 @@ namespace RotoChips.Management
             }
         }
         [SerializeField]
-        float musicCrossFadeTime = 0.5f;
+        protected float musicCrossFadeTime = 0.5f;
         public float MusicCrossFadeTime
         {
             get
@@ -48,7 +79,7 @@ namespace RotoChips.Management
             }
         }
         [SerializeField]
-        int musicCrossFadeSteps = 32;
+        protected int musicCrossFadeSteps = 32;
         public int MusicCrossFadeSteps
         {
             get
@@ -58,12 +89,22 @@ namespace RotoChips.Management
         }
 
         [SerializeField]
-        List<AudioTrackControl> tracks;     // a list of tracks to be played
+        protected List<AudioTrackControl> tracks;   // a list of tracks to be played
         public List<AudioTrackControl> Tracks
         {
             get
             {
                 return tracks;
+            }
+        }
+
+        [SerializeField]
+        protected List<SFXControl> sfx;             // a list of SFX to be played
+        public List<SFXControl> SFX
+        {
+            get
+            {
+                return sfx;
             }
         }
 

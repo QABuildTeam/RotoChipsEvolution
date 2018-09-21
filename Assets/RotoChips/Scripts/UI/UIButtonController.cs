@@ -18,7 +18,10 @@ namespace RotoChips.UI
 
         public void ButtonClick()
         {
-            GlobalManager.MInstantMessage.DeliverMessage(messageType, this);
+            if (gameObject.activeInHierarchy)
+            {
+                GlobalManager.MInstantMessage.DeliverMessage(messageType, this);
+            }
         }
 
     }

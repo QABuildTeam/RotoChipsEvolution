@@ -7,23 +7,96 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RotoChips.Management;
 
 namespace RotoChips.Audio
 {
+
+    public enum BackGroundMusicMode
+    {
+        Off,    // do not play anything
+        One,    // repeat playing one track from the playlist
+        All     // play all tracks from playlist in a random order
+    }
     public class MusicPlayer : MonoBehaviour
     {
 
+        [SerializeField]
+        protected List<AudioTrackEnum> playList;
+        AudioTrackEnum currentTrack;
+        [SerializeField]
+        protected BackGroundMusicMode musicMode;
 
+        MessageRegistrator registrator;
+        private void Awake()
+        {
+            currentTrack = AudioTrackEnum.Unknown;
+            registrator = new MessageRegistrator(
+                InstantMessageType.PlayMusicTrack, (InstantMessageHandler)OnPlayMusicTrack,
+                InstantMessageType.BackgroundMusic, (InstantMessageHandler)OnBackgroundMusic,
+                InstantMessageType.MusicTrackPlayed, (InstantMessageHandler)OnMusicTrackPlayed
+            );
+            registrator.RegisterHandlers();
+        }
         // Use this for initialization
         void Start()
         {
-
+            PlayNextTrack();
         }
 
-        // Update is called once per frame
-        void Update()
+        void PlayNextTrack()
         {
+            if (playList.Count > 0)
+            {
+                switch (musicMode)
+                {
+                    case BackGroundMusicMode.Off:
+                        currentTrack = AudioTrackEnum.Unknown;
+                        GlobalManager.MAudio.PlayMusicTrack(currentTrack, false);   // just stop playing
+                        break;
+                    case BackGroundMusicMode.One:
+                        if (currentTrack == AudioTrackEnum.Unknown)
+                        {
+                            currentTrack = playList[Random.Range(0, playList.Count)];
+                        }
+                        GlobalManager.MAudio.PlayMusicTrack(currentTrack, false);   // play the same track over and over again
+                        break;
+                    case BackGroundMusicMode.All:
+                        currentTrack = playList[Random.Range(0, playList.Count)];
+                        GlobalManager.MAudio.PlayMusicTrack(currentTrack, false);   // play a random track from the playlist
+                        break;
+                }
+            }
+        }
 
+        // message handling
+        // this method implements a PlayMusicTrack command handling
+        void OnPlayMusicTrack(object sender, InstantMessageArgs args)
+        {
+            PlayNextTrack();
+        }
+
+        void OnBackgroundMusic(object sender, InstantMessageArgs args)
+        {
+            musicMode = (BackGroundMusicMode)args.arg;
+            PlayNextTrack();
+        }
+
+        void OnMusicTrackPlayed(object sender, InstantMessageArgs args)
+        {
+            if (musicMode != BackGroundMusicMode.Off)
+            {
+                AudioTrackEnum trackId = (AudioTrackEnum)args.arg;
+                if (trackId == currentTrack && currentTrack != AudioTrackEnum.Unknown)
+                {
+                    PlayNextTrack();
+                }
+            }
+        }
+
+        private void OnDestroy()
+        {
+            registrator.UnregisterHandlers();
         }
     }
 }

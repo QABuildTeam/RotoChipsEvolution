@@ -55,6 +55,10 @@ namespace RotoChips.Generic
                     StartCoroutine(RollDigits());
                 }
             }
+            else
+            {
+                previousScore = score;
+            }
         }
 
         IEnumerator RollDigits()

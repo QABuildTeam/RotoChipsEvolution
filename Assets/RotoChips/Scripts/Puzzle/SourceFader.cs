@@ -61,7 +61,7 @@ namespace RotoChips.Puzzle
                 puzzleRatioXY > screenAspect ? imageToCanvasRatio.x : imageToCanvasRatio.y * puzzleRatioXY,
                 puzzleRatioXY > screenAspect ? imageToCanvasRatio.x / puzzleRatioXY : imageToCanvasRatio.y
             );
-            //Debug.Log("Image sizes: canvas: " + sourceCanvasRect.ToString() + ", image: " + sourceRect.ToString() + ", image/canvas: " + imageToCanvasRatio.ToString() + ", scale: " + sourceRectScale.ToString());
+            Debug.Log("Image sizes: canvas: " + sourceCanvasRect.ToString() + ", image: " + sourceRect.ToString() + ", image/canvas: " + imageToCanvasRatio.ToString() + ", scale: " + sourceRectScale.ToString());
             sourceTransform.localScale = sourceRectScale;
             // UV-coordinates of the image
             Rect uvRect = new Rect(

@@ -57,6 +57,7 @@ namespace RotoChips.World
         {
             worldRotated = false;
             cameraZoomed = false;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, false);
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldZoomCameraAtMin, this);
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotateToObject, this, targetObject);
         }
@@ -70,6 +71,7 @@ namespace RotoChips.World
         void OnWorldRotatedToObject(object sender, InstantMessageArgs args)
         {
             worldRotated = true;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, true);
         }
 
         void OnGUIWhiteCurtainFaded(object sender, InstantMessageArgs args)

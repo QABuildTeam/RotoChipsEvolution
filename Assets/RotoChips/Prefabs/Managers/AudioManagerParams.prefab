@@ -51,39 +51,115 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e3e4b2cf203a7e4e9e42495513cbf62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxAudioPlayers: 2
+  maxSFXPlayers: 5
   maxMusicVolume: 1
   musicCrossFadeTime: 0.5
   musicCrossFadeSteps: 32
   tracks:
-  - clip: {fileID: 8300000, guid: 5da9da0b01409438cbd0f73051f49cd7, type: 3}
-    loop: 1
+  - id: 9
+    clip: {fileID: 8300000, guid: 5da9da0b01409438cbd0f73051f49cd7, type: 3}
+    volume: 0.4
     subclips: []
     subclipOrder: 
-  - clip: {fileID: 8300000, guid: 6d24e7e5626a4440e872bd98ad8bf826, type: 3}
-    loop: 1
+  - id: 4
+    clip: {fileID: 8300000, guid: 6d24e7e5626a4440e872bd98ad8bf826, type: 3}
+    volume: 0.4
     subclips: []
     subclipOrder: 
-  - clip: {fileID: 8300000, guid: ed225ea503af2448cb8b05c333ef615a, type: 3}
-    loop: 1
+  - id: 5
+    clip: {fileID: 8300000, guid: ed225ea503af2448cb8b05c333ef615a, type: 3}
+    volume: 0.4
     subclips: []
     subclipOrder: 
-  - clip: {fileID: 8300000, guid: 00ed0ecaa244c4872a56f4ccd438da5f, type: 3}
-    loop: 1
+  - id: 6
+    clip: {fileID: 8300000, guid: 00ed0ecaa244c4872a56f4ccd438da5f, type: 3}
+    volume: 0.4
     subclips: []
     subclipOrder: 
-  - clip: {fileID: 8300000, guid: d56bf1156b0f5414099762ec5f3bd493, type: 3}
-    loop: 1
+  - id: 7
+    clip: {fileID: 8300000, guid: d56bf1156b0f5414099762ec5f3bd493, type: 3}
+    volume: 0.4
     subclips: []
     subclipOrder: 
-  - clip: {fileID: 8300000, guid: 3d141f99a7a134d43ba051c68e358e7f, type: 3}
-    loop: 1
+  - id: 3
+    clip: {fileID: 8300000, guid: 3d141f99a7a134d43ba051c68e358e7f, type: 3}
+    volume: 0.4
     subclips: []
     subclipOrder: 
-  - clip: {fileID: 8300000, guid: 4019bb0d591184f2fbbd3b6f48e2922b, type: 3}
-    loop: 1
+  - id: 1
+    clip: {fileID: 8300000, guid: 4019bb0d591184f2fbbd3b6f48e2922b, type: 3}
+    volume: 0.4
     subclips: []
     subclipOrder: 
-  - clip: {fileID: 8300000, guid: 636bbdcf0a9894ffea0108cd2d3b1631, type: 3}
-    loop: 1
+  - id: 2
+    clip: {fileID: 8300000, guid: 636bbdcf0a9894ffea0108cd2d3b1631, type: 3}
+    volume: 0.4
     subclips: []
     subclipOrder: 
+  sfx:
+  - id: 1
+    clip: {fileID: 8300000, guid: 0afc04de06d5746b4981f321b75fa8af, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 2
+    clip: {fileID: 8300000, guid: 84c52bdb4531848fda49696996c0a851, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 3
+    clip: {fileID: 8300000, guid: 873306423fb9f467eaeb1f82b41d2751, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 4
+    clip: {fileID: 8300000, guid: fca518e5f20474ffea842964f502d8a1, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 5
+    clip: {fileID: 8300000, guid: ce8a8f05cb9695742972570631522639, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 6
+    clip: {fileID: 8300000, guid: bcbcc35506d49407eb76ab6777da0416, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 7
+    clip: {fileID: 8300000, guid: a2ca18533a2494a52a309cc11a978e4b, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 8
+    clip: {fileID: 8300000, guid: 81a77d57bb3654a26a89c64fb4ddd3c2, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 9
+    clip: {fileID: 8300000, guid: 5a9a21e91da6d4bc3a4289bbdfe39c8f, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 10
+    clip: {fileID: 8300000, guid: 01855fa0f389940f7afc7bcea7376cfa, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 11
+    clip: {fileID: 8300000, guid: 0255a7dc0ac3d4c78a42b55427340965, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 12
+    clip: {fileID: 8300000, guid: 4ed82dfd6d9f83b40b1678475f407d5e, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 13
+    clip: {fileID: 8300000, guid: 3719753ad541a0749ada1f276f18d702, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
