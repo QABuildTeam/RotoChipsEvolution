@@ -81,7 +81,7 @@ namespace RotoChips.Management
         {
             get
             {
-                if (musicTracks == null)
+                if (sfxClips == null)
                 {
                     sfxClips = new Dictionary<SFXEnum, SFXControl>();
                     if (Parameters != null)
@@ -174,8 +174,8 @@ namespace RotoChips.Management
         {
             if (Parameters.Tracks.Count > 0)
             {
-                int playerId = this.currentMusicPlayerId;
-                MusicPlayer currentMusicPlayer = musicPlayers[playerId];
+                int startPlayerId = currentMusicPlayerId;
+                MusicPlayer currentMusicPlayer = musicPlayers[currentMusicPlayerId];
                 AudioSource actualPlayer = currentMusicPlayer.actualPlayer;
                 AudioTrackControl track = MusicTracks[currentTrack];
                 do
@@ -183,7 +183,7 @@ namespace RotoChips.Management
                     // prepare subclip play parameters
                     float startTime = currentMusicPlayer.startTime;
                     float waitTime = currentMusicPlayer.endTime - startTime;
-                    Debug.Log("Playing subclip " + currentMusicPlayer.subclip.ToString() + " from " + startTime.ToString() + ", waiting for " + waitTime.ToString());
+                    //Debug.Log("Playing subclip " + currentMusicPlayer.subclip.ToString() + " from " + startTime.ToString() + ", waiting for " + waitTime.ToString());
                     // do the actual play
                     actualPlayer.time = startTime;
                     // ensure that actual player is really playing
@@ -195,9 +195,15 @@ namespace RotoChips.Management
 
                     // move to the next subclip
                     PromoteToNextMusicSubclip(currentMusicPlayer, track);
-                    Debug.Log("Subclip order " + currentMusicPlayer.order.ToString() + "/" + track.subclipOrder.Length.ToString());
+                    //Debug.Log("Subclip order " + currentMusicPlayer.order.ToString() + "/" + track.subclipOrder.Length.ToString());
                 }
                 while (currentMusicPlayer.loop || currentMusicPlayer.order < track.subclipOrder.Length);
+                // forcibly stop playing
+                actualPlayer.Stop();
+                if (startPlayerId == currentMusicPlayerId)
+                {
+                    currentMusicPlayerId = -1;
+                }
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.MusicTrackPlayed, this, track.id);
             }
         }
@@ -298,9 +304,13 @@ namespace RotoChips.Management
             {
                 if (currentMusicPlayerId >= 0)
                 {
-                    Debug.Log("Stopping track " + currentTrack.ToString());
-                    // stop the currently playing track
-                    StartCoroutine(FadeMusicTrack(currentMusicPlayerId, false));
+                    AudioSource actualPlayer = musicPlayers[currentMusicPlayerId].actualPlayer;
+                    if (actualPlayer.isPlaying)
+                    {
+                        Debug.Log("Stopping track " + currentTrack.ToString());
+                        // stop the currently playing track
+                        StartCoroutine(FadeMusicTrack(currentMusicPlayerId, false));
+                    }
                 }
                 Debug.Log("Playing track " + trackId.ToString());
                 if (MusicTracks.ContainsKey(trackId))

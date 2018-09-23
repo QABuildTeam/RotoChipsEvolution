@@ -153,6 +153,19 @@ namespace RotoChips.Management
             }
         }
 
+        protected HintManager mHint;
+        public static HintManager MHint
+        {
+            get
+            {
+                return Instance.mHint;
+            }
+            set
+            {
+                Instance.mHint = value;
+            }
+        }
+
         public bool Initialized
         {
             get; private set;
@@ -196,6 +209,7 @@ namespace RotoChips.Management
                 MInput = (TouchInput)LocateManager(typeof(TouchInput));
                 MQueue = (MessageQueueManager)LocateManager(typeof(MessageQueueManager));
                 MGame = (GameManager)LocateManager(typeof(GameManager));
+                MHint = (HintManager)LocateManager(typeof(HintManager));
 
                 Debug.Log("Submanagers are linked");
 

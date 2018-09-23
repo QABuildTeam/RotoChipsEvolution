@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using RotoChips.Management;
+using RotoChips.UI;
 
 namespace RotoChips.World
 {
@@ -31,13 +32,14 @@ namespace RotoChips.World
                 InstantMessageType.WorldGlobePressed, (InstantMessageHandler)OnWorldGlobePressed,
                 InstantMessageType.WorldSelectorPressed, (InstantMessageHandler)OnWorldSelectorPressed,
                 InstantMessageType.WorldRotatedToObject, (InstantMessageHandler)OnWorldRotatedToObject,
-                InstantMessageType.GUIRotoChipsPressed, (InstantMessageHandler)OnWorldRotoChipsPressed,
-                InstantMessageType.GUIRotoCoinsPressed, (InstantMessageHandler)OnWorldRotoCoinsPressed,
+                InstantMessageType.GUIRotoChipsPressed, (InstantMessageHandler)OnGUIRotoChipsPressed,
+                InstantMessageType.GUIRotoCoinsPressed, (InstantMessageHandler)OnGUIRotoCoinsPressed,
                 InstantMessageType.WorldSatellitePressed, (InstantMessageHandler)OnWorldSatellitePressed,
                 InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded,
                 InstantMessageType.GUIRestartButtonPressed, (InstantMessageHandler)OnGUIRestartButtonPressed,
                 InstantMessageType.GUIViewButtonPressed, (InstantMessageHandler)OnGUIViewButtonPressed,
-                InstantMessageType.WorldLevelDescriptionClosed, (InstantMessageHandler)OnWorldLevelDescriptionClosed
+                InstantMessageType.WorldLevelDescriptionClosed, (InstantMessageHandler)OnWorldLevelDescriptionClosed,
+                InstantMessageType.GUIMagicButtonPressed, (InstantMessageHandler)OnGUIMagicButtonPressed
             );
             registrator.RegisterHandlers();
         }
@@ -112,17 +114,46 @@ namespace RotoChips.World
                         StartCoroutine(YieldToScene(targetObject, puzzleScene));
                     }
                 }
+                else
+                {
+                    // show hint message
+                    GlobalManager.MInstantMessage.DeliverMessage(
+                        InstantMessageType.GUIShowHint,
+                        this,
+                        new HintRequest
+                        {
+                            type = HintType.LevelNotYetPlayable,
+                            target = null
+                        }
+                    );
+                }
             }
         }
 
-        void OnWorldRotoChipsPressed(object sender, InstantMessageArgs args)
+        void OnGUIRotoChipsPressed(object sender, InstantMessageArgs args)
         {
-
+            GlobalManager.MInstantMessage.DeliverMessage(
+                InstantMessageType.GUIShowHint,
+                this,
+                new HintRequest
+                {
+                    type = HintType.WorldPointScoreTapped,
+                    target = null
+                }
+            );
         }
 
-        void OnWorldRotoCoinsPressed(object sender, InstantMessageArgs args)
+        void OnGUIRotoCoinsPressed(object sender, InstantMessageArgs args)
         {
-
+            GlobalManager.MInstantMessage.DeliverMessage(
+                InstantMessageType.GUIShowHint,
+                this,
+                new HintRequest
+                {
+                    type = HintType.WorldCoinsScoreTapped,
+                    target = null
+                }
+            );
         }
 
         [SerializeField]
@@ -135,14 +166,20 @@ namespace RotoChips.World
 
         void OnGUIRestartButtonPressed(object sender, InstantMessageArgs args)
         {
+            if (!GlobalManager.MHint.ShowNewHint(HintType.GameRestartButton))
+            {
 
+            }
         }
 
         [SerializeField]
         protected string finaleScene = "Finale";
         void OnGUIViewButtonPressed(object sender, InstantMessageArgs args)
         {
-            StartCoroutine(YieldToScene(null, finaleScene));
+            if (!GlobalManager.MHint.ShowNewHint(HintType.GameRollsButton))
+            {
+                StartCoroutine(YieldToScene(null, finaleScene));
+            }
         }
 
         IEnumerator YieldToScene(GameObject initiator, string sceneName)
@@ -171,6 +208,41 @@ namespace RotoChips.World
         private void OnDestroy()
         {
             registrator.UnregisterHandlers();
+        }
+
+        // special debug messaging
+        HintType currentHint = HintType.None;
+        void OnGUIMagicButtonPressed(object sender, InstantMessageArgs args)
+        {
+            do
+            {
+                HintType newHint = currentHint;
+                foreach (HintType hintType in System.Enum.GetValues(typeof(HintType)))
+                {
+                    if (hintType > newHint)
+                    {
+                        newHint = hintType;
+                        break;
+                    }
+                }
+                if (newHint == currentHint)
+                {
+                    currentHint = HintType.None + 1;
+                }
+                else
+                {
+                    currentHint = newHint;
+                }
+            } while (!GlobalManager.MHint.Hints.ContainsKey(currentHint));
+            GlobalManager.MInstantMessage.DeliverMessage(
+                InstantMessageType.GUIShowHint,
+                this,
+                new HintRequest
+                {
+                    type = currentHint,
+                    target = gameObject
+                }
+            );
         }
 
     }

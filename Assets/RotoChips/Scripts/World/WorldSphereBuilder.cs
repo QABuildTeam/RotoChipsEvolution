@@ -34,9 +34,12 @@ namespace RotoChips.World
         GameObject clouds;
         bool fadeClouds;
 
+        MessageRegistrator registrator;
         // this method constructs the level selection objects on the world sphere
         void Awake()
         {
+            registrator = new MessageRegistrator(InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded);
+            registrator.RegisterHandlers();
             fadeClouds = false;
 
             //EnableRotation(false);                                  // make sure the sphere does not rotate while constructing spikes
@@ -128,11 +131,23 @@ namespace RotoChips.World
             // special command for the Finale scene
             // if there are no fireworks, the command yields to nothing
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.VictoryStartFireworks, this, selectors);
+        }
+
+        // message handling
+        void OnGUIWhiteCurtainFaded(object sender, InstantMessageArgs args)
+        {
+            bool up = (bool)args.arg;
             // fade the clouds if necessary
-            if (fadeClouds)
+            if (!up && clouds != null && fadeClouds)
             {
+                fadeClouds = false;
                 clouds.GetComponent<CloudFader>().FadeOut();
             }
+        }
+
+        private void OnDestroy()
+        {
+            registrator.UnregisterHandlers();
         }
 
     }

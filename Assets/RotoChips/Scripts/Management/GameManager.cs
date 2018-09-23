@@ -10,6 +10,7 @@ using UnityEngine;
 using RotoChips.Generic;
 using RotoChips.Puzzle;
 using RotoChips.Data;
+using RotoChips.UI;
 
 namespace RotoChips.Management
 {
@@ -19,12 +20,71 @@ namespace RotoChips.Management
         MessageRegistrator registrator;
         public override void MakeReady()
         {
-            registrator = new MessageRegistrator(InstantMessageType.PuzzleComplete, (InstantMessageHandler)OnPuzzleComplete);
+            registrator = new MessageRegistrator(
+                InstantMessageType.WorldStarted, (InstantMessageHandler)OnWorldStarted,
+                InstantMessageType.PuzzleStarted, (InstantMessageHandler)OnPuzzleStarted,
+                InstantMessageType.PuzzleComplete, (InstantMessageHandler)OnPuzzleComplete,
+                InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded
+            );
             registrator.RegisterHandlers();
             base.MakeReady();
         }
 
         // message handling
+        protected enum SceneType
+        {
+            World,
+            Puzzle
+        }
+        protected SceneType sceneType;
+        void OnWorldStarted(object sender, InstantMessageArgs args)
+        {
+            sceneType = SceneType.World;
+            bool firstRound = GlobalManager.MStorage.FirstRound;
+            int selectedLevel = GlobalManager.MStorage.SelectedLevel;
+            if (firstRound)
+            {
+            }
+        }
+
+        void OnPuzzleStarted(object sender, InstantMessageArgs args)
+        {
+            sceneType = SceneType.Puzzle;
+        }
+
+        void OnGUIWhiteCurtainFaded(object sender, InstantMessageArgs args)
+        {
+            bool firstRound = GlobalManager.MStorage.FirstRound;
+            int selectedLevel = GlobalManager.MStorage.SelectedLevel;
+            switch (sceneType)
+            {
+                case SceneType.World:
+                    if (firstRound)
+                    {
+                        switch (selectedLevel)
+                        {
+                            case 0:
+                                GlobalManager.MHint.ShowNewHint(HintType.FirstTimeWelcome);
+                                break;
+                            case 1:
+                                //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.rota)
+                                GlobalManager.MHint.ShowNewHint(HintType.GalleryOpened);
+                                break;
+                        }
+                    }
+                    break;
+                case SceneType.Puzzle:
+                    if (firstRound)
+                    {
+                        switch (selectedLevel)
+                        {
+                        }
+                    }
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleShuffle, this);
+                    break;
+            }
+        }
+
         [SerializeField]
         protected string levelCompletedId = "idLevelCompleted";
         [SerializeField]

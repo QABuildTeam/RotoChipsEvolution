@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using RotoChips.Management;
 using RotoChips.Audio;
+using RotoChips.UI;
 
 namespace RotoChips.Puzzle
 {
@@ -40,8 +41,7 @@ namespace RotoChips.Puzzle
         MessageRegistrator registrator;
         bool puzzleBusy;
 
-        // Use this for initialization
-        void Start()
+        private void Awake()
         {
             dialogMode = DialogOKCancelMode.None;
             exitMode = Exitmode.World;
@@ -57,9 +57,15 @@ namespace RotoChips.Puzzle
                 InstantMessageType.GUIMagicButtonPressed, (InstantMessageHandler)OnGUIMagicButtonPressed,
                 InstantMessageType.GUIOKButtonPressed, (InstantMessageHandler)OnGUIOKButtonPressed,
                 InstantMessageType.GUICancelButtonPressed, (InstantMessageHandler)OnGUICancelButtonPressed,
-                InstantMessageType.MusicTrackPlayed, (InstantMessageHandler)OnMusicTrackPlayed
+                InstantMessageType.MusicTrackPlayed, (InstantMessageHandler)OnMusicTrackPlayed,
+                InstantMessageType.GUIRotoCoinsPressed, (InstantMessageHandler)OnGUIRotoCoinsPressed,
+                InstantMessageType.GUIRotoChipsPressed, (InstantMessageHandler)OnGUIRotoChipsPressed
             );
             registrator.RegisterHandlers();
+        }
+        // Use this for initialization
+        void Start()
+        {
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleStarted, this);
         }
 
@@ -70,9 +76,12 @@ namespace RotoChips.Puzzle
         {
             if (!puzzleBusy)
             {
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
-                dialogMode = DialogOKCancelMode.Back;
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIStartDialogOKCancel, this, backQuestionId);
+                if (!GlobalManager.MHint.ShowNewHint(HintType.BackLevelButton))
+                {
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
+                    dialogMode = DialogOKCancelMode.Back;
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIStartDialogOKCancel, this, backQuestionId);
+                }
             }
         }
 
@@ -80,8 +89,11 @@ namespace RotoChips.Puzzle
         {
             if (!puzzleBusy)
             {
-                // no need to set the puzzle busy because the SourceImage overlaps all the puzzle controls
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleViewSourceImage, this);
+                if (!GlobalManager.MHint.ShowNewHint(HintType.ShowSourceButton))
+                {
+                    // no need to set the puzzle busy because the SourceImage overlaps all the puzzle controls
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleViewSourceImage, this);
+                }
             }
         }
 
@@ -91,9 +103,12 @@ namespace RotoChips.Puzzle
         {
             if (!puzzleBusy)
             {
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
-                dialogMode = DialogOKCancelMode.Reset;
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIStartDialogOKCancel, this, restartlevelQuestionId);
+                if (!GlobalManager.MHint.ShowNewHint(HintType.AskForRestartButton))
+                {
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
+                    dialogMode = DialogOKCancelMode.Reset;
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIStartDialogOKCancel, this, restartlevelQuestionId);
+                }
             }
         }
 
@@ -103,10 +118,13 @@ namespace RotoChips.Puzzle
         {
             if (!puzzleBusy)
             {
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
-                dialogMode = DialogOKCancelMode.Autostep;
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzlePrepareAutostep, this);
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIStartDialogOKCancel, this, magicQuestionId);
+                if (!GlobalManager.MHint.ShowNewHint(HintType.AutoStepButton))
+                {
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
+                    dialogMode = DialogOKCancelMode.Autostep;
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzlePrepareAutostep, this);
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIStartDialogOKCancel, this, magicQuestionId);
+                }
             }
         }
 
@@ -197,6 +215,31 @@ namespace RotoChips.Puzzle
             }
         }
 
+        void OnGUIRotoCoinsPressed(object sender, InstantMessageArgs args)
+        {
+            GlobalManager.MInstantMessage.DeliverMessage(
+                InstantMessageType.GUIShowHint,
+                this,
+                new HintRequest
+                {
+                    type = HintType.PuzzleCoinsScoreTapped,
+                    target = null
+                }
+            );
+        }
+
+        void OnGUIRotoChipsPressed(object sender, InstantMessageArgs args)
+        {
+            GlobalManager.MInstantMessage.DeliverMessage(
+                InstantMessageType.GUIShowHint,
+                this,
+                new HintRequest
+                {
+                    type = HintType.PuzzlePointScoreTapped,
+                    target = null
+                }
+            );
+        }
         private void OnDestroy()
         {
             registrator.UnregisterHandlers();
