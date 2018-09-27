@@ -27,21 +27,25 @@ namespace RotoChips.Puzzle
 
     public class PuzzleController : MonoBehaviour
     {
-        MessageRegistrator registrator;
-        LevelDataManager.Descriptor descriptor;
-        TileStatus[,] tileNeighbours;
-        int[,] buttonAngles;
+        MessageRegistrator registrator;         // standard message handlers registrator
+        LevelDataManager.Descriptor descriptor; // a descriptor of a currently played level
+        TileStatus[,] tileNeighbours;           // a 2-dimensional array of tile statuses
+        int[,] buttonAngles;                    // a 2-dimensional array of button angle codes
+                                                // (0 - 0 degrees,
+                                                //  1 - 90 degrees clockwise,
+                                                //  2 - 180 degrees clockwise,
+                                                //  3 - 270 degrees clockwise
 
-        PuzzleBuilder builder;
-        bool puzzleBusy;
+        PuzzleBuilder builder;                  // a reference to the PuzzleBuilder
+        bool puzzleBusy;                        // private puzzle status flags
         bool buttonRotated;
         bool puzzleComplete;
         bool autostepUsed;
 
-        bool startVictoryScreen;
+        bool startVictoryScreen;                // a flag to start the victory screen
 
         // Use this for initialization
-        void Start()
+        private void Awake()
         {
             descriptor = GlobalManager.MLevel.GetDescriptor(GlobalManager.MStorage.SelectedLevel);
             tileNeighbours = new TileStatus[descriptor.init.width, descriptor.init.height];
@@ -52,7 +56,6 @@ namespace RotoChips.Puzzle
             puzzleComplete = false;
             autostepUsed = false;
             startVictoryScreen = true;
-            RestoreAll();
             registrator = new MessageRegistrator(
                 InstantMessageType.PuzzleButtonPressed, (InstantMessageHandler)OnPuzzleButtonPressed,
                 InstantMessageType.PuzzleButtonRotated, (InstantMessageHandler)OnPuzzleButtonRotated,
@@ -65,6 +68,11 @@ namespace RotoChips.Puzzle
                 InstantMessageType.PuzzleBusy, (InstantMessageHandler)OnPuzzleBusy
             );
             registrator.RegisterHandlers();
+        }
+
+        void Start()
+        {
+            RestoreAll();
         }
 
         #region Status handling
@@ -365,7 +373,7 @@ namespace RotoChips.Puzzle
         }
         #endregion
 
-        #region Autostep
+        #region Autostep and autocomplete
         // -------------------------
         // Autostep methods
         // -------------------------
@@ -436,11 +444,29 @@ namespace RotoChips.Puzzle
                     }
                 }
                 SaveAll();
+                //GlobalManager.MAudio.PlaySFX();
                 // tight vibe sound
                 //Debug.Log("Playing vibe sound");
                 //vss.playSound();
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutostepUsed, this);
             }
+        }
+
+        IEnumerator PerformAutocomplete()
+        {
+            while (!puzzleComplete)
+            {
+                Autostep();
+                while (!autostepUsed)
+                {
+                    yield return null;
+                }
+            }
+        }
+
+        void Autocomplete()
+        {
+            StartCoroutine(PerformAutocomplete());
         }
         #endregion
 

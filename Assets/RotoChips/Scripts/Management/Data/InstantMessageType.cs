@@ -179,6 +179,14 @@ namespace RotoChips.Management
         BackgroundMusic,                // Command: Set or reset background music playing
                                         //      Arguments:
                                         //          bool on - a flag which starts (true) or stops (false) background music playing
+
+        // Special
+        RedirectFirstTimeWelcome2,      // Command: Active level selector on the world globe should create a hint request for FirstTimeWelcome2
+                                        //      Arguments: None
+        RedirectGalleryOpened,          // Command: The satellite above the world globe should create a hint request for GalleryOpened
+                                        //      Arguments: None
+        RedirectFirstTileButtons        // Command: The puzzle button (0,0) should create a hint request for FirstTileButtonsHint
+                                        //      Arguments: None
     }
 
 }

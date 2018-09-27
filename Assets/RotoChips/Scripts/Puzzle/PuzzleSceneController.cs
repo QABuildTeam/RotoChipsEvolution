@@ -217,6 +217,7 @@ namespace RotoChips.Puzzle
 
         void OnGUIRotoCoinsPressed(object sender, InstantMessageArgs args)
         {
+            // this hint is shown every time the RotoCoins panel is tapped
             GlobalManager.MInstantMessage.DeliverMessage(
                 InstantMessageType.GUIShowHint,
                 this,
@@ -230,6 +231,7 @@ namespace RotoChips.Puzzle
 
         void OnGUIRotoChipsPressed(object sender, InstantMessageArgs args)
         {
+            // this hint is shown every time the RotoChips panel is tapped
             GlobalManager.MInstantMessage.DeliverMessage(
                 InstantMessageType.GUIShowHint,
                 this,

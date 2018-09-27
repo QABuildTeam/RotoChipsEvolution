@@ -24,7 +24,10 @@ namespace RotoChips.Management
                 InstantMessageType.WorldStarted, (InstantMessageHandler)OnWorldStarted,
                 InstantMessageType.PuzzleStarted, (InstantMessageHandler)OnPuzzleStarted,
                 InstantMessageType.PuzzleComplete, (InstantMessageHandler)OnPuzzleComplete,
-                InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded
+                InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded,
+                InstantMessageType.PuzzleSourceImageClosed, (InstantMessageHandler)OnPuzzleSourceImageClosed,
+                InstantMessageType.PuzzleHasShuffled, (InstantMessageHandler)OnPuzzleHasShuffled,
+                InstantMessageType.GUIHintClosed, (InstantMessageHandler)OnGUIHintClosed
             );
             registrator.RegisterHandlers();
             base.MakeReady();
@@ -33,6 +36,7 @@ namespace RotoChips.Management
         // message handling
         protected enum SceneType
         {
+            None,
             World,
             Puzzle
         }
@@ -42,9 +46,6 @@ namespace RotoChips.Management
             sceneType = SceneType.World;
             bool firstRound = GlobalManager.MStorage.FirstRound;
             int selectedLevel = GlobalManager.MStorage.SelectedLevel;
-            if (firstRound)
-            {
-            }
         }
 
         void OnPuzzleStarted(object sender, InstantMessageArgs args)
@@ -52,8 +53,18 @@ namespace RotoChips.Management
             sceneType = SceneType.Puzzle;
         }
 
+        [SerializeField]
+        protected string tutorial0ShuffleConfig = "";
+        [SerializeField]
+        protected string tutorial1ShuffleConfig = "";
         void OnGUIWhiteCurtainFaded(object sender, InstantMessageArgs args)
         {
+            bool up = (bool)args.arg;
+            if (up)
+            {
+                sceneType = SceneType.None;
+                return;
+            }
             bool firstRound = GlobalManager.MStorage.FirstRound;
             int selectedLevel = GlobalManager.MStorage.SelectedLevel;
             switch (sceneType)
@@ -64,11 +75,97 @@ namespace RotoChips.Management
                         switch (selectedLevel)
                         {
                             case 0:
+                                // hint FirstTimeWelcome is shown once at the very first start of the game
                                 GlobalManager.MHint.ShowNewHint(HintType.FirstTimeWelcome);
                                 break;
                             case 1:
-                                //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.rota)
-                                GlobalManager.MHint.ShowNewHint(HintType.GalleryOpened);
+                                // hint GalleryOpened
+                                // requires the gallery satellite as an argument
+                                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RedirectGalleryOpened, this);
+                                break;
+                        }
+                    }
+                    break;
+                case SceneType.Puzzle:
+                    // now shuffle the puzzle
+                    string shuffleConfig = null;
+                    if (firstRound)
+                    {
+                        // the first two levels are shuffled specially while on the first round
+                        switch (selectedLevel)
+                        {
+                            case 0:
+                                shuffleConfig = tutorial0ShuffleConfig;
+                                break;
+                            case 1:
+                                shuffleConfig = tutorial1ShuffleConfig;
+                                break;
+                        }
+                    }
+                    StartCoroutine(WaitPuzzleShuffle(shuffleConfig));
+                    break;
+            }
+        }
+
+        bool sourceImageClosed;
+        void OnPuzzleSourceImageClosed(object sender, InstantMessageArgs args)
+        {
+            sourceImageClosed = true;
+        }
+
+        IEnumerator WaitPuzzleShuffle(string shuffleConfig)
+        {
+            // wait while source image is closed
+            sourceImageClosed = false;
+            while (!sourceImageClosed)
+            {
+                yield return null;
+            }
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleShuffle, this, shuffleConfig);
+        }
+
+        void OnPuzzleHasShuffled(object sender, InstantMessageArgs args)
+        {
+            bool firstRound = GlobalManager.MStorage.FirstRound;
+            int selectedLevel = GlobalManager.MStorage.SelectedLevel;
+            // the first three level are handled specially while on the first round
+            if (firstRound)
+            {
+                switch (selectedLevel)
+                {
+                    case 0:
+                        GlobalManager.MHint.ShowNewHint(HintType.PuzzleFirstShuffled);
+                        break;
+                    case 1:
+                        GlobalManager.MHint.ShowNewHint(HintType.SecondLevelChallenge);
+                        break;
+                    case 2:
+                        GlobalManager.MHint.ShowNewHint(HintType.NoMoreBonuses);
+                        break;
+                }
+            }
+        }
+
+        void OnGUIHintClosed(object sender, InstantMessageArgs args)
+        {
+            HintParams hintParams = (HintParams)args.arg;
+            bool firstRound = GlobalManager.MStorage.FirstRound;
+            int selectedLevel = GlobalManager.MStorage.SelectedLevel;
+            switch (sceneType)
+            {
+                case SceneType.World:
+                    if (firstRound)
+                    {
+                        switch (selectedLevel)
+                        {
+                            case 0:
+                                switch (hintParams.type)
+                                {
+                                    case HintType.FirstTimeWelcome:
+                                        GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotateToSelected, this);
+                                        GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RedirectFirstTimeWelcome2, this);
+                                        break;
+                                }
                                 break;
                         }
                     }
@@ -78,9 +175,22 @@ namespace RotoChips.Management
                     {
                         switch (selectedLevel)
                         {
+                            case 0:
+                                switch (hintParams.type)
+                                {
+                                    case HintType.PuzzleFirstShuffled:
+                                        GlobalManager.MHint.ShowNewHint(HintType.FirstLevelChallenge);
+                                        break;
+                                    case HintType.FirstLevelChallenge:
+                                        GlobalManager.MHint.ShowNewHint(HintType.FirstTileButtonsHint);
+                                        break;
+                                    case HintType.FirstTileButtonsHint:
+                                        GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RedirectFirstTileButtons, this);
+                                        break;
+                                }
+                                break;
                         }
                     }
-                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleShuffle, this);
                     break;
             }
         }
@@ -139,7 +249,7 @@ namespace RotoChips.Management
                 completeStatus.descriptor.state.Complete = true;
                 // set all the levels in the current realm revealed
                 bool realmComplete = true;
-                for(int i = 0; i < realmData.members.Length; i++)
+                for (int i = 0; i < realmData.members.Length; i++)
                 {
                     LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(realmData.members[i]);
                     if (!descriptor.state.Revealed)

@@ -228,220 +228,88 @@ MonoBehaviour:
     target: {fileID: 0}
     arrowAngle: 0
     arrowMessage: 0
-  - type: 0
-    hintMsgId: 
+  - type: 32
+    hintMsgId: idHelpFirstLevelChallenge
     layout: 0
-    width: 0
-    height: 0
+    width: 400
+    height: 200
     xGap: 0
     yGap: 0
     arrowOn: 0
     target: {fileID: 0}
     arrowAngle: 0
     arrowMessage: 0
-  - type: 0
-    hintMsgId: 
+  - type: 33
+    hintMsgId: idHelpFirstTileButtonsHint
+    layout: 5
+    width: 400
+    height: 200
+    xGap: -100
+    yGap: 100
+    arrowOn: 1
+    target: {fileID: 0}
+    arrowAngle: -45
+    arrowMessage: 60
+  - type: 28
+    hintMsgId: idHelpFirstTileInPlace
     layout: 0
-    width: 0
-    height: 0
+    width: 400
+    height: 200
     xGap: 0
     yGap: 0
     arrowOn: 0
     target: {fileID: 0}
     arrowAngle: 0
     arrowMessage: 0
-  - type: 0
-    hintMsgId: 
+  - type: 34
+    hintMsgId: idHelpSecondTileButtonsHint
+    layout: 7
+    width: 400
+    height: 200
+    xGap: 100
+    yGap: 100
+    arrowOn: 1
+    target: {fileID: 0}
+    arrowAngle: 135
+    arrowMessage: 60
+  - type: 30
+    hintMsgId: idHelpThirdTileInPlace
     layout: 0
-    width: 0
-    height: 0
+    width: 500
+    height: 250
     xGap: 0
     yGap: 0
     arrowOn: 0
     target: {fileID: 0}
     arrowAngle: 0
     arrowMessage: 0
-  - type: 0
-    hintMsgId: 
+  - type: 36
+    hintMsgId: idHelpTwoRowsInPlace2
     layout: 0
-    width: 0
-    height: 0
+    width: 500
+    height: 200
     xGap: 0
     yGap: 0
     arrowOn: 0
     target: {fileID: 0}
     arrowAngle: 0
     arrowMessage: 0
-  - type: 0
-    hintMsgId: 
+  - type: 35
+    hintMsgId: idHelpSecondLevelChallenge
     layout: 0
-    width: 0
-    height: 0
+    width: 500
+    height: 200
     xGap: 0
     yGap: 0
     arrowOn: 0
     target: {fileID: 0}
     arrowAngle: 0
     arrowMessage: 0
-  - type: 0
-    hintMsgId: 
+  - type: 31
+    hintMsgId: idHelpTwoRowsInPlace
     layout: 0
-    width: 0
-    height: 0
-    xGap: 0
-    yGap: 0
-    arrowOn: 0
-    target: {fileID: 0}
-    arrowAngle: 0
-    arrowMessage: 0
-  - type: 0
-    hintMsgId: 
-    layout: 0
-    width: 0
-    height: 0
-    xGap: 0
-    yGap: 0
-    arrowOn: 0
-    target: {fileID: 0}
-    arrowAngle: 0
-    arrowMessage: 0
-  - type: 0
-    hintMsgId: 
-    layout: 0
-    width: 0
-    height: 0
-    xGap: 0
-    yGap: 0
-    arrowOn: 0
-    target: {fileID: 0}
-    arrowAngle: 0
-    arrowMessage: 0
-  - type: 0
-    hintMsgId: 
-    layout: 0
-    width: 0
-    height: 0
-    xGap: 0
-    yGap: 0
-    arrowOn: 0
-    target: {fileID: 0}
-    arrowAngle: 0
-    arrowMessage: 0
-  - type: 0
-    hintMsgId: 
-    layout: 0
-    width: 0
-    height: 0
-    xGap: 0
-    yGap: 0
-    arrowOn: 0
-    target: {fileID: 0}
-    arrowAngle: 0
-    arrowMessage: 0
-  - type: 0
-    hintMsgId: 
-    layout: 0
-    width: 0
-    height: 0
-    xGap: 0
-    yGap: 0
-    arrowOn: 0
-    target: {fileID: 0}
-    arrowAngle: 0
-    arrowMessage: 0
-  - type: 0
-    hintMsgId: 
-    layout: 0
-    width: 0
-    height: 0
-    xGap: 0
-    yGap: 0
-    arrowOn: 0
-    target: {fileID: 0}
-    arrowAngle: 0
-    arrowMessage: 0
-  - type: 0
-    hintMsgId: 
-    layout: 0
-    width: 0
-    height: 0
-    xGap: 0
-    yGap: 0
-    arrowOn: 0
-    target: {fileID: 0}
-    arrowAngle: 0
-    arrowMessage: 0
-  - type: 0
-    hintMsgId: 
-    layout: 0
-    width: 0
-    height: 0
-    xGap: 0
-    yGap: 0
-    arrowOn: 0
-    target: {fileID: 0}
-    arrowAngle: 0
-    arrowMessage: 0
-  - type: 0
-    hintMsgId: 
-    layout: 0
-    width: 0
-    height: 0
-    xGap: 0
-    yGap: 0
-    arrowOn: 0
-    target: {fileID: 0}
-    arrowAngle: 0
-    arrowMessage: 0
-  - type: 0
-    hintMsgId: 
-    layout: 0
-    width: 0
-    height: 0
-    xGap: 0
-    yGap: 0
-    arrowOn: 0
-    target: {fileID: 0}
-    arrowAngle: 0
-    arrowMessage: 0
-  - type: 0
-    hintMsgId: 
-    layout: 0
-    width: 0
-    height: 0
-    xGap: 0
-    yGap: 0
-    arrowOn: 0
-    target: {fileID: 0}
-    arrowAngle: 0
-    arrowMessage: 0
-  - type: 0
-    hintMsgId: 
-    layout: 0
-    width: 0
-    height: 0
-    xGap: 0
-    yGap: 0
-    arrowOn: 0
-    target: {fileID: 0}
-    arrowAngle: 0
-    arrowMessage: 0
-  - type: 0
-    hintMsgId: 
-    layout: 0
-    width: 0
-    height: 0
-    xGap: 0
-    yGap: 0
-    arrowOn: 0
-    target: {fileID: 0}
-    arrowAngle: 0
-    arrowMessage: 0
-  - type: 0
-    hintMsgId: 
-    layout: 0
-    width: 0
-    height: 0
+    width: 500
+    height: 400
     xGap: 0
     yGap: 0
     arrowOn: 0

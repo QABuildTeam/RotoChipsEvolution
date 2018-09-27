@@ -69,7 +69,7 @@ namespace RotoChips.Management
                 }
             }
             hintShown = new Dictionary<HintType, bool>();
-            foreach(HintType type in System.Enum.GetValues(typeof(HintType)))
+            foreach (HintType type in System.Enum.GetValues(typeof(HintType)))
             {
                 hintShown.Add(type, false);
             }
@@ -96,46 +96,57 @@ namespace RotoChips.Management
             hintShown = (Dictionary<HintType, bool>)prototype;
         }
 
-        public bool IsHintShown(HintType hintType)
+        protected bool IsHintShown(HintType hintType)
         {
             bool isShown;
-            if (hintShown.TryGetValue(hintType,out isShown))
+            if (hintShown.TryGetValue(hintType, out isShown))
             {
                 return isShown;
             }
             return false;
         }
 
-        public void SetHintShown(HintType hintType)
+        protected void SetHintShown(HintType hintType)
         {
             bool isShown;
-            if (hintShown.TryGetValue(hintType, out isShown)&&!isShown)
+            if (!hintShown.TryGetValue(hintType, out isShown))
+            {
+                hintShown.Add(hintType, true);
+            }
+            else if (!isShown)
             {
                 hintShown[hintType] = true;
-                GlobalManager.Instance.Save();
             }
             else
             {
-                hintShown.Add(hintType, true);
-                GlobalManager.Instance.Save();
+                return;
             }
+            GlobalManager.Instance.Save();
         }
 
-        public bool ShowNewHint(HintType hintType, GameObject hintTarget=null)
+        public bool ShowNewHint(HintType hintType, GameObject hintTarget = null)
         {
+            HintRequest hintRequest = new HintRequest
+            {
+                type = hintType,
+                target = hintTarget
+            };
             if (!IsHintShown(hintType))
             {
+                // only show a hint once
                 SetHintShown(hintType);
                 GlobalManager.MInstantMessage.DeliverMessage(
                     InstantMessageType.GUIShowHint,
                     this,
-                    new HintRequest
-                    {
-                        type = hintType,
-                        target = hintTarget
-                    }
+                    hintRequest
                 );
                 return true;
+            }
+            else
+            {
+                // if a hint has already been shown, do not show it again
+                // but notify that it is closed
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIHintClosed, this, hintRequest);
             }
             return false;
         }

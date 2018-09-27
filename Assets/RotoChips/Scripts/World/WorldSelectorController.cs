@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using RotoChips.Management;
 using RotoChips.Generic;
+using RotoChips.UI;
 
 namespace RotoChips.World
 {
@@ -46,7 +47,8 @@ namespace RotoChips.World
         {
             registrator = new MessageRegistrator(
                 InstantMessageType.SteadyMouseUpAsButton, (InstantMessageHandler)OnSteadyMouseUpAsButton,
-                InstantMessageType.WorldRotateToSelected, (InstantMessageHandler)OnWorldRotateToSelected
+                InstantMessageType.WorldRotateToSelected, (InstantMessageHandler)OnWorldRotateToSelected,
+                InstantMessageType.RedirectFirstTimeWelcome2, (InstantMessageHandler)OnRedirectFirstTimeWelcome2
             );
             registrator.RegisterHandlers();
             levelDescriptor = descriptor;
@@ -117,6 +119,15 @@ namespace RotoChips.World
             if (gameObject.activeInHierarchy && GlobalManager.MStorage.SelectedLevel == levelDescriptor.init.id)
             {
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldSelectorPressed, this, levelDescriptor);
+            }
+        }
+
+        // special message, only received on the cery first start of the World scene
+        void OnRedirectFirstTimeWelcome2(object sender, InstantMessageArgs args)
+        {
+            if (gameObject.activeInHierarchy && GlobalManager.MStorage.SelectedLevel == levelDescriptor.init.id)
+            {
+                GlobalManager.MHint.ShowNewHint(HintType.FirstTimeWelcome2, gameObject);
             }
         }
 
