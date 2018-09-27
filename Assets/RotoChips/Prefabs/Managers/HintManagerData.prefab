@@ -77,7 +77,7 @@ MonoBehaviour:
   - type: 3
     hintMsgId: idHelpBackButton
     layout: 7
-    width: 500
+    width: 400
     height: 150
     xGap: 100
     yGap: 100
@@ -88,8 +88,8 @@ MonoBehaviour:
   - type: 4
     hintMsgId: idHelpRestartLevelButton
     layout: 1
-    width: 500
-    height: 250
+    width: 450
+    height: 220
     xGap: 100
     yGap: -100
     arrowOn: 0
@@ -111,7 +111,7 @@ MonoBehaviour:
     hintMsgId: idHelpMagicButton
     layout: 5
     width: 500
-    height: 250
+    height: 200
     xGap: -100
     yGap: 100
     arrowOn: 0
@@ -127,7 +127,7 @@ MonoBehaviour:
     yGap: 50
     arrowOn: 1
     target: {fileID: 0}
-    arrowAngle: -45
+    arrowAngle: 45
     arrowMessage: 60
   - type: 18
     hintMsgId: idHelpGameRestartButton
@@ -165,7 +165,7 @@ MonoBehaviour:
   - type: 27
     hintMsgId: idHelpNoMoreBonuses
     layout: 0
-    width: 500
+    width: 560
     height: 250
     xGap: 0
     yGap: 0
@@ -243,12 +243,12 @@ MonoBehaviour:
     hintMsgId: idHelpFirstTileButtonsHint
     layout: 5
     width: 400
-    height: 200
+    height: 150
     xGap: -100
     yGap: 100
     arrowOn: 1
     target: {fileID: 0}
-    arrowAngle: -45
+    arrowAngle: 45
     arrowMessage: 60
   - type: 28
     hintMsgId: idHelpFirstTileInPlace
@@ -266,17 +266,17 @@ MonoBehaviour:
     layout: 7
     width: 400
     height: 200
-    xGap: 100
-    yGap: 100
+    xGap: 50
+    yGap: 50
     arrowOn: 1
     target: {fileID: 0}
-    arrowAngle: 135
+    arrowAngle: -45
     arrowMessage: 60
   - type: 30
     hintMsgId: idHelpThirdTileInPlace
     layout: 0
-    width: 500
-    height: 250
+    width: 400
+    height: 200
     xGap: 0
     yGap: 0
     arrowOn: 0
@@ -287,7 +287,7 @@ MonoBehaviour:
     hintMsgId: idHelpTwoRowsInPlace2
     layout: 0
     width: 500
-    height: 200
+    height: 150
     xGap: 0
     yGap: 0
     arrowOn: 0
@@ -298,7 +298,7 @@ MonoBehaviour:
     hintMsgId: idHelpSecondLevelChallenge
     layout: 0
     width: 500
-    height: 200
+    height: 150
     xGap: 0
     yGap: 0
     arrowOn: 0
@@ -309,7 +309,7 @@ MonoBehaviour:
     hintMsgId: idHelpTwoRowsInPlace
     layout: 0
     width: 500
-    height: 400
+    height: 200
     xGap: 0
     yGap: 0
     arrowOn: 0
