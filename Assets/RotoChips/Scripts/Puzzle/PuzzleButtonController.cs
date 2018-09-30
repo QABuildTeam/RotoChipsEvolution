@@ -10,6 +10,7 @@ using UnityEngine;
 using RotoChips.Management;
 using RotoChips.Audio;
 using RotoChips.UI;
+using RotoChips.Utility;
 
 namespace RotoChips.Puzzle
 {
@@ -42,6 +43,8 @@ namespace RotoChips.Puzzle
         protected SFXPlayParams fastSFXParams;
         [SerializeField]
         protected SFXPlayParams slowSFXParams;
+        [SerializeField]
+        protected FloatRange jinglePitchRange;
 
         public void Init(Vector2Int pos, float aNeutralZ, float aPressedZ, float aReleasedZ)
         {
@@ -51,13 +54,13 @@ namespace RotoChips.Puzzle
             pressedZ = aPressedZ;
             releasedZ = aReleasedZ;
             registrator = new MessageRegistrator(
-                InstantMessageType.SteadyMouseUpAsButton, (InstantMessageHandler)OnSteadyMouseUpAsButton,
+                InstantMessageType.GUIObjectPressedAsButton, (InstantMessageHandler)OnGUIObjectPressedAsButton,
                 InstantMessageType.PuzzlePressButton, (InstantMessageHandler)OnPuzzlePressButton
             );
             registrator.RegisterHandlers();
         }
 
-        void OnSteadyMouseUpAsButton(object sender, InstantMessageArgs args)
+        void OnGUIObjectPressedAsButton(object sender, InstantMessageArgs args)
         {
             if ((GameObject)args.arg == gameObject)
             {
@@ -111,7 +114,9 @@ namespace RotoChips.Puzzle
                 transform.position = position;
                 currentTime -= phaseTime;
                 // emit rotation sound
-                GlobalManager.MAudio.PlaySFX(fastFactor > fastThreshold ? slowSFXParams : fastSFXParams);
+                SFXPlayParams sfxPlayParams = fastFactor > fastThreshold ? slowSFXParams : fastSFXParams;
+                sfxPlayParams.pitchFactor = jinglePitchRange.Random;
+                GlobalManager.MAudio.PlaySFX(sfxPlayParams);
                 // rotate the button
                 phaseTime = rotateTime * fastFactor;
                 float rotationAngle = 0;

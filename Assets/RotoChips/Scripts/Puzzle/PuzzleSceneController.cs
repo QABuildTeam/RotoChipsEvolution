@@ -134,7 +134,7 @@ namespace RotoChips.Puzzle
             {
                 case DialogOKCancelMode.Back:
                     dialogMode = DialogOKCancelMode.None;
-                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeOutWhiteCurtain, this);
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
                     break;
                 case DialogOKCancelMode.Reset:
                     dialogMode = DialogOKCancelMode.None;
@@ -175,7 +175,7 @@ namespace RotoChips.Puzzle
         void OnPuzzleSourceImageClosed(object sender, InstantMessageArgs args)
         {
             // faded in, shuffle the puzzle if necessary
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleShuffle, this, string.Empty);
+            //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleShuffle, this, string.Empty);
         }
 
         void OnPuzzleBusy(object sender, InstantMessageArgs args)
@@ -202,7 +202,7 @@ namespace RotoChips.Puzzle
 
         void OnPuzzleWinImageStopped(object sender, InstantMessageArgs args)
         {
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeOutWhiteCurtain, this);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
         }
 
         [SerializeField]

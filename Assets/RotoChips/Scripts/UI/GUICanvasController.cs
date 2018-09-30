@@ -14,12 +14,12 @@ namespace RotoChips.UI
 {
     public class GUIConfiguration
     {
-        public bool RestartButton;
-        public bool ViewButton;
-        public bool BackButton;
-        public bool MagicButon;
-        public bool RotochipsPanel;
-        public bool RotocoinsPanel;
+        public bool restartButton;
+        public bool viewButton;
+        public bool backButton;
+        public bool magicButon;
+        public bool rotochipsPanel;
+        public bool rotocoinsPanel;
     }
 
     public class GUICanvasController : MonoBehaviour
@@ -52,27 +52,27 @@ namespace RotoChips.UI
             {
                 if (restartButton != null)
                 {
-                    restartButton.SetActive(configuration.RestartButton);
+                    restartButton.SetActive(configuration.restartButton);
                 }
                 if (viewButton != null)
                 {
-                    viewButton.SetActive(configuration.ViewButton);
+                    viewButton.SetActive(configuration.viewButton);
                 }
                 if (backButton != null)
                 {
-                    backButton.SetActive(configuration.BackButton);
+                    backButton.SetActive(configuration.backButton);
                 }
                 if (magicButton != null)
                 {
-                    magicButton.SetActive(configuration.MagicButon);
+                    magicButton.SetActive(configuration.magicButon);
                 }
                 if (rotochipsPanel != null)
                 {
-                    rotochipsPanel.SetActive(configuration.RotochipsPanel);
+                    rotochipsPanel.SetActive(configuration.rotochipsPanel);
                 }
                 if (rotocoinsPanel != null)
                 {
-                    rotocoinsPanel.SetActive(configuration.RotocoinsPanel);
+                    rotocoinsPanel.SetActive(configuration.rotocoinsPanel);
                 }
             }
         }

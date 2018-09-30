@@ -20,7 +20,10 @@ namespace RotoChips.Puzzle
         MessageRegistrator registrator;
         private void Awake()
         {
-            registrator = new MessageRegistrator(InstantMessageType.PuzzleWinImageFinished, (InstantMessageHandler)OnPuzzleWinImageFinished);
+            registrator = new MessageRegistrator(
+                InstantMessageType.PuzzleWinImageFinished, (InstantMessageHandler)OnPuzzleWinImageFinished,
+                InstantMessageType.PuzzleShowWinimage, (InstantMessageHandler)OnPuzzleShowWinimage
+            );
             registrator.RegisterHandlers();
             Visualize(flashRange.max);
         }
@@ -39,6 +42,11 @@ namespace RotoChips.Puzzle
         }
 
         // message handling
+        void OnPuzzleShowWinimage(object sender, InstantMessageArgs args)
+        {
+            Visualize(flashRange.max);
+        }
+
         void OnPuzzleWinImageFinished(object sender, InstantMessageArgs args)
         {
             StartFlash(false);

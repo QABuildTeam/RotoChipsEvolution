@@ -50,7 +50,7 @@ namespace RotoChips.Finale
         // message handling
         void OnGUIFullScreenButtonPressed(object sender, InstantMessageArgs args)
         {
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeOutWhiteCurtain, this);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
         }
 
         [SerializeField]

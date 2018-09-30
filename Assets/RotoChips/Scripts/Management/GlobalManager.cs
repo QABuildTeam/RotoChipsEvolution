@@ -211,8 +211,6 @@ namespace RotoChips.Management
                 MGame = (GameManager)LocateManager(typeof(GameManager));
                 MHint = (HintManager)LocateManager(typeof(HintManager));
 
-                Debug.Log("Submanagers are linked");
-
                 // make myself immortal
                 DontDestroyOnLoad(gameObject);
             }
@@ -231,11 +229,11 @@ namespace RotoChips.Management
             {
                 yield return null;
             }
-            Debug.Log("Submanagers switched to Initial");
+            //Debug.Log("Submanagers switched to Initial");
             // make all submanagers Loading
             SwitchManagersStatus(GenericManager.Status.Loading);
             // make them load all their persistent data
-            Debug.Log("Submanagers switched to Loading");
+            //Debug.Log("Submanagers switched to Loading");
             Load();
             // notify submanagers of configuration stream end
             SwitchManagersStatus(GenericManager.Status.Ready);
@@ -244,7 +242,7 @@ namespace RotoChips.Management
             {
                 yield return null;
             }
-            Debug.Log("Submanagers switched to Ready");
+            //Debug.Log("Submanagers switched to Ready");
             Initialized = true;
         }
 
@@ -254,7 +252,7 @@ namespace RotoChips.Management
             {
                 foreach (GenericManager manager in list.Value)
                 {
-                    Debug.Log("Switching manager " + manager.ToString() + " to status " + status.ToString());
+                    //Debug.Log("Switching manager " + manager.ToString() + " to status " + status.ToString());
                     manager.Make(status);
                 }
             }
@@ -266,7 +264,7 @@ namespace RotoChips.Management
             {
                 foreach (GenericManager manager in list.Value)
                 {
-                    Debug.Log("Checking manager " + manager.ToString() + " status to be " + status.ToString());
+                    //Debug.Log("Checking manager " + manager.ToString() + " status to be " + status.ToString());
                     if (manager.Initialized != status)
                     {
                         return false;
@@ -335,7 +333,7 @@ namespace RotoChips.Management
                 if (File.Exists(statusFileName))
                 {
                     //choose either loading procedure
-                    Debug.Log("Loading managers status from " + statusFileName);
+                    //Debug.Log("Loading managers status from " + statusFileName);
                     statusSaver = LoadStatusBinary(statusFileName);
                     //statusSaver = LoadStatusJSON(statusFileName);
                 }
@@ -443,7 +441,7 @@ namespace RotoChips.Management
                 if (status.statusList.Count > 0)
                 {
                     // choose either save procedure
-                    Debug.Log("Saving managers status to " + statusFileName);
+                    //Debug.Log("Saving managers status to " + statusFileName);
                     SaveStatusBinary(statusFileName, status);
                     //SaveStatusJSON(statusFileName, status);
                 }
@@ -451,7 +449,7 @@ namespace RotoChips.Management
             catch (System.Exception e)
             {
                 Debug.Log("GlobalManager.Save failed: " + e.ToString());
-                throw;
+                //throw;
             }
             saveStatus = SaveStatus.Unchanged;
         }

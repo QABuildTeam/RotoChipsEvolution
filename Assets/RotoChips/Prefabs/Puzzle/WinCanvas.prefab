@@ -277,7 +277,7 @@ MonoBehaviour:
   marginRatio: 0
   scaleRange:
     min: 1
-    max: 4
+    max: 3
   imageParams:
   - winImage: {fileID: 114843049276435582}
     imageTransform: {fileID: 0}

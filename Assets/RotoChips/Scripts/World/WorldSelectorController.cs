@@ -46,7 +46,7 @@ namespace RotoChips.World
         public void Init(LevelDataManager.Descriptor descriptor, SelectorPrefab prefab, bool noStatusCheck = false)
         {
             registrator = new MessageRegistrator(
-                InstantMessageType.SteadyMouseUpAsButton, (InstantMessageHandler)OnSteadyMouseUpAsButton,
+                InstantMessageType.GUIObjectPressedAsButton, (InstantMessageHandler)OnGUIObjectPressedAsButton,
                 InstantMessageType.WorldRotateToSelected, (InstantMessageHandler)OnWorldRotateToSelected,
                 InstantMessageType.RedirectFirstTimeWelcome2, (InstantMessageHandler)OnRedirectFirstTimeWelcome2
             );
@@ -105,7 +105,7 @@ namespace RotoChips.World
         }
 
         // the selector is touched and released once (no moving)
-        void OnSteadyMouseUpAsButton(object sender, InstantMessageArgs args)
+        void OnGUIObjectPressedAsButton(object sender, InstantMessageArgs args)
         {
             if (gameObject.activeInHierarchy && (GameObject)args.arg == gameObject)
             {

@@ -141,6 +141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldScene: World
+  fullImageDelay: 8
 --- !u!4 &202978269
 Transform:
   m_ObjectHideFlags: 0
@@ -553,15 +554,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4922614106964410, guid: ed645c35686535947a8166887717ab58, type: 2}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4922614106964410, guid: ed645c35686535947a8166887717ab58, type: 2}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4922614106964410, guid: ed645c35686535947a8166887717ab58, type: 2}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4922614106964410, guid: ed645c35686535947a8166887717ab58, type: 2}
       propertyPath: m_LocalRotation.w

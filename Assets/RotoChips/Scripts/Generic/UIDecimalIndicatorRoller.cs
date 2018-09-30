@@ -80,12 +80,12 @@ namespace RotoChips.Generic
                     {
                         //Debug.Log("delta score = " + deltaScore.ToString() + ", decimal score:" + previousScoreDecimal.ToString());
                         decimal currentScore = previousScore;
-                        controlledText.text = Decimal.Round(currentScore, 0).ToString();
+                        ControlledText.text = Decimal.Round(currentScore, 0).ToString();
                         previousScore += deltaScore;
                         yield return new WaitForSeconds(deltaTime);
                     }
-                    controlledText.text = Decimal.Round(newScore, 0).ToString();
-                    controlledText.color = TargetColor(newScore);
+                    ControlledText.text = Decimal.Round(newScore, 0).ToString();
+                    ControlledText.color = TargetColor(newScore);
                     previousScore = newScore;
                 }
             }

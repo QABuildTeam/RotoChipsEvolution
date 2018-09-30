@@ -19,7 +19,7 @@ namespace RotoChips.World
         private void Awake()
         {
             registrator = new MessageRegistrator(
-                InstantMessageType.SteadyMouseUpAsButton, (InstantMessageHandler)OnSteadyMouseUpAsButton,
+                InstantMessageType.GUIObjectPressedAsButton, (InstantMessageHandler)OnGUIObjectPressedAsButton,
                 InstantMessageType.RedirectGalleryOpened, (InstantMessageHandler)OnRedirectGalleryOpened
             );
             registrator.RegisterHandlers();
@@ -33,7 +33,7 @@ namespace RotoChips.World
 
         // message handling
         // the satellite is tapped
-        void OnSteadyMouseUpAsButton(object sender, InstantMessageArgs args)
+        void OnGUIObjectPressedAsButton(object sender, InstantMessageArgs args)
         {
             if (gameObject.activeInHierarchy && (GameObject)args.arg == gameObject)
             {
@@ -46,6 +46,8 @@ namespace RotoChips.World
         {
             if (gameObject.activeInHierarchy)
             {
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, false);
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotateToObject, this, gameObject);
                 GlobalManager.MHint.ShowNewHint(HintType.GalleryOpened, gameObject);
             }
         }

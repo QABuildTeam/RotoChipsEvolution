@@ -49,10 +49,10 @@ namespace RotoChips.World
             // notify that the World scene has just been started
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldStarted, this);
             // update RotoChips and RotoCoins indicators
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this);
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)GlobalManager.MStorage.CurrentPoints);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
             // rotate the world to the currently active level selector
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotateToSelected, this);
+            //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotateToSelected, this);
         }
 
         void RotateWorldToZero(GameObject targetObject)
@@ -189,7 +189,7 @@ namespace RotoChips.World
                 RotateWorldToZero(initiator);
             }
             curtainFaded = false;
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeOutWhiteCurtain, this);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
             while (!curtainFaded)
             {
                 yield return null;

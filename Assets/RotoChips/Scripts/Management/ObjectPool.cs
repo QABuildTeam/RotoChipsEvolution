@@ -38,7 +38,7 @@ namespace RotoChips.Management
                         idleObjectsDictionary.Add(oc, new Stack<int>());
                     }
                 }
-                Debug.Log("ObjectPool initialized");
+                //Debug.Log("ObjectPool initialized");
             }
         }
 
@@ -54,7 +54,7 @@ namespace RotoChips.Management
                         idleObjectsDictionary[oc].Clear(); ;
                     }
                 }
-                Debug.Log("ObjectPool cleared");
+                //Debug.Log("ObjectPool cleared");
             }
         }
 

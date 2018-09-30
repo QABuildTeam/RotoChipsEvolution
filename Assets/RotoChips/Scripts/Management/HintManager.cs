@@ -96,7 +96,7 @@ namespace RotoChips.Management
             hintShown = (Dictionary<HintType, bool>)prototype;
         }
 
-        protected bool IsHintShown(HintType hintType)
+        public bool IsHintShown(HintType hintType)
         {
             bool isShown;
             if (hintShown.TryGetValue(hintType, out isShown))

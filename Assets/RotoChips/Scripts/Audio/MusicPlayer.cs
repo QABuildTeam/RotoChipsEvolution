@@ -96,6 +96,7 @@ namespace RotoChips.Audio
 
         private void OnDestroy()
         {
+            Debug.Log("MusicPlayer: unregistering handlers");
             registrator.UnregisterHandlers();
         }
     }

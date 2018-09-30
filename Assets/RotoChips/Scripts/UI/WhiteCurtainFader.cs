@@ -44,7 +44,7 @@ namespace RotoChips.UI
         MessageRegistrator registrator;
         private void Awake()
         {
-            registrator = new MessageRegistrator(InstantMessageType.GUIFadeOutWhiteCurtain, (InstantMessageHandler)OnFadeOutWhiteCurtain);
+            registrator = new MessageRegistrator(InstantMessageType.GUIFadeWhiteCurtain, (InstantMessageHandler)OnGUIFadeWhiteCurtain);
             fader = GetComponentInChildren<Image>();
             flashRange.min = 0;
             flashRange.max = 1;
@@ -95,11 +95,20 @@ namespace RotoChips.UI
             return periodCounter == 0;    // this fader progresses for only one period
         }
 
-        public void OnFadeOutWhiteCurtain(object sender, InstantMessageArgs args)
+        void OnGUIFadeWhiteCurtain(object sender, InstantMessageArgs args)
         {
-            if (fadeOut)
+            bool where = true;
+            if (args.arg != null)
+            {
+                where = (bool)args.arg;
+            }
+            if (where && fadeOut)
             {
                 Fade(true);
+            }
+            else if (!where && fadeIn)
+            {
+                Fade(false);
             }
         }
 

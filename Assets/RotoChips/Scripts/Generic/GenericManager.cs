@@ -51,21 +51,21 @@ namespace RotoChips.Generic
         public virtual void MakeInitial()
         {
             Initialized = Status.Initial;
-            Debug.Log(GetType().ToString() + ".Initialized = " + Initialized.ToString());
+            //Debug.Log(GetType().ToString() + ".Initialized = " + Initialized.ToString());
         }
 
         // switch to Status.Loading
         public virtual void MakeLoading()
         {
             Initialized = Status.Loading;
-            Debug.Log(GetType().ToString() + ".Initialized = " + Initialized.ToString());
+            //Debug.Log(GetType().ToString() + ".Initialized = " + Initialized.ToString());
         }
 
         // switch to Status.Ready
         public virtual void MakeReady()
         {
             Initialized = Status.Ready;
-            Debug.Log(GetType().ToString() + ".Initialized = " + Initialized.ToString());
+            //Debug.Log(GetType().ToString() + ".Initialized = " + Initialized.ToString());
         }
 
         public void Make(Status status)

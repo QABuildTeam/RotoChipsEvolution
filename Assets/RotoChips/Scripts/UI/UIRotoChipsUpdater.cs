@@ -19,8 +19,8 @@ namespace RotoChips.UI
 
         protected override decimal SourceValue(InstantMessageArgs args)
         {
-            //return (decimal)args.arg;
-            return (decimal)GlobalManager.MStorage.TotalPoints;
+            return (decimal)args.arg;
+            //return (decimal)GlobalManager.MStorage.TotalPoints;
         }
 
         protected override Color TargetColor(decimal value)

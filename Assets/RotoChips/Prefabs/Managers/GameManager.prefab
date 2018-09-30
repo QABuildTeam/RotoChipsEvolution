@@ -52,3 +52,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initOrder: 100
+  tutorial0ShuffleConfig: 1.1.1.1.1.1.0.1.0.1.0.1.0.0.0.0.0.0
+  tutorial1ShuffleConfig: 
+  levelCompletedId: idLevelCompleted
+  galleryOpenedId: idGalleryOpened
+  levelCompletedOnceAgainId: idLevelCompletedOnceAgain
+  realmRevealedId: idRealmRevealed
+  newLevelPlayableId: idNewLevelPlayable
+  realmCompletedId: idRealmCompleted
+  realmOpenedId: idRealmOpened
+  gameCompletedId: idGameCompleted

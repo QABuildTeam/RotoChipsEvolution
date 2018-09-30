@@ -307,12 +307,12 @@ namespace RotoChips.Management
                     AudioSource actualPlayer = musicPlayers[currentMusicPlayerId].actualPlayer;
                     if (actualPlayer.isPlaying)
                     {
-                        Debug.Log("Stopping track " + currentTrack.ToString());
+                        //Debug.Log("Stopping track " + currentTrack.ToString());
                         // stop the currently playing track
                         StartCoroutine(FadeMusicTrack(currentMusicPlayerId, false));
                     }
                 }
-                Debug.Log("Playing track " + trackId.ToString());
+                //Debug.Log("Playing track " + trackId.ToString());
                 if (MusicTracks.ContainsKey(trackId))
                 {
                     currentMusicPlayerId = (currentMusicPlayerId + 1) % musicPlayers.Length;
@@ -396,7 +396,7 @@ namespace RotoChips.Management
         {
             if (Initialized == Status.Ready)
             {
-                Debug.Log("Enabling audio");
+                //Debug.Log("Enabling audio");
                 Unpause();
             }
         }
@@ -405,7 +405,7 @@ namespace RotoChips.Management
         {
             if (Initialized == Status.Ready)
             {
-                Debug.Log("Disabling audio");
+                //Debug.Log("Disabling audio");
                 Pause();
             }
         }

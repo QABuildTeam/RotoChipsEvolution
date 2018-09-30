@@ -110,6 +110,9 @@ MonoBehaviour:
     id: 13
     pitchFactor: 1.5
     volumeFactor: 0.025
+  jinglePitchRange:
+    min: 0.8
+    max: 1.2
 --- !u!114 &114748410036810790
 MonoBehaviour:
   m_ObjectHideFlags: 1

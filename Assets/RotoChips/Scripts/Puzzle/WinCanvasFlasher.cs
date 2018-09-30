@@ -59,7 +59,6 @@ namespace RotoChips.Puzzle
         }
 
         // message handling
-        int runCounter = 0;
         void OnPuzzleShowWinimage(object sender, InstantMessageArgs args)
         {
             string winTextId = (string)args.arg;

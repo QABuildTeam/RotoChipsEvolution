@@ -35,7 +35,7 @@ namespace RotoChips.Utility
             if (pointerSteady)
             {
                 pointerSteady = false;
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.SteadyMouseUpAsButton, this, gameObject);
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIObjectPressedAsButton, this, gameObject);
             }
         }
     }

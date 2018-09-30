@@ -128,7 +128,7 @@ namespace RotoChips.UI
                 }
                 else
                 {
-                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIHintClosed, this, hintParams);
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIHintClosed, this, hintRequest);
                 }
             }
         }
@@ -141,13 +141,30 @@ namespace RotoChips.UI
         public void BackgroundButtonPressed()
         {
             gameObject.SetActive(false);
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIHintClosed, this, hintParams);
+            GlobalManager.MInstantMessage.DeliverMessage(
+                InstantMessageType.GUIHintClosed,
+                this,
+                new HintRequest
+                {
+                    type = hintParams.type,
+                    target = hintParams.target
+                }
+            );
         }
 
         public void ArrowSpotPressed()
         {
             gameObject.SetActive(false);
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIHintClosed, this, hintParams);
+            GlobalManager.MInstantMessage.DeliverMessage(
+                InstantMessageType.GUIHintClosed, 
+                this,
+                new HintRequest
+                {
+                    type = hintParams.type,
+                    target = hintParams.target
+                }
+            );
+            Debug.Log("ArrowSpotPressed, sending " + hintParams.arrowMessage.ToString());
             GlobalManager.MInstantMessage.DeliverMessage(hintParams.arrowMessage, this, hintParams.target);
         }
     }

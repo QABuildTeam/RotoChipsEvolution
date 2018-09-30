@@ -28,6 +28,14 @@ namespace RotoChips.Puzzle
             public GameObject[] tiles;
         }
         ButtonCluster[,] buttons;
+        public GameObject ButtonById(Vector2Int buttonId)
+        {
+            if (buttonId.x >= 0 && buttonId.x < descriptor.init.width && buttonId.y >= 0 && buttonId.y < descriptor.init.height)
+            {
+                return buttons[buttonId.x, buttonId.y].button;
+            }
+            return null;
+        }
         GameObject[,] tiles;
 
         [SerializeField]

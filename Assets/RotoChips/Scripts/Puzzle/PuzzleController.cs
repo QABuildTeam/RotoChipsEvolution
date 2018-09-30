@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using RotoChips.Management;
 using RotoChips.Data;
+using RotoChips.Audio;
+using RotoChips.UI;
+using RotoChips.Utility;
 
 namespace RotoChips.Puzzle
 {
@@ -23,6 +26,12 @@ namespace RotoChips.Puzzle
     {
         public LevelDataManager.Descriptor descriptor;
         public bool firstTime;
+    }
+
+    public class TileInPlaceReport
+    {
+        public Vector2Int previous;     // previous tile in place
+        public Vector2Int current;      // current tile in place
     }
 
     public class PuzzleController : MonoBehaviour
@@ -65,7 +74,10 @@ namespace RotoChips.Puzzle
                 InstantMessageType.PuzzleReset, (InstantMessageHandler)OnPuzzleReset,
                 InstantMessageType.PuzzlePrepareAutostep, (InstantMessageHandler)OnPuzzlePrepareAutostep,
                 InstantMessageType.PuzzleAutostep, (InstantMessageHandler)OnPuzzleAutostep,
-                InstantMessageType.PuzzleBusy, (InstantMessageHandler)OnPuzzleBusy
+                InstantMessageType.PuzzleAutocomplete, (InstantMessageHandler)OnPuzzleAutocomplete,
+                InstantMessageType.PuzzleBusy, (InstantMessageHandler)OnPuzzleBusy,
+                InstantMessageType.RedirectFirstTileButtons, (InstantMessageHandler)OnRedirectFirstTileButtons,
+                InstantMessageType.RedirectSecondTileButtons, (InstantMessageHandler)OnRedirectSecondTileButtons
             );
             registrator.RegisterHandlers();
         }
@@ -130,8 +142,21 @@ namespace RotoChips.Puzzle
         {
             Vector2Int thisTile, otherTile;
             bool good = IsPuzzleStateBetter(descriptor.state.LastGoodState, out thisTile, out otherTile) > 0;
+            Debug.Log("PuzzleController.SaveAll: new state is better - " + good.ToString());
             SaveButtonStatuses(good);
             SaveTileStatuses(good);
+            if (good)
+            {
+                GlobalManager.MInstantMessage.DeliverMessage(
+                    InstantMessageType.PuzzleTileInPlace,
+                    this,
+                    new TileInPlaceReport
+                    {
+                        previous = otherTile,
+                        current = thisTile
+                    }
+                );
+            }
         }
 
         // this method parses a status string and sets a TileStatus array according to it
@@ -349,7 +374,6 @@ namespace RotoChips.Puzzle
             else
             {
                 // forced mode shuffle
-                char[] delimiters = { '.' };
                 string[] parts = shuffleString.Split('.');
                 int partsCount = parts.Length;
                 //Debug.Log("Initial shuffle string: " + partsCount.ToString() + " parts");
@@ -412,6 +436,10 @@ namespace RotoChips.Puzzle
         }
 
         // this method moves one [next] tile to its 'place' automatically
+        [SerializeField]
+        protected SFXPlayParams autostepJingle;
+        [SerializeField]
+        protected FloatRange autostepPitchRange;
         IEnumerator PerformAutoStep()
         {
             Vector2Int lastGood, nextGood;
@@ -444,10 +472,9 @@ namespace RotoChips.Puzzle
                     }
                 }
                 SaveAll();
-                //GlobalManager.MAudio.PlaySFX();
                 // tight vibe sound
-                //Debug.Log("Playing vibe sound");
-                //vss.playSound();
+                autostepJingle.pitchFactor = autostepPitchRange.Random;
+                GlobalManager.MAudio.PlaySFX(autostepJingle);
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutostepUsed, this);
             }
         }
@@ -567,9 +594,28 @@ namespace RotoChips.Puzzle
             Autostep();
         }
 
+        void OnPuzzleAutocomplete(object sender, InstantMessageArgs args)
+        {
+            Autocomplete();
+        }
+
         void OnPuzzleBusy(object sender, InstantMessageArgs args)
         {
             puzzleBusy = (bool)args.arg;
+        }
+
+        [SerializeField]
+        Vector2Int firstButtonId = new Vector2Int(0, 0);
+        void OnRedirectFirstTileButtons(object sender, InstantMessageArgs args)
+        {
+            GlobalManager.MHint.ShowNewHint(HintType.FirstTileButtonsHint, builder.ButtonById(firstButtonId));
+        }
+
+        [SerializeField]
+        Vector2Int secondButtonId = new Vector2Int(1, 0);
+        void OnRedirectSecondTileButtons(object sender, InstantMessageArgs args)
+        {
+            GlobalManager.MHint.ShowNewHint(HintType.SecondTileButtonsHint, builder.ButtonById(secondButtonId));
         }
 
         private void OnDestroy()
@@ -674,9 +720,9 @@ namespace RotoChips.Puzzle
             ParseStatusString(aState, ref otherTiles);
             bool checkThis = true;
             bool checkOther = true;
-            for (int y = 0; y < descriptor.init.height && !checkThis && !checkOther; y++)
+            for (int y = 0; y < descriptor.init.height && (checkThis || checkOther); y++)
             {
-                for (int x = 0; x < descriptor.init.width && !checkThis && !checkOther; x++)
+                for (int x = 0; x < descriptor.init.width && (checkThis || checkOther); x++)
                 {
                     if (checkThis)
                     {

@@ -187,7 +187,7 @@ namespace RotoChips.Logo
         {
             if (GlobalManager.Instance != null)
             {
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeOutWhiteCurtain, this);
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
             }
         }
     }

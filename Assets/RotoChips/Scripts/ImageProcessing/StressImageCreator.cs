@@ -60,7 +60,7 @@ namespace RotoChips.ImageProcessing
             float startTime = Time.realtimeSinceStartup;
             string sourceGraphicResource = LevelDataManager.SmoothImageResource(level);
             originalImage = Resources.Load<Texture2D>(sourceGraphicResource);
-            Debug.Log("StressImageCreator.BgStressImage: creating STRESS image from " + sourceGraphicResource + " as " + (originalImage == null ? "null" : originalImage.ToString()));
+            //Debug.Log("StressImageCreator.BgStressImage: creating STRESS image from " + sourceGraphicResource + " as " + (originalImage == null ? "null" : originalImage.ToString()));
             int w = originalImage.width;
             int h = originalImage.height;
             stressedImage = new Texture2D(w, h, originalImage.format, false);

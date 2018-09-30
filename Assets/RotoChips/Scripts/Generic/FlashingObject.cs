@@ -54,6 +54,7 @@ namespace RotoChips.Generic
         {
         }
 
+        protected Coroutine currentFlash;
         protected IEnumerator Flash(bool up = true)
         {
             // up argument sets the initial direction of visual change:
@@ -89,12 +90,17 @@ namespace RotoChips.Generic
                 startFlash = endFlash;
                 endFlash = temp;
             }
-
+            currentFlash = null;
         }
 
         public virtual void StartFlash(bool up = true)
         {
-            StartCoroutine(Flash(up));
+            if (currentFlash != null)
+            {
+                StopCoroutine(currentFlash);
+            }
+            currentFlash = StartCoroutine(Flash(up));
         }
+
     }
 }

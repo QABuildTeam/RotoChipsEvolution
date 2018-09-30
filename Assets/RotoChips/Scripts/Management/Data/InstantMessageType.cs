@@ -28,8 +28,9 @@ namespace RotoChips.Management
                                         //      Arguments: None
         GUIMagicButtonPressed,          // Notification: Magic button has just been pressed
                                         //      Arguments: None
-        GUIFadeOutWhiteCurtain,         // Command: Fade the entire screen out to white
-                                        //      Arguments: None
+        GUIFadeWhiteCurtain,            // Command: Fade the entire screen in or out
+                                        //      Arguments:
+                                        //          bool up - where to fade: transparent (false) or opaque (true) (default if null)
         GUIWhiteCurtainFaded,           // Notification: The entire screen has just faded
                                         //      Arguments:
                                         //          bool up - the white screen has faded transparent (false) or opaque (true)
@@ -43,6 +44,9 @@ namespace RotoChips.Management
                                         //      Arguments: None
         GUIFullScreenButtonPressed,     // Notification: A sole fullscreen button in a scene has been pressed
                                         //      Arguments: None
+        GUIObjectPressedAsButton,       // Notification: A pointer (mouse/touch) has been pressed and released on an object without moving
+                                        //      Arguments:
+                                        //          GameObject originator - a GameObjects which issued the message
         GUIConfigureAppearance,         // Command: Configure visibility and interactiveness of the GUIDialog elements
                                         //      Arguments:
                                         //          RotoChips.UI.GUIConfiguration configuration - a structure of configuration flags
@@ -50,6 +54,7 @@ namespace RotoChips.Management
                                         //      Arguments:
         GUIHintClosed,                  // Notification: A hint message (with or without a hint arrow) has been closed
                                         //      Arguments:
+                                        //          RotoChips.UI.HintRequest hintRequest - source parameters of a closed hint
 
         // World scene messages
         WorldStarted,                   // Notification: Method Start() of the scene World has just finished its execution
@@ -100,6 +105,9 @@ namespace RotoChips.Management
         PuzzleButtonRotated,            // Notification: A puzzle button and a quad of its neighbour square tiles have just rotated a quarter clockwise
                                         //      Arguments:
                                         //          Vector2Int buttonId - a 2d id of a rotated button (x,y)
+        PuzzleTileInPlace,              // Notification: A puzzle tile has just put on its place for the first time
+                                        //      Arguments:
+                                        //          Vector2Int tileId - a 2d id of the tile in place (x,y)
         PuzzleRotoChipsPressed,         // Notification: RotoChips indicator on the scene Puzzle has just been pressed (either by mouse or by finger)
                                         //      Arguments: None
         PuzzleRotoCoinsPressed,         // Notification: RotoCoins indicator on the scene Puzzle has just been pressed (either by mouse or by finger)
@@ -163,13 +171,12 @@ namespace RotoChips.Management
         // General
         LanguageChanged,                // Notification: System language has changed
                                         //      Arguments: None
-        SteadyMouseUpAsButton,          // Notification: A pointer (mouse/touch) has been pressed and released on an object without moving
-                                        //      Arguments:
-                                        //          GameObject originator - a GameObjects which issued the message
         RotoChipsChanged,               // Notification: Per puzzle/total amount of RotoChips has changed
-                                        //      Arguments: None
+                                        //      Arguments:
+                                        //          decimal newValue - the new value of RotoChips (don't forget to cast from long to decimal)
         RotoCoinsChanged,               // Notification: Amount of RotoCoins has changed
-                                        //      Arguments: None
+                                        //      Arguments:
+                                        //          decimal newValue - the new value of the RotoCoins
         PlayMusicTrack,                 // Command: MusicPlayer must stop playing background playlist and play a specified track
                                         //      Arguments:
                                         //          RotoChips.Management.AudioTrackEnum trackId - an id of a track to play
@@ -179,13 +186,19 @@ namespace RotoChips.Management
         BackgroundMusic,                // Command: Set or reset background music playing
                                         //      Arguments:
                                         //          bool on - a flag which starts (true) or stops (false) background music playing
+        GalleryStarted,                 // Notification: The Gallery scene has just started
+                                        //      Arguments: None
+        GalleryClosed,                  // Notification: The Gallery scene is about to close
+                                        //      Arguments: None
 
         // Special
         RedirectFirstTimeWelcome2,      // Command: Active level selector on the world globe should create a hint request for FirstTimeWelcome2
                                         //      Arguments: None
         RedirectGalleryOpened,          // Command: The satellite above the world globe should create a hint request for GalleryOpened
                                         //      Arguments: None
-        RedirectFirstTileButtons        // Command: The puzzle button (0,0) should create a hint request for FirstTileButtonsHint
+        RedirectFirstTileButtons,       // Command: The puzzle button (0,0) should create a hint request for FirstTileButtonsHint
+                                        //      Arguments: None
+        RedirectSecondTileButtons       // Command: The puzzle button (1,0) should create a hint request for SecondTileButtonsHint
                                         //      Arguments: None
     }
 

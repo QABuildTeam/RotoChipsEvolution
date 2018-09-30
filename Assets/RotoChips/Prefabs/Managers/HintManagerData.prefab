@@ -73,7 +73,7 @@ MonoBehaviour:
     arrowOn: 1
     target: {fileID: 0}
     arrowAngle: -45
-    arrowMessage: 60
+    arrowMessage: 13
   - type: 3
     hintMsgId: idHelpBackButton
     layout: 7
@@ -128,7 +128,7 @@ MonoBehaviour:
     arrowOn: 1
     target: {fileID: 0}
     arrowAngle: 45
-    arrowMessage: 60
+    arrowMessage: 13
   - type: 18
     hintMsgId: idHelpGameRestartButton
     layout: 1
@@ -249,7 +249,7 @@ MonoBehaviour:
     arrowOn: 1
     target: {fileID: 0}
     arrowAngle: 45
-    arrowMessage: 60
+    arrowMessage: 13
   - type: 28
     hintMsgId: idHelpFirstTileInPlace
     layout: 0
@@ -271,9 +271,9 @@ MonoBehaviour:
     arrowOn: 1
     target: {fileID: 0}
     arrowAngle: -45
-    arrowMessage: 60
-  - type: 30
-    hintMsgId: idHelpThirdTileInPlace
+    arrowMessage: 13
+  - type: 29
+    hintMsgId: idHelpSecondTileInPlace
     layout: 0
     width: 400
     height: 200
@@ -284,6 +284,17 @@ MonoBehaviour:
     arrowAngle: 0
     arrowMessage: 0
   - type: 36
+    hintMsgId: idHelpTwoRowsInPlace2
+    layout: 0
+    width: 500
+    height: 150
+    xGap: 0
+    yGap: 0
+    arrowOn: 0
+    target: {fileID: 0}
+    arrowAngle: 0
+    arrowMessage: 0
+  - type: 37
     hintMsgId: idHelpTwoRowsInPlace2
     layout: 0
     width: 500
@@ -307,6 +318,28 @@ MonoBehaviour:
     arrowMessage: 0
   - type: 31
     hintMsgId: idHelpTwoRowsInPlace
+    layout: 0
+    width: 500
+    height: 200
+    xGap: 0
+    yGap: 0
+    arrowOn: 0
+    target: {fileID: 0}
+    arrowAngle: 0
+    arrowMessage: 0
+  - type: 30
+    hintMsgId: idHelpThirdTileInPlace
+    layout: 0
+    width: 500
+    height: 200
+    xGap: 0
+    yGap: 0
+    arrowOn: 0
+    target: {fileID: 0}
+    arrowAngle: 0
+    arrowMessage: 0
+  - type: 12
+    hintMsgId: idFirstRowCongratulation
     layout: 0
     width: 500
     height: 200

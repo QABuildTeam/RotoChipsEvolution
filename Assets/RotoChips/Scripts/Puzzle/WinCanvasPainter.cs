@@ -32,6 +32,15 @@ namespace RotoChips.Puzzle
         // Use this for initialization
         void Start()
         {
+            registrator = new MessageRegistrator(InstantMessageType.PuzzleShowWinimage, (InstantMessageHandler)OnPuzzleShowWinimage);
+            registrator.RegisterHandlers();
+            gameObject.SetActive(false);
+            // Debug
+            //StartCoroutine(Painter());
+        }
+
+        void Initialize()
+        {
             // make the stress image texture modifiable
             Texture2D upperTexture = (Texture2D)(stressImage.texture);
             painterTexture = new Texture2D(upperTexture.width, upperTexture.height, TextureFormat.RGBA32, false);
@@ -47,15 +56,10 @@ namespace RotoChips.Puzzle
             startY = 4;
             xSteps = (painterTexture.width - startX / 2) / deltaX - 3;
             ySteps = (painterTexture.height - startY / 2) / deltaY - 3;
-
-            registrator = new MessageRegistrator(InstantMessageType.PuzzleShowWinimage, (InstantMessageHandler)OnPuzzleShowWinimage);
-            registrator.RegisterHandlers();
-            gameObject.SetActive(false);
-            // Debug
-            //StartCoroutine(Painter());
         }
 
         // this is the main painter loop
+        Coroutine currentCoroutine;
         IEnumerator Painter()
         {
             int cX = startX;
@@ -97,7 +101,7 @@ namespace RotoChips.Puzzle
                 }
             }
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleWinImageFinished, this);
-
+            currentCoroutine = null;
         }
 
         // message handling
@@ -107,7 +111,12 @@ namespace RotoChips.Puzzle
             {
                 gameObject.SetActive(true);
             }
-            StartCoroutine(Painter());
+            if (currentCoroutine != null)
+            {
+                StopCoroutine(currentCoroutine);
+            }
+            Initialize();
+            currentCoroutine = StartCoroutine(Painter());
         }
 
         private void OnDestroy()

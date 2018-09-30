@@ -51,11 +51,11 @@ namespace RotoChips.Puzzle
         MessageRegistrator registrator;
 
         bool effectFinished;
-        private void Awake()
+        public void Initialize()
         {
             descriptor = GlobalManager.MLevel.GetDescriptor(GlobalManager.MStorage.GalleryLevel);
-            int width = descriptor.init.width;
-            int height = descriptor.init.height;
+            //int width = descriptor.init.width;
+            //int height = descriptor.init.height;
             float finalRatioXY = descriptor.init.finalXYScale;
             float screenAspect = Camera.main.aspect;
 
@@ -74,15 +74,19 @@ namespace RotoChips.Puzzle
             sourceCanvasSize = new Vector2(sourceCanvasRect.width, sourceCanvasRect.height);
             for (int i = 0; i < imageParams.Length; i++)
             {
-                imageParams[i].imageTransform = imageParams[i].winImage.GetComponent<RectTransform>();
+                //imageParams[i].imageTransform = imageParams[i].winImage.GetComponent<RectTransform>();
+                imageParams[i].imageTransform.localPosition = imageParams[i].originalPosition;
                 Rect sourceRect = imageParams[i].imageTransform.rect;
                 Vector2 imageToCanvasRatio = new Vector2(
                     sourceCanvasRect.width / sourceRect.width,
                     sourceCanvasRect.height / sourceRect.height
                 );
+                float sourceCanvasAspect = sourceCanvasRect.width / sourceCanvasRect.height;
                 imageParams[i].sourceScale = new Vector2(
-                    finalRatioXY > screenAspect ? imageToCanvasRatio.y * finalRatioXY : imageToCanvasRatio.x,
-                    finalRatioXY > screenAspect ? imageToCanvasRatio.y : imageToCanvasRatio.x / finalRatioXY
+                    //finalRatioXY > screenAspect ? imageToCanvasRatio.y * finalRatioXY : imageToCanvasRatio.x,
+                    //finalRatioXY > screenAspect ? imageToCanvasRatio.y : imageToCanvasRatio.x / finalRatioXY
+                    finalRatioXY > sourceCanvasAspect ? imageToCanvasRatio.y * finalRatioXY : imageToCanvasRatio.x,
+                    finalRatioXY > sourceCanvasAspect ? imageToCanvasRatio.y : imageToCanvasRatio.x / finalRatioXY
                 );
                 imageParams[i].effectiveSize = Vector2.Scale(new Vector2(sourceRect.width, sourceRect.height), imageParams[i].sourceScale);
                 imageParams[i].imageTransform.localScale = imageParams[i].sourceScale;
@@ -94,7 +98,7 @@ namespace RotoChips.Puzzle
                 // UV-coordinates of the image
                 imageParams[i].winImage.uvRect = new Rect(0, 0, 1, 1);
                 // positions
-                imageParams[i].originalPosition = imageParams[i].imageTransform.localPosition;
+                //imageParams[i].originalPosition = imageParams[i].imageTransform.localPosition;
                 imageParams[i].movePosition = new Vector2[2]
                 {
                     imageParams[i].originalPosition,
@@ -102,12 +106,24 @@ namespace RotoChips.Puzzle
                 };
             }
             GenerateNewStep(true);
+            effectFinished = false;
+        }
+
+        private void Awake()
+        {
+            for (int i = 0; i < imageParams.Length; i++)
+            {
+                // transforms
+                imageParams[i].imageTransform = imageParams[i].winImage.GetComponent<RectTransform>();
+                // positions
+                imageParams[i].originalPosition = imageParams[i].imageTransform.localPosition;
+            }
             registrator = new MessageRegistrator(
                 InstantMessageType.PuzzleShowWinimage, (InstantMessageHandler)OnPuzzleShowWinimage,
                 InstantMessageType.PuzzleWinImageFinished, (InstantMessageHandler)OnPuzzleWinImageFinished
             );
             registrator.RegisterHandlers();
-            effectFinished = false;
+            //Initialize();
             // Debugging
             //StartFlash();
         }
@@ -121,7 +137,7 @@ namespace RotoChips.Puzzle
             for (int i = 0; i < imageParams.Length; i++)
             {
                 Vector2 displacement = Vector2.Scale((imageParams[i].effectiveSize * newScale - sourceCanvasSize), endParts);
-                Vector2 newPosition= imageParams[i].originalPosition + displacement;
+                Vector2 newPosition = imageParams[i].originalPosition + displacement;
                 imageParams[i].movePosition[index] = newPosition;
             }
             //Debug.Log("original=" + imageParams[0].originalPosition.ToString() + "; scale: min=" + currentScale.min.ToString() + ", max=" + currentScale.max.ToString() + "; position: 0=" + imageParams[0].movePosition[0].ToString() + ", 1=" + imageParams[0].movePosition[1].ToString());
@@ -152,6 +168,7 @@ namespace RotoChips.Puzzle
             {
                 gameObject.SetActive(true);
             }
+            Initialize();
             StartFlash();
         }
 

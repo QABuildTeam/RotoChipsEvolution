@@ -59,7 +59,7 @@ namespace RotoChips.Victory
             else
             {
                 // all messages are dequeued, fade out
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeOutWhiteCurtain, this);
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
             }
         }
 

@@ -26,8 +26,9 @@ namespace RotoChips.Gallery
         {
             exitMode = ExitMode.Gallery;
             registrator = new MessageRegistrator(
-                InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded,
+                InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIFadeWhiteCurtain,
                 InstantMessageType.PuzzleWinImageStopped, (InstantMessageHandler)OnPuzzleWinImageStopped,
+                InstantMessageType.PuzzleWinImageFinished, (InstantMessageHandler)OnPuzzleWinImageFinished,
                 InstantMessageType.GUIBackButtonPressed, (InstantMessageHandler)OnGUIBackButtonPressed
             );
             registrator.RegisterHandlers();
@@ -36,13 +37,14 @@ namespace RotoChips.Gallery
         // Use this for initialization
         void Start()
         {
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GalleryStarted, this);
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleShowWinimage, this, string.Empty);
         }
 
         // message handling
         [SerializeField]
         protected string worldScene = "World";
-        void OnGUIWhiteCurtainFaded(object sender, InstantMessageArgs args)
+        void OnGUIFadeWhiteCurtain(object sender, InstantMessageArgs args)
         {
             bool up = (bool)args.arg;
             if (up)
@@ -58,29 +60,42 @@ namespace RotoChips.Gallery
                             nextGalleryLevel = 0;
                         }
                         GlobalManager.MStorage.GalleryLevel = nextGalleryLevel;
-                        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                        GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleShowWinimage, this);
+                        GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this, false);
                         break;
                     case ExitMode.World:
+                        GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GalleryClosed, this);
                         SceneManager.LoadScene(worldScene);
                         break;
                 }
-            }
-            else
-            {
-
             }
         }
 
         void OnPuzzleWinImageStopped(object sender, InstantMessageArgs args)
         {
             exitMode = ExitMode.Gallery;
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeOutWhiteCurtain, this);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
+        }
+
+        [SerializeField]
+        protected float fullImageDelay = 2f;
+        IEnumerator ShowNextImage()
+        {
+            yield return new WaitForSeconds(fullImageDelay);
+            exitMode = ExitMode.Gallery;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
+        }
+
+        void OnPuzzleWinImageFinished(object sender, InstantMessageArgs args)
+        {
+            StartCoroutine(ShowNextImage());
         }
 
         void OnGUIBackButtonPressed(object sender, InstantMessageArgs args)
         {
             exitMode = ExitMode.World;
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeOutWhiteCurtain, this);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
         }
 
         private void OnDestroy()

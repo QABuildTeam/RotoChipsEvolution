@@ -922,11 +922,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 8
       objectReference: {fileID: 0}
-    - target: {fileID: 114045376236760932, guid: 288f1b39bab326948b55e5f2d46c5d7d,
-        type: 2}
-      propertyPath: tutorial0ShuffleConfig
-      value: 1.1.1.1.1.1.0.1.0.1.0.1.0.0.0.0.0.0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 288f1b39bab326948b55e5f2d46c5d7d, type: 2}
   m_IsPrefabAsset: 0

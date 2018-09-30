@@ -113,7 +113,7 @@ namespace RotoChips.Management
                 foreach (SystemLanguage language in Enum.GetValues(typeof(SystemLanguage)))
                 {
                     string localizationFileName = LocalizationFileName(language);
-                    Debug.Log("LocalizationManager.InitAvailableLocalizations(): checking " + language.ToString());
+                    //Debug.Log("LocalizationManager.InitAvailableLocalizations(): checking " + language.ToString());
                     StartCoroutine(CheckStreamableAsset(localizationFileName, (assetName, exists) => { if (exists) { availableLocalizations.Add(language); } }));
                     while (!IsLoaded)
                     {
@@ -171,7 +171,7 @@ namespace RotoChips.Management
                 {
                     if (!exists)
                     {
-                        Debug.Log("No localization files for " + languageName + " found");
+                        //Debug.Log("No localization files for " + languageName + " found");
                     }
                     else
                     {
@@ -192,7 +192,7 @@ namespace RotoChips.Management
                                     }
                                     else
                                     {
-                                        Debug.Log("Entry " + entry.id + " is already in vocabulary!");
+                                        //Debug.Log("Entry " + entry.id + " is already in vocabulary!");
                                     }
                                 }
                             }
@@ -203,7 +203,7 @@ namespace RotoChips.Management
                 {
                     yield return null;
                 }
-                Debug.Log(entriesRead.ToString() + " entries read for " + languageName + " language");
+                //Debug.Log(entriesRead.ToString() + " entries read for " + languageName + " language");
                 if (notify)
                 {
                     GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.LanguageChanged, this, currentLanguage);
@@ -211,7 +211,7 @@ namespace RotoChips.Management
             }
             else
             {
-                Debug.Log("No localization files for " + languageName + " found");
+                //Debug.Log("No localization files for " + languageName + " found");
             }
             processFlag = true;
         }
@@ -225,7 +225,7 @@ namespace RotoChips.Management
             {
                 return value;
             }
-            Debug.Log("No localization entry for id \"" + id + "\" found");
+            //Debug.Log("No localization entry for id \"" + id + "\" found");
             return id;
         }
 

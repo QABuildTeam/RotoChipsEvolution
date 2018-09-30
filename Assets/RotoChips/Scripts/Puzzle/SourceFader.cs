@@ -35,9 +35,7 @@ namespace RotoChips.Puzzle
         void Awake()
         {
             descriptor = GlobalManager.MLevel.GetDescriptor(GlobalManager.MStorage.SelectedLevel);
-            int width = descriptor.init.width;
-            int height = descriptor.init.height;
-            float puzzleRatioXY = (float)width / (float)height;
+            float puzzleRatioXY = (float)descriptor.init.width / (float)descriptor.init.height;
             float screenAspect = Camera.main.aspect;
 
             // prepare STRESS texture
@@ -51,17 +49,19 @@ namespace RotoChips.Puzzle
             };
             sourceImage.texture = tex;
             CanvasScaler canvasScaler = GetComponent<CanvasScaler>();
+            // SourceCanvas matches screen by width, so the final scaling should be reduced by:
             // the size of the canvas excluding margins
             Rect sourceCanvasRect = new Rect(0, 0, canvasScaler.referenceResolution.x * (1 - marginRatio), canvasScaler.referenceResolution.y * (1 - marginRatio));
             RectTransform sourceTransform = sourceImage.GetComponent<RectTransform>();
             // the original size of the source image (square)
             Rect sourceRect = sourceTransform.rect;
             Vector2 imageToCanvasRatio = new Vector2(sourceCanvasRect.width / sourceRect.width, sourceCanvasRect.height / sourceRect.height);
+            float canvasAspect = sourceCanvasRect.x / sourceCanvasRect.y;
             Vector2 sourceRectScale = new Vector2(
                 puzzleRatioXY > screenAspect ? imageToCanvasRatio.x : imageToCanvasRatio.y * puzzleRatioXY,
                 puzzleRatioXY > screenAspect ? imageToCanvasRatio.x / puzzleRatioXY : imageToCanvasRatio.y
             );
-            Debug.Log("Image sizes: canvas: " + sourceCanvasRect.ToString() + ", image: " + sourceRect.ToString() + ", image/canvas: " + imageToCanvasRatio.ToString() + ", scale: " + sourceRectScale.ToString());
+            //Debug.Log("Image sizes: canvas: " + sourceCanvasRect.ToString() + ", image: " + sourceRect.ToString() + ", image/canvas: " + imageToCanvasRatio.ToString() + ", scale: " + sourceRectScale.ToString());
             sourceTransform.localScale = sourceRectScale;
             // UV-coordinates of the image
             Rect uvRect = new Rect(
