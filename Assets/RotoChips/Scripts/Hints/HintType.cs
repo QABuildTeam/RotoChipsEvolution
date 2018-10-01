@@ -49,6 +49,7 @@ namespace RotoChips.UI
         SecondTileButtonsHint,
         SecondLevelChallenge,
         TwoRowsInPlace2,
-        TwoRowsInPlace1
+        TwoRowsInPlace1,
+        ShowAdHint
     }
 }

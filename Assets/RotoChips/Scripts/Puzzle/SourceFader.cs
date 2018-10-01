@@ -49,19 +49,20 @@ namespace RotoChips.Puzzle
             };
             sourceImage.texture = tex;
             CanvasScaler canvasScaler = GetComponent<CanvasScaler>();
-            // SourceCanvas matches screen by width, so the final scaling should be reduced by:
             // the size of the canvas excluding margins
             Rect sourceCanvasRect = new Rect(0, 0, canvasScaler.referenceResolution.x * (1 - marginRatio), canvasScaler.referenceResolution.y * (1 - marginRatio));
+            // SourceCanvas matches screen by width, so the final scaling should be multiplied by:
+            float heightAdjustFactor = sourceCanvasRect.width / sourceCanvasRect.height / screenAspect;
             RectTransform sourceTransform = sourceImage.GetComponent<RectTransform>();
             // the original size of the source image (square)
             Rect sourceRect = sourceTransform.rect;
-            Vector2 imageToCanvasRatio = new Vector2(sourceCanvasRect.width / sourceRect.width, sourceCanvasRect.height / sourceRect.height);
-            float canvasAspect = sourceCanvasRect.x / sourceCanvasRect.y;
-            Vector2 sourceRectScale = new Vector2(
-                puzzleRatioXY > screenAspect ? imageToCanvasRatio.x : imageToCanvasRatio.y * puzzleRatioXY,
-                puzzleRatioXY > screenAspect ? imageToCanvasRatio.x / puzzleRatioXY : imageToCanvasRatio.y
-            );
-            //Debug.Log("Image sizes: canvas: " + sourceCanvasRect.ToString() + ", image: " + sourceRect.ToString() + ", image/canvas: " + imageToCanvasRatio.ToString() + ", scale: " + sourceRectScale.ToString());
+            Vector2 canvasToImageRatio = new Vector2(sourceCanvasRect.width / sourceRect.width, sourceCanvasRect.height / sourceRect.height);
+            Vector3 sourceRectScale = new Vector3(
+                puzzleRatioXY > screenAspect ? canvasToImageRatio.x : canvasToImageRatio.y * puzzleRatioXY,
+                puzzleRatioXY > screenAspect ? canvasToImageRatio.x / puzzleRatioXY : canvasToImageRatio.y,
+                1
+            ) * heightAdjustFactor;
+            Debug.Log("Image sizes: canvas: " + sourceCanvasRect.ToString() + ", image: " + sourceRect.ToString() + ", image/canvas: " + canvasToImageRatio.ToString() + ", scale: " + sourceRectScale.ToString());
             sourceTransform.localScale = sourceRectScale;
             // UV-coordinates of the image
             Rect uvRect = new Rect(

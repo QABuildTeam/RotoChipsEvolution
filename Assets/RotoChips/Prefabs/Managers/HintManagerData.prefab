@@ -349,3 +349,14 @@ MonoBehaviour:
     target: {fileID: 0}
     arrowAngle: 0
     arrowMessage: 0
+  - type: 38
+    hintMsgId: idShowAd
+    layout: 0
+    width: 500
+    height: 200
+    xGap: 0
+    yGap: 0
+    arrowOn: 0
+    target: {fileID: 0}
+    arrowAngle: 0
+    arrowMessage: 0

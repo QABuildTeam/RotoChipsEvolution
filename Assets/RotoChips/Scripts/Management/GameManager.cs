@@ -39,7 +39,8 @@ namespace RotoChips.Management
                 InstantMessageType.PuzzleSourceImageClosed, (InstantMessageHandler)OnPuzzleSourceImageClosed,
                 InstantMessageType.PuzzleHasShuffled, (InstantMessageHandler)OnPuzzleHasShuffled,
                 InstantMessageType.PuzzleTileInPlace, (InstantMessageHandler)OnPuzzleTileInPlace,
-                InstantMessageType.GUIHintClosed, (InstantMessageHandler)OnGUIHintClosed
+                InstantMessageType.GUIHintClosed, (InstantMessageHandler)OnGUIHintClosed,
+                InstantMessageType.GUIMagicButtonPressed, (InstantMessageHandler)OnGUIMagicButtonPressed
             );
             registrator.RegisterHandlers();
             base.MakeReady();
@@ -352,6 +353,14 @@ namespace RotoChips.Management
                                 break;
                         }
                     }
+                    if (!firstRound || selectedLevel > 0)
+                    {
+                        switch (hintRequest.type)
+                        {
+                            case HintType.ShowAdHint:
+                                break;
+                        }
+                    }
                     break;
                 case SceneType.Puzzle:
                     if (firstRound)
@@ -449,7 +458,7 @@ namespace RotoChips.Management
                         return;
                 }
             }
-            // a row is assembled
+            // calculate points bonuses
             if (!descriptor.state.AutocompleteUsed)
             {
                 int startId = tilesInPlace.previous.y * descriptor.init.width + tilesInPlace.previous.x + 1;
@@ -463,7 +472,7 @@ namespace RotoChips.Management
                     if (x == puzzleWidth - 1)
                     {
                         // a row is assembled
-                            descriptor.state.EarnedPoints += (y + 1) * puzzleAssembledRowBonusStep;
+                        descriptor.state.EarnedPoints += (y + 1) * puzzleAssembledRowBonusStep;
                         scoreChanged = true;
                     }
                 }
@@ -499,6 +508,8 @@ namespace RotoChips.Management
                 int nextLevelId = GlobalManager.MLevel.NextLevel(completeStatus.descriptor.init.id);
                 int prevLevelId = GlobalManager.MLevel.PreviousLevel(completeStatus.descriptor.init.id);
                 RealmData.Init realmData = RealmData.initializers[completeStatus.descriptor.init.realmId];
+
+                // set a message queue for the Victory screen
                 if (completeStatus.firstTime)   // a puzzle is assembled for the first time
                 {
                     GlobalManager.MQueue.PostMessage(levelCompletedId);
@@ -526,6 +537,8 @@ namespace RotoChips.Management
                 {
                     GlobalManager.MQueue.PostMessage(levelCompletedOnceAgainId);
                 }
+
+                // Do the accounting chores
                 if (firstRound)
                 {
                     switch (completeStatus.descriptor.init.id)
@@ -548,6 +561,7 @@ namespace RotoChips.Management
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)completeStatus.descriptor.state.EarnedPoints);
                 GlobalManager.MStorage.CurrentPoints += completeStatus.descriptor.state.EarnedPoints;
                 completeStatus.descriptor.state.Complete = true;
+
                 // set all the levels in the current realm revealed
                 bool realmComplete = true;
                 for (int i = 0; i < realmData.members.Length; i++)
@@ -563,6 +577,7 @@ namespace RotoChips.Management
                         realmComplete = false;
                     }
                 }
+
                 if (nextLevelId >= 0)
                 {
                     // make next level revealed and playable
@@ -578,6 +593,8 @@ namespace RotoChips.Management
                     LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(prevLevelId);
                     descriptor.state.NextCompleteId = completeStatus.descriptor.init.id;
                 }
+
+                // check if the game is complete
                 if (realmComplete)
                 {
                     GlobalManager.MQueue.PostMessage(realmCompletedId);
@@ -593,6 +610,19 @@ namespace RotoChips.Management
                         GlobalManager.MQueue.PostMessage(realmOpenedId);
                     }
                 }
+            }
+        }
+
+        // advertisements
+        void OnGUIMagicButtonPressed(object sender, InstantMessageArgs args)
+        {
+            switch (sceneType)
+            {
+                case SceneType.World:
+                    GlobalManager.MHint.ShowNewHint(HintType.ShowAdHint);
+                    break;
+                case SceneType.Puzzle:
+                    break;
             }
         }
 

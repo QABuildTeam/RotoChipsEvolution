@@ -191,6 +191,8 @@ namespace RotoChips.Management
         GalleryClosed,                  // Notification: The Gallery scene is about to close
                                         //      Arguments: None
 
+        // Advertisements
+
         // Special
         RedirectFirstTimeWelcome2,      // Command: Active level selector on the world globe should create a hint request for FirstTimeWelcome2
                                         //      Arguments: None

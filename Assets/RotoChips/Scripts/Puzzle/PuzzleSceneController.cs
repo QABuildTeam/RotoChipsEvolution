@@ -66,7 +66,12 @@ namespace RotoChips.Puzzle
         // Use this for initialization
         void Start()
         {
+            // notify that the Puzzle scene has just been started
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleStarted, this);
+            // update RotoChips and RotoCoins indicators
+            LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(GlobalManager.MStorage.SelectedLevel);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
         }
 
         // message handling

@@ -74,19 +74,17 @@ namespace RotoChips.Puzzle
             sourceCanvasSize = new Vector2(sourceCanvasRect.width, sourceCanvasRect.height);
             for (int i = 0; i < imageParams.Length; i++)
             {
-                //imageParams[i].imageTransform = imageParams[i].winImage.GetComponent<RectTransform>();
                 imageParams[i].imageTransform.localPosition = imageParams[i].originalPosition;
                 Rect sourceRect = imageParams[i].imageTransform.rect;
-                Vector2 imageToCanvasRatio = new Vector2(
+                Vector2 canvasToImageRatio = new Vector2(
                     sourceCanvasRect.width / sourceRect.width,
                     sourceCanvasRect.height / sourceRect.height
                 );
-                float sourceCanvasAspect = sourceCanvasRect.width / sourceCanvasRect.height;
+                // SourceCanvas matches screen by width, so the final scaling should be multiplied by:
+                float heightAdjustFactor = sourceCanvasRect.width / sourceCanvasRect.height / screenAspect;
                 imageParams[i].sourceScale = new Vector2(
-                    //finalRatioXY > screenAspect ? imageToCanvasRatio.y * finalRatioXY : imageToCanvasRatio.x,
-                    //finalRatioXY > screenAspect ? imageToCanvasRatio.y : imageToCanvasRatio.x / finalRatioXY
-                    finalRatioXY > sourceCanvasAspect ? imageToCanvasRatio.y * finalRatioXY : imageToCanvasRatio.x,
-                    finalRatioXY > sourceCanvasAspect ? imageToCanvasRatio.y : imageToCanvasRatio.x / finalRatioXY
+                    finalRatioXY > screenAspect ? canvasToImageRatio.y * finalRatioXY : canvasToImageRatio.x,
+                    finalRatioXY > screenAspect ? canvasToImageRatio.y : canvasToImageRatio.x / finalRatioXY
                 );
                 imageParams[i].effectiveSize = Vector2.Scale(new Vector2(sourceRect.width, sourceRect.height), imageParams[i].sourceScale);
                 imageParams[i].imageTransform.localScale = imageParams[i].sourceScale;
