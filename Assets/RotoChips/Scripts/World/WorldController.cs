@@ -28,6 +28,7 @@ namespace RotoChips.World
             curtainFaded = false;
             cameraController = Camera.main.GetComponent<WorldCameraController>();
             registrator = new MessageRegistrator(
+                //InstantMessageType.GUIMagicButtonPressed, (InstantMessageHandler)OnGUIMagicButtonPressed,
                 InstantMessageType.WorldCameraZoomedAtMin, (InstantMessageHandler)OnWorldCameraZoomedAtMin,
                 InstantMessageType.WorldGlobePressed, (InstantMessageHandler)OnWorldGlobePressed,
                 InstantMessageType.WorldSelectorPressed, (InstantMessageHandler)OnWorldSelectorPressed,
@@ -38,8 +39,7 @@ namespace RotoChips.World
                 InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded,
                 InstantMessageType.GUIRestartButtonPressed, (InstantMessageHandler)OnGUIRestartButtonPressed,
                 InstantMessageType.GUIViewButtonPressed, (InstantMessageHandler)OnGUIViewButtonPressed,
-                InstantMessageType.WorldLevelDescriptionClosed, (InstantMessageHandler)OnWorldLevelDescriptionClosed,
-                InstantMessageType.GUIMagicButtonPressed, (InstantMessageHandler)OnGUIMagicButtonPressed
+                InstantMessageType.WorldLevelDescriptionClosed, (InstantMessageHandler)OnWorldLevelDescriptionClosed
             );
             registrator.RegisterHandlers();
         }

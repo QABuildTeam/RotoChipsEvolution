@@ -1,121 +1,121 @@
-{"language":"Russian","value":"Ледяная голубизна","id":"LevelTitle017"}
-{"id":"idGUIStartMessage","value":"НАЧАТЬ","language":"Russian"}
-{"id":"idGameFinishedCongratulation","value":"ПОЗДРАВЛЯЕМ!\\nВы только что прошли всю игру!","language":"Russian"}
-{"language":"Russian","value":"Леса на Ушканьих островах, что раскинулись в средней части озера Байкал, пестрят самыми разными видами растительности, которую только можно увидеть в тайге: здесь и лиственница, и сосна, и береза, и багульник.","id":"LevelDescription018"}
-{"language":"Russian","value":"Это очки RotoChips, полученные на этом уровне.","id":"idHelpPuzzlePointScoreTapped"}
-{"language":"Russian","value":"Нажав на эту кнопку,\\nигру можно запустить заново,\\nзаработать кучу очков\\nи стать ЧЕМПИОНОМ RotoChips!","id":"idHelpGameRestartButton"}
-{"value":"ПРОСМОТРЕТЬ ГОТОВУЮ КАРТИНКУ","language":"Russian","id":"idGUIViewMessage"}
-{"id":"LevelDescription031","value":"Причудливые формы скал нижнего Каньона Антилопы, освещенных магическим светом, отраженным от их рельефных поверхностей, привлекают туристов и фотографов со всего мира.","language":"Russian"}
-{"language":"Russian","value":"Эта кнопка возвращает\\nк выбору уровня","id":"idHelpBackButton"}
-{"value":"Каменный остров","language":"Russian","id":"LevelTitle007"}
-{"id":"LevelTitle010","language":"Russian","value":"Медведь в лесу"}
-{"id":"LevelTitle015","language":"Russian","value":"Осеннее озеро"}
-{"id":"LevelTitle009","language":"Russian","value":"Туманный прилив"}
-{"value":"Дорога в Алтайских горах","language":"Russian","id":"LevelTitle025"}
-{"id":"idHelpGalleryOpened","value":"В этом спутнике хранятся\\nфотографии всех уровней,\\nкоторые Вы собрали.","language":"Russian"}
-{"id":"LevelDescription015","value":"Горный Алтай. Золотая осень. Выпавший утром снег к вечеру уже растаял и остался лежать лишь высоко в горах.","language":"Russian"}
-{"language":"Russian","value":"Острова Трук находятся на юго-западе Тихого океана и входят в состав Микронезии. Здесь круглый год идеальная погода, а дайверы со всего мира наслаждаются видом обломков затонувшей боевой техники посреди коралловых рифов, окружающих лагуну с островами.","id":"LevelDescription033"}
-{"value":"Речной полумесяц","language":"Russian","id":"LevelTitle026"}
-{"language":"Russian","value":"ПРОДОЛЖИТЬ","id":"idGUIContinueMessage"}
-{"id":"idRealmOpened","language":"Russian","value":"ОТКРЫЛСЯ ВХОД В СЛЕДУЮЩЕЕ ЦАРСТВО!"}
-{"value":"Замечательно!\\nПервая плитка на месте!","language":"Russian","id":"idHelpFirstTileInPlace"}
-{"id":"idHelpNoMoreBonuses","language":"Russian","value":"Ну вот, вы собрали уже две фотографии. Теперь настало время действовать самостоятельно. Желаем успеха в мире этих мозгодробительных головоломок!"}
-{"value":"МОЖНО ИГРАТЬ НА СЛЕДУЮЩЕМ УРОВНЕ!","language":"Russian","id":"idNewLevelPlayable"}
-{"id":"LevelTitle023","language":"Russian","value":"Закат на водопадах"}
-{"value":"Славное море, священный Байкал","language":"Russian","id":"LevelTitle032"}
-{"value":"Байкал, берег Большого Ушканьего острова","language":"Russian","id":"LevelTitle030"}
-{"id":"LevelTitle033","language":"Russian","value":"Коралловые рифы островов Трук"}
-{"id":"idHelpFirstTileButtonsHint","value":"Первую плитку можно поставить на место, нажав эту кнопку.","language":"Russian"}
-{"value":"Дальше головоломка соберется сама собой!","language":"Russian","id":"idHelpTwoRowsInPlace2"}
-{"value":"Лофотены. Норвегия. Зима. Близится полярная ночь. Солнце придет сюда только через шесть месяцев.","language":"Russian","id":"LevelDescription004"}
-{"language":"Russian","value":"НАЧАТЬ ИГРУ ЗАНОВО?","id":"idGUIRestartGameQuestion"}
-{"id":"LevelDescription030","language":"Russian","value":"Удивительно, но по происхождению озеро Байкал и Мёртвое море - родственники; они оба расположены в рифтовых впадинах, крупных провалах на месте разломов земной коры."}
-{"id":"idFinalTextRoll","language":"Russian","value":"Эту игру-головоломку разработал для Вас\\n\\n<color=yellow>ИГОРЬ СПИРИДОНОВ</color>\\n<color=lightblue>https://vk.com/rotochips</color>\\n\\n\\nФотограф дикой природы\\n\\n<color=yellow>ДМИТРИЙ АРХИПОВ</color>\\n<color=lightblue>http://www.dmitryarkhipov.com/</color>\\n<color=lightblue>http://www.dmitryarkhipov.ru/</color>\\n\\n\\n\\n\\n\\n\\nСпасибо за игру!\\n"}
-{"id":"LevelTitle004","value":"Лофотенская деревня","language":"Russian"}
-{"language":"Russian","value":"Ветряные мельницы, построенные в XVIII веке в деревне Киндердейк  недалеко от Роттердама, являются одной из самых популярных туристических достопримечательностей в Нидерландах.","id":"LevelDescription003"}
-{"language":"Russian","value":"Феерия","id":"LevelTitle005"}
-{"id":"idHelpTwoRowsInPlace","language":"Russian","value":"Поздравляем!\\nВерхние два ряда собраны,\\nи Вы получаете бонус -\\nРотоЧипсы и РотоКойны!"}
-{"value":"Байкальский лес","language":"Russian","id":"LevelTitle018"}
-{"language":"Russian","value":"Голубая бездна, закат","id":"LevelTitle014"}
-{"id":"LevelTitle029","value":"Каменный шар","language":"Russian"}
-{"id":"idHelpFirstPuzzleQuarterRotated","language":"Russian","value":"Да-да, все верно!\\nПопробуйте еще раз!"}
-{"language":"Russian","value":"Высокогорное ледниковое озеро Морейн, расположенное на высоте 1885 м в канадской провинции Альберта, считается одним из самых красивых озёр мира.","id":"LevelDescription005"}
-{"value":"Исландский водопад Свартифосс (''черный водопад'') широко известен своими декорациями - шестигранными колоннами из кристаллизовавшейся черной лавы, ставших источником вдохновения для многих исландских архитекторов.","language":"Russian","id":"LevelDescription021"}
-{"id":"idFinalTextRoll1","value":"Эту игру-головоломку\\nразработал для Вас\\n\\n<color=yellow>ИГОРЬ СПИРИДОНОВ</color>\\n<color=lightblue>https://vk.com/rotochips</color>","language":"Russian"}
-{"language":"Russian","value":"Нажав эту кнопку,\\nможно посмотреть финальные титры.","id":"idHelpGameRollsButton"}
-{"id":"idGameCompleted","language":"Russian","value":"ИГРА ПРОЙДЕНА!"}
-{"value":"Изваяния Брайс Каньона","language":"Russian","id":"LevelTitle028"}
-{"value":"Неповторимым фоном Кейптауна является Столовая гора - одно из ''Семи новых чудес природы''. Ее совершенно плоская вершина дала название не только ей самой, но и ее природным близнецам, и даже созвездию.","language":"Russian","id":"LevelDescription020"}
-{"id":"LevelTitle011","language":"Russian","value":"Голубая бездна"}
-{"id":"idHelpSecondTileInPlace","value":"Великолепно!\\nВторая плитка на месте!","language":"Russian"}
-{"language":"Russian","value":"Этот высеченный из камня ''остров'' можно увидеть в старейшем канадском национальном парке Банф, расположенном на западе провинции Альберта.","id":"LevelDescription007"}
-{"id":"idRealmRevealed","language":"Russian","value":"ОТКРЫЛОСЬ ЦАРСТВО!"}
-{"id":"LevelDescription028","value":"Национальный парк Брайс-Каньон, расположенный на юго-западе США, скорее не каньон, а амфитеатр, образованный скалами причудливой формы, созданной эрозией, которая длилась десятками миллионов лет.","language":"Russian"}
-{"id":"idGUIRestartLevelQuestion","language":"Russian","value":"НАЧАТЬ УРОВЕНЬ ЗАНОВО?"}
-{"value":"Осенняя река","language":"Russian","id":"LevelTitle013"}
-{"id":"LevelDescription034","value":"Обширные кипарисовые леса, произрастающие в заболоченных местах Луизианы и Техаса, США, оставляют ощущение своей сверхъестественности у каждого, кому удается попасть сюда.","language":"Russian"}
-{"id":"idHelpSecondTileButtonsHint","value":"Следующие плитки встанут на место при нажатии этой кнопки.","language":"Russian"}
-{"language":"Russian","value":"Лёд на Байкале исключительно прозрачен и к концу зимы его тощина достигает 1-2 м. Сильные морозы разрывают лёд на куски, покрывая его неповторимым узором трещин, через который в глубинные слои озера проникает кисород.","id":"LevelDescription032"}
-{"id":"LevelTitle027","value":"Исландия, водопад Хауифосс","language":"Russian"}
-{"value":"Загрузка...","language":"Russian","id":"idLogoLoadingMessage"}
-{"id":"LevelTitle002","value":"Ледяная пещера на острове Ольхон","language":"Russian"}
-{"id":"idFinalTextRoll2","language":"Russian","value":"Фотограф дикой природы\\n\\n<color=yellow>ДМИТРИЙ АРХИПОВ</color>\\n<color=lightblue>http://www.dmitryarkhipov.com/</color>"}
-{"id":"LevelDescription014","language":"Russian","value":"В последнее время власти Египта разрешают нырять в Голубой Дыре только квалифицированным ныряльщикам-фридайверам в сопровождении сертифицированных инструкторов."}
-{"id":"LevelTitle024","value":"Ледяная арка","language":"Russian"}
-{"id":"idHelpRestartLevelButton","language":"Russian","value":"Эта кнопка\\nначинает уровень заново.\\nВНИМАНИЕ!\\nВсе очки, полученные на этом\\nуровне, обнулятся!"}
-{"id":"LevelDescription009","language":"Russian","value":"Лофотенские острова, расположенные у северо-заподного побережья Норвегии, разделены друг от друга в основном узкими протоками. Между двумя островами архипелага - Верёй и Москенесёй - находится знаменитый водоворот Мальстрём."}
-{"value":"Добро пожаловать в RotoChips!\\nНа таинственной планете Земля\\nскрыто много очаровательных мест.\\nПопробуйте раскрыть их!","language":"Russian","id":"idWelcomeMessage"}
-{"id":"LevelTitle012","value":"Иконы Юго-Запада","language":"Russian"}
-{"id":"LevelDescription023","value":"Фантастический закат на водопаде Хайфосс. Нам несказанно повезло. Мы приехали к водопаду за 3 часа до заката, чтобы полетать на дроне. Но вскоре на небе началось светопредставление...","language":"Russian"}
-{"value":"УРОВЕНЬ ПРОЙДЕН!","language":"Russian","id":"idLevelCompleted"}
-{"id":"LevelTitle021","language":"Russian","value":"Черный водопад Свартифосс"}
-{"id":"idShowAd","value":"Нажав эту кнопку, Вы посмотрите рекламу и получите немного РотоКойнов!","language":"Russian"}
-{"id":"LevelDescription001","value":"Юго-запад США изобилует национальными парками, среди которых знаменитые Большой Каньон, Долина смерти, Пустыня Мохаве, Йосемите и многие другие, при этом климатические и природные особенности их простираются от выжженых пустынь до тысячелетних лесов и подземных пещер.","language":"Russian"}
-{"id":"LevelTitle022","value":"Алтайские горы с высоты птичьего полета","language":"Russian"}
-{"language":"Russian","value":"Эта кнопка позволяет\\nпосмотреть на исходное изображение","id":"idHelpShowSourceButton"}
-{"language":"Russian","value":"Старая деревянная мельница на реке Кристалл, что в штате Колорадо, США, в действительности представляет собой шахтерскую гидроэлектростанцию. Она не работает уже многие десятилетия, но благодаря живописным окрестностям радует глаз многочисленных фотографов и туристов.","id":"LevelDescription016"}
-{"id":"idFirstRowCongratulation","language":"Russian","value":"Изумительно!\\nВерхний ряд на месте!\\nВы получаете бонус - РотоЧипсы!"}
-{"id":"LevelDescription025","language":"Russian","value":"Алтайские горы считаются самым экологически чистым регионом России - здесь нет промышленных предприятий и железных дорог. Автомобильные дороги, впрочем, есть..."}
-{"language":"Russian","value":"СПАСИБО ЗА ИГРУ!","id":"idFinalTextRoll3"}
-{"language":"Russian","value":"Кипарисовые болота","id":"LevelTitle034"}
-{"value":"ПОСТАВИТЬ ПЛИТКУ НА МЕСТО?\\nЭто стоит 1000 РотоКойнов!","language":"Russian","id":"idGUIMagicQuestion"}
-{"id":"LevelDescription029","value":"Одна из самых крупных горных систем Южной Африки, расположенная на территории ЮАР, Лесото и Свазиленда, получила название ''Драконовых гор'' за свою труднодоступность.","language":"Russian"}
+{"language":"Russian","id":"LevelTitle024","value":"Ледяная арка"}
+{"language":"Russian","id":"LevelDescription017","value":"Несмотря на то, что Лофотенские острова лежат за Северным полярным кругом, даже в самые холодные зимние месяцы температура там выше нуля - и все благодаря теплому атлантическому течению Гольфстрим."}
+{"id":"idGUIStartMessage","language":"Russian","value":"НАЧАТЬ"}
+{"language":"Russian","id":"LevelTitle001","value":"Озера в каньонах"}
+{"value":"Начать","language":"Russian","id":"idLogoStartMessage"}
+{"language":"Russian","id":"idLevelNotYetPlayable","value":"Этот уровень еще не открыт."}
+{"id":"idGUIMagicQuestion","language":"Russian","value":"ПОСТАВИТЬ ПЛИТКУ НА МЕСТО?\\nЭто стоит 1000 РотоКойнов!"}
+{"value":"Причудливые формы скал нижнего Каньона Антилопы, освещенных магическим светом, отраженным от их рельефных поверхностей, привлекают туристов и фотографов со всего мира.","language":"Russian","id":"LevelDescription031"}
+{"id":"idHelpGalleryOpened","language":"Russian","value":"В этом спутнике хранятся\\nфотографии всех уровней,\\nкоторые Вы собрали."}
+{"value":"Юго-запад США изобилует национальными парками, среди которых знаменитые Большой Каньон, Долина смерти, Пустыня Мохаве, Йосемите и многие другие, при этом климатические и природные особенности их простираются от выжженых пустынь до тысячелетних лесов и подземных пещер.","id":"LevelDescription001","language":"Russian"}
+{"value":"Закат на водопадах","language":"Russian","id":"LevelTitle023"}
+{"id":"LevelDescription021","language":"Russian","value":"Исландский водопад Свартифосс (''черный водопад'') широко известен своими декорациями - шестигранными колоннами из кристаллизовавшейся черной лавы, ставших источником вдохновения для многих исландских архитекторов."}
+{"id":"LevelTitle017","language":"Russian","value":"Ледяная голубизна"}
+{"value":"Первую плитку можно поставить на место, нажав эту кнопку.","language":"Russian","id":"idHelpFirstTileButtonsHint"}
+{"value":"ОТКРЫЛАСЬ ГАЛЕРЕЯ!","language":"Russian","id":"idGalleryOpened"}
+{"value":"Эту игру-головоломку разработал для Вас\\n\\n<color=yellow>ИГОРЬ СПИРИДОНОВ</color>\\n<color=lightblue>https://vk.com/rotochips</color>\\n\\n\\nФотограф дикой природы\\n\\n<color=yellow>ДМИТРИЙ АРХИПОВ</color>\\n<color=lightblue>http://www.dmitryarkhipov.com/</color>\\n<color=lightblue>http://www.dmitryarkhipov.ru/</color>\\n\\n\\n\\n\\n\\n\\nСпасибо за игру!\\n","language":"Russian","id":"idFinalTextRoll"}
+{"value":"Неповторимым фоном Кейптауна является Столовая гора - одно из ''Семи новых чудес природы''. Ее совершенно плоская вершина дала название не только ей самой, но и ее природным близнецам, и даже созвездию.","id":"LevelDescription020","language":"Russian"}
+{"language":"Russian","id":"idHelpMagicButton","value":"Если поставить плитку на место\\nслишком сложно, то эта кнопка\\nмагически сделает это за Вас.\\nОдин магический ход\\nстоит <color=red>1000 РотоКойнов</color>."}
+{"value":"Эта кнопка возвращает\\nк выбору уровня","language":"Russian","id":"idHelpBackButton"}
+{"value":"Нажав эту кнопку, Вы посмотрите рекламу и получите немного РотоКойнов!","language":"Russian","id":"idShowAd"}
+{"id":"idGUIContinueMessage","language":"Russian","value":"ПРОДОЛЖИТЬ"}
 {"id":"LevelTitle000","language":"Russian","value":"Причал на Лофотенах"}
-{"id":"LevelDescription006","language":"Russian","value":"Недалеко от города Белогорска, что в Крыму, находится одна из самых известных крымских достопримечательностей - гигантская стена из ракушечника, 100-метровая Ак-Кая или Белая Скала. Здесь почти каждый год снимается какой-нибудь художественный фильм."}
-{"language":"Russian","value":"Гренландия считается самым большим островом в мире, при этом почти целиком покрытым льдом. Ее гораздо большая родственница - Антарктида - хоть и закована в ледяной панцирь, но считается материком, а не островом.","id":"LevelDescription024"}
-{"language":"Russian","value":"Ледники Гренландии тают гораздо быстрее, чем образуется составляющий их лед, из-за чего уровень Мирового океана постоянно поднимается.","id":"LevelDescription019"}
-{"value":"Вид на Столовую гору","language":"Russian","id":"LevelTitle020"}
-{"value":"Лофотенские острова расположены в суровых водах Норвежского моря, за Полярным кругом. Это край дикой, необузданной природы, величественных гор, глубоких фьордов, шумных птичьих колоний и длинных песчаных пляжей. ","language":"Russian","id":"LevelDescription000"}
-{"id":"idLevelAlreadyAssembled","language":"Russian","value":"Эта головоломка уже собрана."}
-{"value":"Река Лицзян - одна из самых чистых рек Китая. Извиваясь между зеленых холмов и рисовых полей, она несет свои воды от округа Гуйлинь к реке Сицзян. Общая длина этого природного великолепия составляет 437 км.","language":"Russian","id":"LevelDescription026"}
-{"id":"idGalleryOpened","language":"Russian","value":"ОТКРЫЛАСЬ ГАЛЕРЕЯ!"}
-{"value":"ЦАРСТВО ПРОЙДЕНО!","language":"Russian","id":"idRealmCompleted"}
-{"language":"Russian","value":"В этой головоломке соберите верхний ряд плиток.","id":"idHelpFirstLevelChallenge"}
-{"id":"LevelDescription017","language":"Russian","value":"Несмотря на то, что Лофотенские острова лежат за Северным полярным кругом, даже в самые холодные зимние месяцы температура там выше нуля - и все благодаря теплому атлантическому течению Гольфстрим."}
-{"value":"Старая мельница","language":"Russian","id":"LevelTitle016"}
-{"id":"idGUIBackQuestion","value":"ОБРАТНО К ВЫБОРУ УРОВНЯ?","language":"Russian"}
-{"value":"МОЛОДЕЦ!","language":"Russian","id":"idLevelCompletedOnceAgain"}
-{"value":"Красота Алтайских гор столь невероятна, что их можно принять за кинопейзаж или локацию видеоигр, нежели за реальный горный массив на границе России, Казахстана, Китая и Монголии, которому уже около полумиллиарда лет.","language":"Russian","id":"LevelDescription022"}
-{"id":"LevelDescription008","language":"Russian","value":"Остров Духа посреди озера Малайн в канадских Скалистых горах - крохотный клочок суши с маленькой рощей, соединяющийся с берегом узким перешейком. Он широко известен и привлекает фотографов со всего мира."}
-{"language":"Russian","value":"Начать","id":"idLogoStartMessage"}
-{"id":"LevelTitle019","value":"Осколок","language":"Russian"}
-{"id":"LevelDescription010","language":"Russian","value":"Медведи в лксах Карелии обитают повсеместно, и часто выходят к людям."}
-{"id":"LevelDescription013","value":"Горные реки Северного Кавказа невероятно красивы в любое время года. Они славятся чистейшей водой. И еще здесь водится вкуснейшая форель, которую еще называют ''Царской рыбой''.","language":"Russian"}
-{"language":"Russian","value":"Остров Ольхон - самый большой остров на озере Байкал. На нем встречаются самые разнообразные природные условия: степи, песчаные пляжи и хвойные рощи. Одна из достопримечательностей острова - Шаманская пещера, образовавшаяся в результате эрозии известняковых пород.","id":"LevelDescription002"}
-{"language":"Russian","value":"Ветряная мельница","id":"LevelTitle003"}
-{"language":"Russian","value":"Остров Духа","id":"LevelTitle008"}
-{"id":"LevelTitle031","language":"Russian","value":"Магия Каньона Антилопы"}
-{"language":"Russian","value":"Водопад Хауифосс (или Хайфосс, как его называют туристы) образован падающей с высоты 122 м рекой Фоссау. Это третий по высоте водопад Исландии.","id":"LevelDescription027"}
-{"id":"idVictory","value":"ПОБЕДА!","language":"Russian"}
-{"value":"Голубая Дыра в Красном море, недалеко от курорта Дахаб в Египте, снискала себе дурную славу, так как попытки многих неопытных дайверов донырнуть до ее дна на глубине 132 м оканчивались трагически.","language":"Russian","id":"LevelDescription011"}
-{"language":"Russian","value":"Национальный парк Арчес, Юта, США\\nШтат Юта - рекордсмен по удивительным, невообразимым формам, созданным природой с помощью воды и ветра. Всего в парке Арчес насчитывают более 2000 песчаных арок. Длина самой большой арки составляет 85 метров.","id":"LevelDescription012"}
-{"value":"А вот и одно из них...","language":"Russian","id":"idWelcomeMessage2"}
-{"value":"Это очки RotoChips, полученные во всех головоломках в этом Мире.","language":"Russian","id":"idHelpWorldPointScoreTapped"}
-{"language":"Russian","value":"Белая Скала","id":"LevelTitle006"}
-{"id":"idHelpMagicButton","value":"Если поставить плитку на место\\nслишком сложно, то эта кнопка\\nмагически сделает это за Вас.\\nОдин магический ход\\nстоит <color=red>1000 РотоКойнов</color>.","language":"Russian"}
-{"value":"Изумительно!\\nВерхний ряд на месте!\\nВы получаете бонус - РотоЧипсы!","language":"Russian","id":"idHelpThirdTileInPlace"}
-{"value":"Это количество монет RotoCoins, которые у Вас есть.","language":"Russian","id":"idHelpPuzzleCoinsScoreTapped"}
 {"value":"В этой головоломке соберите два верхних ряда.","language":"Russian","id":"idHelpSecondLevelChallenge"}
-{"id":"LevelTitle001","value":"Озера в каньонах","language":"Russian"}
-{"id":"idLevelNotYetPlayable","language":"Russian","value":"Этот уровень еще не открыт."}
-{"id":"idHelpPuzzleFirstShuffled","value":"Исходный пейзаж был разрезан\\nна квадраты и перемешан.\\nЕго можно вновь собрать,\\nнажимая на желтые кнопки!","language":"Russian"}
+{"id":"idHelpFirstTileInPlace","language":"Russian","value":"Замечательно!\\nПервая плитка на месте!"}
+{"value":"Нажав эту кнопку,\\nможно посмотреть финальные титры.","id":"idHelpGameRollsButton","language":"Russian"}
+{"value":"Каменный остров","language":"Russian","id":"LevelTitle007"}
+{"language":"Russian","id":"LevelDescription012","value":"Национальный парк Арчес, Юта, США\\nШтат Юта - рекордсмен по удивительным, невообразимым формам, созданным природой с помощью воды и ветра. Всего в парке Арчес насчитывают более 2000 песчаных арок. Длина самой большой арки составляет 85 метров."}
+{"id":"LevelDescription016","language":"Russian","value":"Старая деревянная мельница на реке Кристалл, что в штате Колорадо, США, в действительности представляет собой шахтерскую гидроэлектростанцию. Она не работает уже многие десятилетия, но благодаря живописным окрестностям радует глаз многочисленных фотографов и туристов."}
+{"language":"Russian","id":"LevelTitle028","value":"Изваяния Брайс Каньона"}
+{"id":"LevelDescription005","language":"Russian","value":"Высокогорное ледниковое озеро Морейн, расположенное на высоте 1885 м в канадской провинции Альберта, считается одним из самых красивых озёр мира."}
+{"value":"Нажав на эту кнопку,\\nигру можно запустить заново,\\nзаработать кучу очков\\nи стать ЧЕМПИОНОМ RotoChips!","id":"idHelpGameRestartButton","language":"Russian"}
+{"value":"Феерия","language":"Russian","id":"LevelTitle005"}
+{"language":"Russian","id":"LevelDescription030","value":"Удивительно, но по происхождению озеро Байкал и Мёртвое море - родственники; они оба расположены в рифтовых впадинах, крупных провалах на месте разломов земной коры."}
+{"id":"idHelpPuzzleFirstShuffled","language":"Russian","value":"Исходный пейзаж был разрезан\\nна квадраты и перемешан.\\nЕго можно вновь собрать,\\nнажимая на желтые кнопки!"}
+{"id":"idFinalTextRoll3","language":"Russian","value":"СПАСИБО ЗА ИГРУ!"}
+{"language":"Russian","id":"LevelTitle008","value":"Остров Духа"}
+{"value":"Белая Скала","id":"LevelTitle006","language":"Russian"}
+{"value":"Это очки RotoChips, полученные во всех головоломках в этом Мире.","id":"idHelpWorldPointScoreTapped","language":"Russian"}
+{"language":"Russian","id":"LevelDescription002","value":"Остров Ольхон - самый большой остров на озере Байкал. На нем встречаются самые разнообразные природные условия: степи, песчаные пляжи и хвойные рощи. Одна из достопримечательностей острова - Шаманская пещера, образовавшаяся в результате эрозии известняковых пород."}
+{"value":"Этот высеченный из камня ''остров'' можно увидеть в старейшем канадском национальном парке Банф, расположенном на западе провинции Альберта.","language":"Russian","id":"LevelDescription007"}
+{"value":"Добро пожаловать в RotoChips!\\nНа таинственной планете Земля\\nскрыто много очаровательных мест.\\nПопробуйте раскрыть их!","language":"Russian","id":"idWelcomeMessage"}
+{"value":"ОБРАТНО К ВЫБОРУ УРОВНЯ?","language":"Russian","id":"idGUIBackQuestion"}
+{"value":"В последнее время власти Египта разрешают нырять в Голубой Дыре только квалифицированным ныряльщикам-фридайверам в сопровождении сертифицированных инструкторов.","language":"Russian","id":"LevelDescription014"}
+{"language":"Russian","id":"LevelDescription018","value":"Леса на Ушканьих островах, что раскинулись в средней части озера Байкал, пестрят самыми разными видами растительности, которую только можно увидеть в тайге: здесь и лиственница, и сосна, и береза, и багульник."}
+{"value":"ПОБЕДА!","id":"idVictory","language":"Russian"}
+{"value":"Алтайские горы считаются самым экологически чистым регионом России - здесь нет промышленных предприятий и железных дорог. Автомобильные дороги, впрочем, есть...","language":"Russian","id":"LevelDescription025"}
+{"value":"Осеннее озеро","id":"LevelTitle015","language":"Russian"}
+{"value":"Лофотены. Норвегия. Зима. Близится полярная ночь. Солнце придет сюда только через шесть месяцев.","id":"LevelDescription004","language":"Russian"}
+{"value":"Черный водопад Свартифосс","id":"LevelTitle021","language":"Russian"}
+{"language":"Russian","id":"idGUIRestartGameQuestion","value":"НАЧАТЬ ИГРУ ЗАНОВО?"}
+{"language":"Russian","id":"LevelDescription013","value":"Горные реки Северного Кавказа невероятно красивы в любое время года. Они славятся чистейшей водой. И еще здесь водится вкуснейшая форель, которую еще называют ''Царской рыбой''."}
+{"language":"Russian","id":"idHelpTwoRowsInPlace2","value":"Дальше головоломка соберется сама собой!"}
+{"id":"LevelTitle013","language":"Russian","value":"Осенняя река"}
+{"value":"Фотограф дикой природы\\n\\n<color=yellow>ДМИТРИЙ АРХИПОВ</color>\\n<color=lightblue>http://www.dmitryarkhipov.com/</color>","id":"idFinalTextRoll2","language":"Russian"}
+{"value":"Туманный прилив","id":"LevelTitle009","language":"Russian"}
+{"value":"Красота Алтайских гор столь невероятна, что их можно принять за кинопейзаж или локацию видеоигр, нежели за реальный горный массив на границе России, Казахстана, Китая и Монголии, которому уже около полумиллиарда лет.","language":"Russian","id":"LevelDescription022"}
+{"language":"Russian","id":"LevelDescription032","value":"Лёд на Байкале исключительно прозрачен и к концу зимы его тощина достигает 1-2 м. Сильные морозы разрывают лёд на куски, покрывая его неповторимым узором трещин, через который в глубинные слои озера проникает кисород."}
+{"id":"idGameFinishedCongratulation","language":"Russian","value":"ПОЗДРАВЛЯЕМ!\\nВы только что прошли всю игру!"}
+{"id":"LevelTitle010","language":"Russian","value":"Медведь в лесу"}
+{"value":"Одна из самых крупных горных систем Южной Африки, расположенная на территории ЮАР, Лесото и Свазиленда, получила название ''Драконовых гор'' за свою труднодоступность.","language":"Russian","id":"LevelDescription029"}
+{"value":"Гренландия считается самым большим островом в мире, при этом почти целиком покрытым льдом. Ее гораздо большая родственница - Антарктида - хоть и закована в ледяной панцирь, но считается материком, а не островом.","id":"LevelDescription024","language":"Russian"}
+{"value":"Эта головоломка уже собрана.","id":"idLevelAlreadyAssembled","language":"Russian"}
+{"value":"Эту игру-головоломку\\nразработал для Вас\\n\\n<color=yellow>ИГОРЬ СПИРИДОНОВ</color>\\n<color=lightblue>https://vk.com/rotochips</color>","id":"idFinalTextRoll1","language":"Russian"}
+{"value":"Ну вот, вы собрали уже две фотографии. Теперь настало время действовать самостоятельно. Желаем успеха в мире этих мозгодробительных головоломок!","language":"Russian","id":"idHelpNoMoreBonuses"}
+{"id":"LevelTitle022","language":"Russian","value":"Алтайские горы с высоты птичьего полета"}
+{"value":"Речной полумесяц","language":"Russian","id":"LevelTitle026"}
+{"language":"Russian","id":"LevelTitle027","value":"Исландия, водопад Хауифосс"}
+{"value":"Обширные кипарисовые леса, произрастающие в заболоченных местах Луизианы и Техаса, США, оставляют ощущение своей сверхъестественности у каждого, кому удается попасть сюда.","id":"LevelDescription034","language":"Russian"}
+{"value":"ИГРА ПРОЙДЕНА!","id":"idGameCompleted","language":"Russian"}
+{"value":"Байкал, берег Большого Ушканьего острова","language":"Russian","id":"LevelTitle030"}
+{"value":"Старая мельница","id":"LevelTitle016","language":"Russian"}
+{"language":"Russian","id":"idRealmCompleted","value":"ЦАРСТВО ПРОЙДЕНО!"}
+{"language":"Russian","id":"LevelDescription023","value":"Фантастический закат на водопаде Хайфосс. Нам несказанно повезло. Мы приехали к водопаду за 3 часа до заката, чтобы полетать на дроне. Но вскоре на небе началось светопредставление..."}
+{"value":"Медведи в лесах Карелии обитают повсеместно, и часто выходят к людям.","language":"Russian","id":"LevelDescription010"}
+{"language":"Russian","id":"idLogoLoadingMessage","value":"Загрузка..."}
+{"language":"Russian","id":"idHelpPuzzlePointScoreTapped","value":"Это очки RotoChips, полученные на этом уровне."}
+{"id":"LevelDescription008","language":"Russian","value":"Остров Духа посреди озера Малайн в канадских Скалистых горах - крохотный клочок суши с маленькой рощей, соединяющийся с берегом узким перешейком. Он широко известен и привлекает фотографов со всего мира."}
+{"value":"Каменный шар","id":"LevelTitle029","language":"Russian"}
+{"id":"LevelTitle002","language":"Russian","value":"Ледяная пещера на острове Ольхон"}
+{"value":"Магия Каньона Антилопы","id":"LevelTitle031","language":"Russian"}
+{"value":"ПРОСМОТРЕТЬ ГОТОВУЮ КАРТИНКУ","id":"idGUIViewMessage","language":"Russian"}
+{"value":"Голубая Дыра в Красном море, недалеко от курорта Дахаб в Египте, снискала себе дурную славу, так как попытки многих неопытных дайверов донырнуть до ее дна на глубине 132 м оканчивались трагически.","language":"Russian","id":"LevelDescription011"}
+{"id":"LevelDescription003","language":"Russian","value":"Ветряные мельницы, построенные в XVIII веке в деревне Киндердейк  недалеко от Роттердама, являются одной из самых популярных туристических достопримечательностей в Нидерландах."}
+{"id":"LevelTitle020","language":"Russian","value":"Вид на Столовую гору"}
+{"value":"МОЖНО ИГРАТЬ НА СЛЕДУЮЩЕМ УРОВНЕ!","id":"idNewLevelPlayable","language":"Russian"}
+{"value":"Славное море, священный Байкал","language":"Russian","id":"LevelTitle032"}
+{"id":"LevelDescription019","language":"Russian","value":"Ледники Гренландии тают гораздо быстрее, чем образуется составляющий их лед, из-за чего уровень Мирового океана постоянно поднимается."}
+{"value":"А вот и одно из них...","language":"Russian","id":"idWelcomeMessage2"}
+{"id":"idRealmOpened","language":"Russian","value":"ОТКРЫЛСЯ ВХОД В СЛЕДУЮЩЕЕ ЦАРСТВО!"}
+{"language":"Russian","id":"idLevelCompleted","value":"УРОВЕНЬ ПРОЙДЕН!"}
+{"id":"LevelDescription026","language":"Russian","value":"Река Лицзян - одна из самых чистых рек Китая. Извиваясь между зеленых холмов и рисовых полей, она несет свои воды от округа Гуйлинь к реке Сицзян. Общая длина этого природного великолепия составляет 437 км."}
+{"value":"ОТКРЫЛОСЬ ЦАРСТВО!","id":"idRealmRevealed","language":"Russian"}
+{"id":"LevelTitle018","language":"Russian","value":"Байкальский лес"}
+{"value":"Иконы Юго-Запада","language":"Russian","id":"LevelTitle012"}
+{"value":"Осколок","language":"Russian","id":"LevelTitle019"}
+{"value":"Водопад Хауифосс (или Хайфосс, как его называют туристы) образован падающей с высоты 122 м рекой Фоссау. Это третий по высоте водопад Исландии.","id":"LevelDescription027","language":"Russian"}
+{"value":"МОЛОДЕЦ!","id":"idLevelCompletedOnceAgain","language":"Russian"}
+{"value":"Изумительно!\\nВерхний ряд на месте!\\nВы получаете бонус - РотоЧипсы!","language":"Russian","id":"idFirstRowCongratulation"}
+{"value":"Лофотенские острова расположены в суровых водах Норвежского моря, за Полярным кругом. Это край дикой, необузданной природы, величественных гор, глубоких фьордов, шумных птичьих колоний и длинных песчаных пляжей. ","language":"Russian","id":"LevelDescription000"}
+{"language":"Russian","id":"LevelDescription006","value":"Недалеко от города Белогорска, что в Крыму, находится одна из самых известных крымских достопримечательностей - гигантская стена из ракушечника, 100-метровая Ак-Кая или Белая Скала. Здесь почти каждый год снимается какой-нибудь художественный фильм."}
+{"value":"Горный Алтай. Золотая осень. Выпавший утром снег к вечеру уже растаял и остался лежать лишь высоко в горах.","language":"Russian","id":"LevelDescription015"}
+{"value":"Поздравляем!\\nВерхние два ряда собраны,\\nи Вы получаете бонус -\\nРотоЧипсы и РотоКойны!","language":"Russian","id":"idHelpTwoRowsInPlace"}
+{"id":"idHelpFirstPuzzleQuarterRotated","language":"Russian","value":"Да-да, все верно!\\nПопробуйте еще раз!"}
+{"language":"Russian","id":"LevelTitle034","value":"Кипарисовые болота"}
+{"language":"Russian","id":"LevelTitle011","value":"Голубая бездна"}
+{"id":"LevelTitle014","language":"Russian","value":"Голубая бездна, закат"}
+{"value":"Дорога в Алтайских горах","id":"LevelTitle025","language":"Russian"}
+{"language":"Russian","id":"idHelpThirdTileInPlace","value":"Изумительно!\\nВерхний ряд на месте!\\nВы получаете бонус - РотоЧипсы!"}
+{"value":"Лофотенские острова, расположенные у северо-заподного побережья Норвегии, разделены друг от друга в основном узкими протоками. Между двумя островами архипелага - Верёй и Москенесёй - находится знаменитый водоворот Мальстрём.","id":"LevelDescription009","language":"Russian"}
+{"id":"LevelTitle033","language":"Russian","value":"Коралловые рифы островов Трук"}
+{"value":"Лофотенская деревня","language":"Russian","id":"LevelTitle004"}
+{"value":"Ветряная мельница","id":"LevelTitle003","language":"Russian"}
+{"language":"Russian","id":"idHelpRestartLevelButton","value":"Эта кнопка\\nначинает уровень заново.\\nВНИМАНИЕ!\\nВсе очки, полученные на этом\\nуровне, обнулятся!"}
+{"language":"Russian","id":"idGUIRestartLevelQuestion","value":"НАЧАТЬ УРОВЕНЬ ЗАНОВО?"}
+{"value":"Это количество монет RotoCoins, которые у Вас есть.","id":"idHelpPuzzleCoinsScoreTapped","language":"Russian"}
+{"language":"Russian","id":"LevelDescription033","value":"Острова Трук находятся на юго-западе Тихого океана и входят в состав Микронезии. Здесь круглый год идеальная погода, а дайверы со всего мира наслаждаются видом обломков затонувшей боевой техники посреди коралловых рифов, окружающих лагуну с островами."}
+{"id":"idHelpFirstLevelChallenge","language":"Russian","value":"В этой головоломке соберите верхний ряд плиток."}
+{"id":"idHelpShowSourceButton","language":"Russian","value":"Эта кнопка позволяет\\nпосмотреть на исходное изображение"}
+{"id":"idHelpSecondTileButtonsHint","language":"Russian","value":"Следующие плитки встанут на место при нажатии этой кнопки."}
+{"value":"Великолепно!\\nВторая плитка на месте!","language":"Russian","id":"idHelpSecondTileInPlace"}
+{"id":"LevelDescription028","language":"Russian","value":"Национальный парк Брайс-Каньон, расположенный на юго-западе США, скорее не каньон, а амфитеатр, образованный скалами причудливой формы, созданной эрозией, которая длилась десятками миллионов лет."}

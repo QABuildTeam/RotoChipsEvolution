@@ -328,12 +328,7 @@ namespace RotoChips.Puzzle
         {
             startVictoryScreen = false;
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
-            descriptor.state.CurrentState = string.Empty;
-            descriptor.state.CurrentButtonState = string.Empty;
-            descriptor.state.LastGoodState = string.Empty;
-            descriptor.state.LastGoodButtonState = string.Empty;
-            descriptor.state.AutocompleteUsed = false;
-            descriptor.state.EarnedPoints = 0;
+            GlobalManager.MLevel.ResetLevel(descriptor.init.id);
             RestoreAll();
             StartCoroutine(ShufflePuzzle());
         }
@@ -551,6 +546,10 @@ namespace RotoChips.Puzzle
 
         void OnPuzzleButtonRotated(object sender, InstantMessageArgs args)
         {
+            // update the points and coins indicators
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
+
             builder.DetachTilesFromButton((Vector2Int)args.arg);
             buttonRotated = true;
             FlashTilesInPlaces();

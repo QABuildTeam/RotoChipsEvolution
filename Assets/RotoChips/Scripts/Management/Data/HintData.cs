@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RotoChips.Management;
+using RotoChips.UI;
 
 namespace RotoChips.Data
 {
@@ -16,6 +17,11 @@ namespace RotoChips.Data
     {
         [SerializeField]
         public List<HintParams> hintParameters;
+
+        [SerializeField]
+        public List<HintType> level0Hints;
+        [SerializeField]
+        public List<HintType> level1Hints;
     }
 
 }

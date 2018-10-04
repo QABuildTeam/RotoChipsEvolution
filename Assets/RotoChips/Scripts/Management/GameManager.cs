@@ -11,6 +11,7 @@ using RotoChips.Generic;
 using RotoChips.Puzzle;
 using RotoChips.Data;
 using RotoChips.UI;
+using RotoChips.Accounting;
 
 namespace RotoChips.Management
 {
@@ -23,8 +24,25 @@ namespace RotoChips.Management
             maximumCoins = decimal.Parse(maximumCoinsString);
             autostepPrice = decimal.Parse(autostepPriceString);
             tutorialBonus = decimal.Parse(tutorialBonusString);
+            adBonus = decimal.Parse(adBonusString);
+            showMagicButton = false;
 
             base.MakeInitial();
+        }
+
+        bool CheckForLevelComplete(int levelId)
+        {
+            if (!GlobalManager.MStorage.BonusCoinsAdded)
+            {
+                LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(levelId);
+                if (!descriptor.state.Complete)
+                {
+                    GlobalManager.MHint.ResetHintFlags(levelId);
+                    GlobalManager.MLevel.ResetLevel(levelId);
+                    return false;
+                }
+            }
+            return true;
         }
 
         MessageRegistrator registrator;
@@ -40,9 +58,25 @@ namespace RotoChips.Management
                 InstantMessageType.PuzzleHasShuffled, (InstantMessageHandler)OnPuzzleHasShuffled,
                 InstantMessageType.PuzzleTileInPlace, (InstantMessageHandler)OnPuzzleTileInPlace,
                 InstantMessageType.GUIHintClosed, (InstantMessageHandler)OnGUIHintClosed,
-                InstantMessageType.GUIMagicButtonPressed, (InstantMessageHandler)OnGUIMagicButtonPressed
+                InstantMessageType.GUIMagicButtonPressed, (InstantMessageHandler)OnGUIMagicButtonPressed,
+                InstantMessageType.AdvertisementResult, (InstantMessageHandler)OnAdvertisementResult,
+                InstantMessageType.AdvertisementReady, (InstantMessageHandler)OnAdvertisementReady
             );
             registrator.RegisterHandlers();
+
+            // the application might be suddenly aborted or crashed
+            // so check for the completeness of the very first two levels in the very first run
+            if (GlobalManager.MStorage.FirstRound)
+            {
+                for (int i = 1; i >= 0; i--)
+                {
+                    if (CheckForLevelComplete(i))
+                    {
+                        break;
+                    }
+                }
+            }
+
             base.MakeReady();
         }
 
@@ -68,6 +102,9 @@ namespace RotoChips.Management
         [SerializeField]
         protected string tutorialBonusString = "600000";
         protected decimal tutorialBonus;
+        [SerializeField]
+        protected string adBonusString = "50";
+        protected decimal adBonus;
 
 
         // message handling
@@ -101,7 +138,7 @@ namespace RotoChips.Management
             backButton = false,
             viewButton = false,
             restartButton = false,
-            magicButon = true,
+            magicButon = false,
             rotochipsPanel = true,
             rotocoinsPanel = true
         };
@@ -112,7 +149,7 @@ namespace RotoChips.Management
             backButton = false,
             viewButton = true,
             restartButton = true,
-            magicButon = true,
+            magicButon = false,
             rotochipsPanel = true,
             rotocoinsPanel = true
         };
@@ -168,9 +205,9 @@ namespace RotoChips.Management
         }
         protected SceneType sceneType;
 
-        void OnWorldStarted(object sender, InstantMessageArgs args)
+        bool showMagicButton;
+        void ConfigureWorldGUI()
         {
-            sceneType = SceneType.World;
             bool firstRound = GlobalManager.MStorage.FirstRound;
             int selectedLevel = GlobalManager.MStorage.SelectedLevel;
             // configure world GUI
@@ -190,7 +227,14 @@ namespace RotoChips.Management
                         break;
                 }
             }
+            worldConfiguration.magicButon = showMagicButton;
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIConfigureAppearance, this, worldConfiguration);
+        }
+
+        void OnWorldStarted(object sender, InstantMessageArgs args)
+        {
+            sceneType = SceneType.World;
+            ConfigureWorldGUI();
         }
 
         void OnPuzzleStarted(object sender, InstantMessageArgs args)
@@ -358,6 +402,7 @@ namespace RotoChips.Management
                         switch (hintRequest.type)
                         {
                             case HintType.ShowAdHint:
+                                GlobalManager.MAds.ShowAd();
                                 break;
                         }
                     }
@@ -374,9 +419,11 @@ namespace RotoChips.Management
                                         GlobalManager.MHint.ShowNewHint(HintType.FirstLevelChallenge);
                                         break;
                                     case HintType.FirstLevelChallenge:
+                                        // this will actually show a FirstTileInPlace hint
                                         GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RedirectFirstTileButtons, this);
                                         break;
                                     case HintType.FirstTileInPlace:
+                                        // this will actually show a SecondTileButtonsHint
                                         GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RedirectSecondTileButtons, this);
                                         break;
                                     case HintType.ThirdTileInPlace:
@@ -399,7 +446,7 @@ namespace RotoChips.Management
                                         {
                                             GlobalManager.MStorage.BonusCoinsAdded = true;
                                             GlobalManager.MStorage.CurrentCoins += tutorialBonus;
-                                            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
+                                            //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
                                         }
                                         GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutocomplete, this);
                                         break;
@@ -434,9 +481,9 @@ namespace RotoChips.Management
                         }
                         else if (tilesInPlace.current == new Vector2Int(descriptor.init.width - 1, 0))
                         {
-                            // tile (2,0) is in place; firsrt row assembled
+                            // tile (2,0) is in place; first row assembled
                             descriptor.state.EarnedPoints += firstRunLevel0Row0Bonus;
-                            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
+                            //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
                             GlobalManager.MHint.ShowNewHint(HintType.ThirdTileInPlace);
                         }
                         return;
@@ -445,14 +492,14 @@ namespace RotoChips.Management
                         {
                             // first row assembled
                             descriptor.state.EarnedPoints += firstRunLevel1Row0Bonus;
-                            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
+                            //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
                             GlobalManager.MHint.ShowNewHint(HintType.FirstRowCongratulation);
                         }
                         else if (tilesInPlace.current == new Vector2Int(descriptor.init.width - 1, 1))
                         {
                             // second row assembled
                             descriptor.state.EarnedPoints += firstRunLevel1Row1Bonus;
-                            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
+                            //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
                             GlobalManager.MHint.ShowNewHint(HintType.TwoRowsInPlace);
                         }
                         return;
@@ -464,7 +511,7 @@ namespace RotoChips.Management
                 int startId = tilesInPlace.previous.y * descriptor.init.width + tilesInPlace.previous.x + 1;
                 int endId = tilesInPlace.current.y * descriptor.init.width + tilesInPlace.current.x;
                 int puzzleWidth = descriptor.init.width;
-                bool scoreChanged = false;
+                //bool scoreChanged = false;
                 for (int runId = startId; runId <= endId; runId++)
                 {
                     int x = runId % puzzleWidth;
@@ -473,13 +520,15 @@ namespace RotoChips.Management
                     {
                         // a row is assembled
                         descriptor.state.EarnedPoints += (y + 1) * puzzleAssembledRowBonusStep;
-                        scoreChanged = true;
+                        //scoreChanged = true;
                     }
                 }
+                /*
                 if (scoreChanged)
                 {
                     GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
                 }
+                */
             }
         }
 
@@ -622,6 +671,29 @@ namespace RotoChips.Management
                     GlobalManager.MHint.ShowNewHint(HintType.ShowAdHint);
                     break;
                 case SceneType.Puzzle:
+                    break;
+            }
+        }
+
+        void OnAdvertisementResult(object sender, InstantMessageArgs args)
+        {
+            AdvertisementResult result = (AdvertisementResult)args.arg;
+            switch (result)
+            {
+                case AdvertisementResult.Successful:
+                    GlobalManager.MStorage.CurrentCoins += adBonus;
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
+                    break;
+            }
+        }
+
+        void OnAdvertisementReady(object sender, InstantMessageArgs args)
+        {
+            switch (sceneType)
+            {
+                case SceneType.World:
+                    showMagicButton = (bool)args.arg;
+                    ConfigureWorldGUI();
                     break;
             }
         }

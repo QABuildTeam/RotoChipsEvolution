@@ -263,7 +263,7 @@ namespace RotoChips.Management
 
         // this method resets all the levels into their initial state
         // used while initializing or resetting the game
-        public void ResetLevels()
+        public void InitializeLevels()
         {
             levelInits = new SortedDictionary<int, int>();
             levelStates = new Dictionary<int, State>();
@@ -273,13 +273,14 @@ namespace RotoChips.Management
                 State state = new State(levelId);
                 levelInits.Add(levelId, i);
                 levelStates.Add(levelId, state);
+                ResetLevel(levelId);
             }
         }
 
         // GenericManager overrides
         public override void MakeInitial()
         {
-            ResetLevels();
+            InitializeLevels();
             base.MakeInitial();
         }
 
@@ -388,6 +389,22 @@ namespace RotoChips.Management
                 }
             }
             return -1;
+        }
+
+        public void ResetLevel(int levelId)
+        {
+            State state = levelStates[levelId];
+            state.Complete = false;
+            state.AutocompleteUsed = false;
+            state.CurrentButtonState = string.Empty;
+            state.CurrentState = string.Empty;
+            state.LastGoodButtonState = string.Empty;
+            state.LastGoodState = string.Empty;
+            state.NextCompleteId = -1;
+            state.NextPlayableId = -1;
+            state.Playable = levelId == 0;
+            state.Revealed = levelId == 0;
+            state.EarnedPoints = 0;
         }
 
     }

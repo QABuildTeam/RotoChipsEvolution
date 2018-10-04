@@ -12,6 +12,7 @@ using System.Runtime.Serialization;
 using UnityEngine;
 using RotoChips.Generic;
 using RotoChips.ImageProcessing;
+using RotoChips.Accounting;
 
 namespace RotoChips.Management
 {
@@ -166,6 +167,19 @@ namespace RotoChips.Management
             }
         }
 
+        protected UnityAdsManager mAds;
+        public static UnityAdsManager MAds
+        {
+            get
+            {
+                return Instance.mAds;
+            }
+            set
+            {
+                Instance.mAds = value;
+            }
+        }
+
         public bool Initialized
         {
             get; private set;
@@ -210,6 +224,7 @@ namespace RotoChips.Management
                 MQueue = (MessageQueueManager)LocateManager(typeof(MessageQueueManager));
                 MGame = (GameManager)LocateManager(typeof(GameManager));
                 MHint = (HintManager)LocateManager(typeof(HintManager));
+                MAds = (UnityAdsManager)LocateManager(typeof(UnityAdsManager));
 
                 // make myself immortal
                 DontDestroyOnLoad(gameObject);

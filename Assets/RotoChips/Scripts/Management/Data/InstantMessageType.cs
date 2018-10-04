@@ -192,6 +192,12 @@ namespace RotoChips.Management
                                         //      Arguments: None
 
         // Advertisements
+        AdvertisementResult,            // Notification: An ad has just been demonstrated
+                                        //      Arguments:
+                                        //          RotoChips.Accounting.AdvertisementResult result - a result of showing an ad
+        AdvertisementReady,             // Notification: An ad video is ready or not
+                                        //      Arguments:
+                                        //          bool ready - an ad video is ready (true) or not (false)
 
         // Special
         RedirectFirstTimeWelcome2,      // Command: Active level selector on the world globe should create a hint request for FirstTimeWelcome2

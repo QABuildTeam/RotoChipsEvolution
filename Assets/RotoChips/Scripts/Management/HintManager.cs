@@ -51,13 +51,15 @@ namespace RotoChips.Management
             get; private set;
         }
 
+        HintData hintData;
         [SerializeField]
         protected Dictionary<HintType, bool> hintShown;
 
+        // GenericManager overrides
         public override void MakeInitial()
         {
             Hints = new Dictionary<HintType, HintParams>();
-            HintData hintData = GetComponentInChildren<HintData>();
+            hintData = GetComponentInChildren<HintData>();
             if (hintData != null)
             {
                 foreach (HintParams hintParams in hintData.hintParameters)
@@ -96,6 +98,7 @@ namespace RotoChips.Management
             hintShown = (Dictionary<HintType, bool>)prototype;
         }
 
+        // Hint management
         public bool IsHintShown(HintType hintType)
         {
             bool isShown;
@@ -149,6 +152,27 @@ namespace RotoChips.Management
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIHintClosed, this, hintRequest);
             }
             return false;
+        }
+
+        protected void ResetHintsFromList(List<HintType> hintList)
+        {
+            foreach(HintType hintType in hintList)
+            {
+                hintShown[hintType] = false;
+            }
+        }
+
+        public void ResetHintFlags(int levelId)
+        {
+            switch (levelId)
+            {
+                case 0:
+                    ResetHintsFromList(hintData.level0Hints);
+                    break;
+                case 1:
+                    ResetHintsFromList(hintData.level1Hints);
+                    break;
+            }
         }
     }
 }
