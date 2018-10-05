@@ -58,7 +58,6 @@ namespace RotoChips.Management
                 InstantMessageType.PuzzleHasShuffled, (InstantMessageHandler)OnPuzzleHasShuffled,
                 InstantMessageType.PuzzleTileInPlace, (InstantMessageHandler)OnPuzzleTileInPlace,
                 InstantMessageType.GUIHintClosed, (InstantMessageHandler)OnGUIHintClosed,
-                InstantMessageType.GUIMagicButtonPressed, (InstantMessageHandler)OnGUIMagicButtonPressed,
                 InstantMessageType.AdvertisementResult, (InstantMessageHandler)OnAdvertisementResult,
                 InstantMessageType.AdvertisementReady, (InstantMessageHandler)OnAdvertisementReady
             );
@@ -224,10 +223,14 @@ namespace RotoChips.Management
                         break;
                     default:
                         worldConfiguration = worldRun1GUIConfiguration;
+                        worldConfiguration.magicButon = showMagicButton;
                         break;
                 }
             }
-            worldConfiguration.magicButon = showMagicButton;
+            else
+            {
+                worldConfiguration.magicButon = showMagicButton;
+            }
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIConfigureAppearance, this, worldConfiguration);
         }
 
@@ -394,15 +397,6 @@ namespace RotoChips.Management
                                         GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RedirectFirstTimeWelcome2, this);
                                         break;
                                 }
-                                break;
-                        }
-                    }
-                    if (!firstRound || selectedLevel > 0)
-                    {
-                        switch (hintRequest.type)
-                        {
-                            case HintType.ShowAdHint:
-                                GlobalManager.MAds.ShowAd();
                                 break;
                         }
                     }
@@ -663,24 +657,14 @@ namespace RotoChips.Management
         }
 
         // advertisements
-        void OnGUIMagicButtonPressed(object sender, InstantMessageArgs args)
-        {
-            switch (sceneType)
-            {
-                case SceneType.World:
-                    GlobalManager.MHint.ShowNewHint(HintType.ShowAdHint);
-                    break;
-                case SceneType.Puzzle:
-                    break;
-            }
-        }
-
         void OnAdvertisementResult(object sender, InstantMessageArgs args)
         {
             AdvertisementResult result = (AdvertisementResult)args.arg;
+            Debug.Log("OnAdvertisementResult: " + result.ToString());
             switch (result)
             {
                 case AdvertisementResult.Successful:
+                    Debug.Log("Adding coins: " + adBonus.ToString());
                     GlobalManager.MStorage.CurrentCoins += adBonus;
                     GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
                     break;

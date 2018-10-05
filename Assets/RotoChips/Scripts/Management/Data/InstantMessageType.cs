@@ -92,6 +92,9 @@ namespace RotoChips.Management
                                         //          RotoChips.Management.LevelDataManager.Descriptor descriptor - an descriptor of the level to show
         WorldLevelDescriptionClosed,    // Notification: A dialog with the level description has been closed
                                         //      Arguments: none
+        WorldBlockScreen,               // Command: Block the scene input
+                                        //      Arguments:
+                                        //          bool on - lock (true) or unlock (false) the screen input
 
         // Puzzle scene messages
         PuzzleStarted,                  // Notification: Method Start() of the scene Puzzle has just finished its execution
@@ -198,6 +201,11 @@ namespace RotoChips.Management
         AdvertisementReady,             // Notification: An ad video is ready or not
                                         //      Arguments:
                                         //          bool ready - an ad video is ready (true) or not (false)
+
+        // Purchases
+        PurchaseComplete,               // Notification: A product has just been purchased
+                                        //      Arguments:
+                                        //          RotoChips.Accounting.ProductDesc product - a product description
 
         // Special
         RedirectFirstTimeWelcome2,      // Command: Active level selector on the world globe should create a hint request for FirstTimeWelcome2

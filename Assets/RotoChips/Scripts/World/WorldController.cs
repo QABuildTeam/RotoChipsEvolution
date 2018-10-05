@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using RotoChips.Accounting;
 using RotoChips.Management;
 using RotoChips.UI;
 
@@ -28,7 +29,6 @@ namespace RotoChips.World
             curtainFaded = false;
             cameraController = Camera.main.GetComponent<WorldCameraController>();
             registrator = new MessageRegistrator(
-                //InstantMessageType.GUIMagicButtonPressed, (InstantMessageHandler)OnGUIMagicButtonPressed,
                 InstantMessageType.WorldCameraZoomedAtMin, (InstantMessageHandler)OnWorldCameraZoomedAtMin,
                 InstantMessageType.WorldGlobePressed, (InstantMessageHandler)OnWorldGlobePressed,
                 InstantMessageType.WorldSelectorPressed, (InstantMessageHandler)OnWorldSelectorPressed,
@@ -39,7 +39,9 @@ namespace RotoChips.World
                 InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded,
                 InstantMessageType.GUIRestartButtonPressed, (InstantMessageHandler)OnGUIRestartButtonPressed,
                 InstantMessageType.GUIViewButtonPressed, (InstantMessageHandler)OnGUIViewButtonPressed,
-                InstantMessageType.WorldLevelDescriptionClosed, (InstantMessageHandler)OnWorldLevelDescriptionClosed
+                InstantMessageType.GUIMagicButtonPressed, (InstantMessageHandler)OnGUIMagicButtonPressed,
+                InstantMessageType.WorldLevelDescriptionClosed, (InstantMessageHandler)OnWorldLevelDescriptionClosed,
+                InstantMessageType.AdvertisementResult, (InstantMessageHandler)OnAdvertisementResult
             );
             registrator.RegisterHandlers();
         }
@@ -51,8 +53,6 @@ namespace RotoChips.World
             // update RotoChips and RotoCoins indicators
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)GlobalManager.MStorage.CurrentPoints);
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
-            // rotate the world to the currently active level selector
-            //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotateToSelected, this);
         }
 
         void RotateWorldToZero(GameObject targetObject)
@@ -168,7 +168,7 @@ namespace RotoChips.World
         {
             if (!GlobalManager.MHint.ShowNewHint(HintType.GameRestartButton))
             {
-
+                
             }
         }
 
@@ -205,44 +205,27 @@ namespace RotoChips.World
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, true);
         }
 
+        // advertisements
+        void OnGUIMagicButtonPressed(object sender, InstantMessageArgs args)
+        {
+            if (!GlobalManager.MHint.ShowNewHint(HintType.ShowAdHint))
+            {
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldBlockScreen, this, true);
+                if (!GlobalManager.MAds.ShowAd())
+                {
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldBlockScreen, this, false);
+                }
+            }
+        }
+
+        void OnAdvertisementResult(object sender, InstantMessageArgs args)
+        {
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldBlockScreen, this, false);
+        }
+
         private void OnDestroy()
         {
             registrator.UnregisterHandlers();
-        }
-
-        // special debug messaging
-        HintType currentHint = HintType.None;
-        void OnGUIMagicButtonPressed(object sender, InstantMessageArgs args)
-        {
-            do
-            {
-                HintType newHint = currentHint;
-                foreach (HintType hintType in System.Enum.GetValues(typeof(HintType)))
-                {
-                    if (hintType > newHint)
-                    {
-                        newHint = hintType;
-                        break;
-                    }
-                }
-                if (newHint == currentHint)
-                {
-                    currentHint = HintType.None + 1;
-                }
-                else
-                {
-                    currentHint = newHint;
-                }
-            } while (!GlobalManager.MHint.Hints.ContainsKey(currentHint));
-            GlobalManager.MInstantMessage.DeliverMessage(
-                InstantMessageType.GUIShowHint,
-                this,
-                new HintRequest
-                {
-                    type = currentHint,
-                    target = gameObject
-                }
-            );
         }
 
     }

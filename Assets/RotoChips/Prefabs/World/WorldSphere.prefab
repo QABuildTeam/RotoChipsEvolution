@@ -145,6 +145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationDeltaAngle: -0.05
   selfRotationWaitTime: 5
+  rotationAxis: {x: 0, y: 1, z: 0}
 --- !u!114 &114508046190474448
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -186,7 +187,7 @@ MonoBehaviour:
     maximumGlowPower: 0
   - prefab: {fileID: 1640755694643310, guid: 13673c520de602848927a7fa86ed83de, type: 2}
     opaqueMaterial: {fileID: 2100000, guid: 9c9695ef1a3c49f4ca6121c7a8c7a72a, type: 2}
-    transparentMaterial: {fileID: 2100000, guid: 9c9695ef1a3c49f4ca6121c7a8c7a72a,
+    transparentMaterial: {fileID: 2100000, guid: de0d5979a16e04345a7c7065b89b62ae,
       type: 2}
     glowMaterial: {fileID: 2100000, guid: 8c37bb81482795e47841b2a211b5803e, type: 2}
     maximumGlowPower: 0
@@ -233,6 +234,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationDeltaAngle: 0.2
   selfRotationWaitTime: 5
+  rotationAxis: {x: 0, y: 1, z: 0}
 --- !u!114 &114840279766853916
 MonoBehaviour:
   m_ObjectHideFlags: 1
