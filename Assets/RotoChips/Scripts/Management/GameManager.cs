@@ -12,19 +12,17 @@ using RotoChips.Puzzle;
 using RotoChips.Data;
 using RotoChips.UI;
 using RotoChips.Accounting;
+using RotoChips.Utility;
 
 namespace RotoChips.Management
 {
     public class GameManager : GenericManager
     {
 
+        // GenericManager overrides
         public override void MakeInitial()
         {
             // some internal chores
-            maximumCoins = decimal.Parse(maximumCoinsString);
-            autostepPrice = decimal.Parse(autostepPriceString);
-            tutorialBonus = decimal.Parse(tutorialBonusString);
-            adBonus = decimal.Parse(adBonusString);
             showMagicButton = false;
 
             base.MakeInitial();
@@ -59,7 +57,11 @@ namespace RotoChips.Management
                 InstantMessageType.PuzzleTileInPlace, (InstantMessageHandler)OnPuzzleTileInPlace,
                 InstantMessageType.GUIHintClosed, (InstantMessageHandler)OnGUIHintClosed,
                 InstantMessageType.AdvertisementResult, (InstantMessageHandler)OnAdvertisementResult,
-                InstantMessageType.AdvertisementReady, (InstantMessageHandler)OnAdvertisementReady
+                InstantMessageType.AdvertisementReady, (InstantMessageHandler)OnAdvertisementReady,
+                InstantMessageType.ShopPurchaseComplete, (InstantMessageHandler)OnPurchaseComplete,
+                InstantMessageType.PuzzleSetForAutostep, (InstantMessageHandler)OnPuzzleSetForAutostep,
+                InstantMessageType.PuzzleAutostep, (InstantMessageHandler)OnPuzzleAutostep,
+                InstantMessageType.ShopStarted, (InstantMessageHandler)OnShopStarted
             );
             registrator.RegisterHandlers();
 
@@ -83,8 +85,7 @@ namespace RotoChips.Management
         [SerializeField]
         protected long maximumPoints = 2000000000;
         [SerializeField]
-        protected string maximumCoinsString = "2000000000";
-        protected decimal maximumCoins;
+        protected SerializableDecimal maximumCoins = new SerializableDecimal { value = 2000000000m };
         [SerializeField]
         protected long firstRunLevel0Row0Bonus = 100;
         [SerializeField]
@@ -96,14 +97,11 @@ namespace RotoChips.Management
         [SerializeField]
         protected long puzzleAssembledRowBonusStep = 100;
         [SerializeField]
-        protected string autostepPriceString = "1000";
-        protected decimal autostepPrice;
+        protected SerializableDecimal autostepPrice = new SerializableDecimal { value = 1000m };
         [SerializeField]
-        protected string tutorialBonusString = "600000";
-        protected decimal tutorialBonus;
+        protected SerializableDecimal tutorialBonus = new SerializableDecimal { value = 600000m };
         [SerializeField]
-        protected string adBonusString = "50";
-        protected decimal adBonus;
+        protected SerializableDecimal adBonus = new SerializableDecimal { value = 50m };
 
 
         // message handling
@@ -195,12 +193,24 @@ namespace RotoChips.Management
             rotochipsPanel = false,
             rotocoinsPanel = false
         };
+        // shop gui configuration
+        [SerializeField]
+        protected GUIConfiguration shopGUIConfiguration = new GUIConfiguration
+        {
+            backButton = true,
+            viewButton = false,
+            restartButton = true,
+            magicButon = false,
+            rotochipsPanel = false,
+            rotocoinsPanel = true
+        };
         protected enum SceneType
         {
             None,
             World,
             Puzzle,
-            Gallery
+            Gallery,
+            Shop
         }
         protected SceneType sceneType;
 
@@ -266,6 +276,12 @@ namespace RotoChips.Management
         {
             sceneType = SceneType.Gallery;
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIConfigureAppearance, this, galleryGUIConfiguration);
+        }
+
+        void OnShopStarted(object sender, InstantMessageArgs args)
+        {
+            sceneType = SceneType.Shop;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIConfigureAppearance, this, shopGUIConfiguration);
         }
 
         [SerializeField]
@@ -439,7 +455,7 @@ namespace RotoChips.Management
                                         if (!GlobalManager.MStorage.BonusCoinsAdded)
                                         {
                                             GlobalManager.MStorage.BonusCoinsAdded = true;
-                                            GlobalManager.MStorage.CurrentCoins += tutorialBonus;
+                                            GlobalManager.MStorage.CurrentCoins += tutorialBonus.value;
                                             //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
                                         }
                                         GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutocomplete, this);
@@ -526,6 +542,29 @@ namespace RotoChips.Management
             }
         }
 
+        void OnPuzzleSetForAutostep(object sender, InstantMessageArgs args)
+        {
+            bool available = GlobalManager.MStorage.CurrentPoints >= autostepPrice.value;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutostepAvailable, this, available);
+        }
+
+        void OnPuzzleAutostep(object sender, InstantMessageArgs args)
+        {
+            bool firstRound = GlobalManager.MStorage.FirstRound;
+            int selectedLevel = GlobalManager.MStorage.SelectedLevel;
+            if (firstRound)
+            {
+                switch (selectedLevel)
+                {
+                    case 0:
+                    case 1:
+                        return;
+                }
+            }
+            GlobalManager.MStorage.CurrentCoins -= autostepPrice.value;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
+        }
+
         [SerializeField]
         protected string levelCompletedId = "idLevelCompleted";
         [SerializeField]
@@ -601,7 +640,7 @@ namespace RotoChips.Management
                 {
                     completeStatus.descriptor.state.EarnedPoints += puzzleCompleteBonus;
                 }
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)completeStatus.descriptor.state.EarnedPoints);
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoChipsChanged, this, (decimal)completeStatus.descriptor.state.EarnedPoints);
                 GlobalManager.MStorage.CurrentPoints += completeStatus.descriptor.state.EarnedPoints;
                 completeStatus.descriptor.state.Complete = true;
 
@@ -665,20 +704,31 @@ namespace RotoChips.Management
             {
                 case AdvertisementResult.Successful:
                     Debug.Log("Adding coins: " + adBonus.ToString());
-                    GlobalManager.MStorage.CurrentCoins += adBonus;
-                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
+                    GlobalManager.MStorage.CurrentCoins += adBonus.value;
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
                     break;
             }
         }
 
         void OnAdvertisementReady(object sender, InstantMessageArgs args)
         {
+            showMagicButton = (bool)args.arg;
             switch (sceneType)
             {
                 case SceneType.World:
-                    showMagicButton = (bool)args.arg;
                     ConfigureWorldGUI();
                     break;
+            }
+        }
+
+        // purchases
+        void OnPurchaseComplete(object sender, InstantMessageArgs args)
+        {
+            ProductDesc product = (ProductDesc)args.arg;
+            if (product != null)
+            {
+                GlobalManager.MStorage.CurrentCoins += product.value.value;
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
             }
         }
 

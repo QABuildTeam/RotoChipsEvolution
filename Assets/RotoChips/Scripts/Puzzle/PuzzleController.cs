@@ -547,8 +547,8 @@ namespace RotoChips.Puzzle
         void OnPuzzleButtonRotated(object sender, InstantMessageArgs args)
         {
             // update the points and coins indicators
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
 
             builder.DetachTilesFromButton((Vector2Int)args.arg);
             buttonRotated = true;

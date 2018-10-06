@@ -891,9 +891,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bc200657406fb8488330485ab78fe73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  messageType: 64
+  messageType: 13
   rollSteps: 20
-  rollTime: 1
+  rollTime: 0.8
   normalColor: {r: 1, g: 1, b: 1, a: 1}
   purchaseColor: {r: 0.9882353, g: 1, b: 0.2784314, a: 1}
   CheckAgainstAutoStepPrice: 1
@@ -935,7 +935,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c7c00c354e1ee240849d8cefaeeeb98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  messageType: 63
+  messageType: 12
   rollSteps: 20
   rollTime: 0.8
   normalColor: {r: 1, g: 1, b: 1, a: 1}

@@ -62,7 +62,7 @@ namespace RotoChips.Puzzle
                 puzzleRatioXY > screenAspect ? canvasToImageRatio.x / puzzleRatioXY : canvasToImageRatio.y,
                 1
             ) * heightAdjustFactor;
-            Debug.Log("Image sizes: canvas: " + sourceCanvasRect.ToString() + ", image: " + sourceRect.ToString() + ", image/canvas: " + canvasToImageRatio.ToString() + ", scale: " + sourceRectScale.ToString());
+            //Debug.Log("Image sizes: canvas: " + sourceCanvasRect.ToString() + ", image: " + sourceRect.ToString() + ", image/canvas: " + canvasToImageRatio.ToString() + ", scale: " + sourceRectScale.ToString());
             sourceTransform.localScale = sourceRectScale;
             // UV-coordinates of the image
             Rect uvRect = new Rect(
@@ -90,7 +90,7 @@ namespace RotoChips.Puzzle
         protected string completePuzzleId = "idGUIViewMessage";
         string GetSourceTextId()
         {
-            if (descriptor.state.CurrentState == "")
+            if (string.IsNullOrEmpty(descriptor.state.CurrentState))
             {
                 return newPuzzleId;
             }

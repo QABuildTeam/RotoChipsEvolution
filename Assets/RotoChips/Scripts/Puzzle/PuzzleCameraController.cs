@@ -45,7 +45,7 @@ namespace RotoChips.Puzzle
         {
             float aspect = ControlledCamera.aspect;
             float fov = ControlledCamera.fieldOfView;
-            float fovFactor = Mathf.Tan(fov * Mathf.PI / (180 * 2));
+            float fovFactor = Mathf.Tan(Mathf.Deg2Rad * fov / 2);
             FloatRange distance = new FloatRange
             {
                 // minimum (nearest) vertical camera distance from the tile array; negative

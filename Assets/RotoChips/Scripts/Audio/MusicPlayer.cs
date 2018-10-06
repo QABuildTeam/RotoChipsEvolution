@@ -23,6 +23,7 @@ namespace RotoChips.Audio
 
         [SerializeField]
         protected List<AudioTrackEnum> playList;
+        protected List<AudioTrackEnum> allPlayList;
         AudioTrackEnum currentTrack;
         [SerializeField]
         protected BackGroundMusicMode musicMode;
@@ -38,6 +39,7 @@ namespace RotoChips.Audio
             );
             registrator.RegisterHandlers();
         }
+
         // Use this for initialization
         void Start()
         {
@@ -62,7 +64,22 @@ namespace RotoChips.Audio
                         GlobalManager.MAudio.PlayMusicTrack(currentTrack, false);   // play the same track over and over again
                         break;
                     case BackGroundMusicMode.All:
-                        currentTrack = playList[Random.Range(0, playList.Count)];
+                        // shuffle the original playlist but make sure each track is only played once
+                        if (allPlayList == null)
+                        {
+                            allPlayList = new List<AudioTrackEnum>();
+                        }
+                        if (allPlayList.Count == 0)
+                        {
+                            foreach (AudioTrackEnum track in playList)
+                            {
+                                allPlayList.Add(track);
+                            }
+                        }
+                        int trackIndex = Random.Range(0, allPlayList.Count);
+                        currentTrack = allPlayList[trackIndex];
+                        // remove the currently playing entry from the playlist
+                        allPlayList.RemoveAt(trackIndex);
                         GlobalManager.MAudio.PlayMusicTrack(currentTrack, false);   // play a random track from the playlist
                         break;
                 }

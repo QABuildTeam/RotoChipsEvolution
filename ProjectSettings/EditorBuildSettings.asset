@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/RotoChips/Scenes/Gallery.unity
     guid: 285f3f7ba45de6842bc90296167336cb
+  - enabled: 1
+    path: Assets/RotoChips/Scenes/Shop.unity
+    guid: d775d0ab242742b4582fcbe51be3db0f
   m_configObjects: {}

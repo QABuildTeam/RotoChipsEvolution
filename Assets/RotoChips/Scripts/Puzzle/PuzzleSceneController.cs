@@ -22,14 +22,16 @@ namespace RotoChips.Puzzle
             None,
             Back,
             Reset,
-            Autostep
+            Autostep,
+            Shopping
         }
         protected DialogOKCancelMode dialogMode;
 
         protected enum Exitmode
         {
             World,
-            Victory
+            Victory,
+            Shop
         }
         protected Exitmode exitMode;
 
@@ -59,7 +61,8 @@ namespace RotoChips.Puzzle
                 InstantMessageType.GUICancelButtonPressed, (InstantMessageHandler)OnGUICancelButtonPressed,
                 InstantMessageType.MusicTrackPlayed, (InstantMessageHandler)OnMusicTrackPlayed,
                 InstantMessageType.GUIRotoCoinsPressed, (InstantMessageHandler)OnGUIRotoCoinsPressed,
-                InstantMessageType.GUIRotoChipsPressed, (InstantMessageHandler)OnGUIRotoChipsPressed
+                InstantMessageType.GUIRotoChipsPressed, (InstantMessageHandler)OnGUIRotoChipsPressed,
+                InstantMessageType.PuzzleAutostepAvailable, (InstantMessageHandler)OnPuzzleAutostepAvailable
             );
             registrator.RegisterHandlers();
         }
@@ -70,8 +73,8 @@ namespace RotoChips.Puzzle
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleStarted, this);
             // update RotoChips and RotoCoins indicators
             LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(GlobalManager.MStorage.SelectedLevel);
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
         }
 
         // message handling
@@ -85,7 +88,11 @@ namespace RotoChips.Puzzle
                 {
                     GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
                     dialogMode = DialogOKCancelMode.Back;
-                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIStartDialogOKCancel, this, backQuestionId);
+                    GlobalManager.MInstantMessage.DeliverMessage(
+                        InstantMessageType.GUIStartDialogOKCancel, 
+                        this, 
+                        GlobalManager.MLanguage.Entry(backQuestionId)
+                    );
                 }
             }
         }
@@ -112,42 +119,73 @@ namespace RotoChips.Puzzle
                 {
                     GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
                     dialogMode = DialogOKCancelMode.Reset;
-                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIStartDialogOKCancel, this, restartlevelQuestionId);
+                    GlobalManager.MInstantMessage.DeliverMessage(
+                        InstantMessageType.GUIStartDialogOKCancel,
+                        this,
+                        GlobalManager.MLanguage.Entry(restartlevelQuestionId)
+                    );
                 }
             }
         }
 
-        [SerializeField]
-        protected string magicQuestionId = "idGUIMagicQuestion";
         void OnGUIMagicButtonPressed(object sender, InstantMessageArgs args)
         {
             if (!puzzleBusy)
             {
                 if (!GlobalManager.MHint.ShowNewHint(HintType.AutoStepButton))
                 {
-                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
-                    dialogMode = DialogOKCancelMode.Autostep;
-                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzlePrepareAutostep, this);
-                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIStartDialogOKCancel, this, magicQuestionId);
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleSetForAutostep, this);
                 }
+            }
+        }
+
+        [SerializeField]
+        protected string magicQuestionId = "idGUIMagicQuestion";
+        [SerializeField]
+        protected string shopQuestionId = "idShopQuestion";
+        void OnPuzzleAutostepAvailable(object sender, InstantMessageArgs args)
+        {
+            bool available = (bool)args.arg;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
+            if (available)
+            {
+                Debug.Log("Autostep available, running DialogOkCancel");
+                dialogMode = DialogOKCancelMode.Autostep;
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzlePrepareAutostep, this);
+                GlobalManager.MInstantMessage.DeliverMessage(
+                    InstantMessageType.GUIStartDialogOKCancel,
+                    this,
+                    GlobalManager.MLanguage.Entry(magicQuestionId)
+                );
+            }
+            else
+            {
+                dialogMode = DialogOKCancelMode.Shopping;
+                GlobalManager.MInstantMessage.DeliverMessage(
+                    InstantMessageType.GUIStartDialogOKCancel,
+                    this,
+                    GlobalManager.MLanguage.Entry(shopQuestionId)
+                );
             }
         }
 
         void OnGUIOKButtonPressed(object sender, InstantMessageArgs args)
         {
-            switch (dialogMode)
+            DialogOKCancelMode mode = dialogMode;
+            dialogMode = DialogOKCancelMode.None;
+            switch (mode)
             {
                 case DialogOKCancelMode.Back:
-                    dialogMode = DialogOKCancelMode.None;
                     GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
                     break;
                 case DialogOKCancelMode.Reset:
-                    dialogMode = DialogOKCancelMode.None;
                     GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleReset, this);
                     break;
                 case DialogOKCancelMode.Autostep:
-                    dialogMode = DialogOKCancelMode.None;
                     GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutostep, this);
+                    break;
+                case DialogOKCancelMode.Shopping:
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleReadyToShop, this);
                     break;
             }
         }

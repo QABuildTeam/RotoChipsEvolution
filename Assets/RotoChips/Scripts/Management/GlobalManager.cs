@@ -180,6 +180,19 @@ namespace RotoChips.Management
             }
         }
 
+        protected PurchasingManager mPurchase;
+        public static PurchasingManager MPurchase
+        {
+            get
+            {
+                return Instance.mPurchase;
+            }
+            set
+            {
+                Instance.mPurchase = value;
+            }
+        }
+
         public bool Initialized
         {
             get; private set;
@@ -225,6 +238,7 @@ namespace RotoChips.Management
                 MGame = (GameManager)LocateManager(typeof(GameManager));
                 MHint = (HintManager)LocateManager(typeof(HintManager));
                 MAds = (UnityAdsManager)LocateManager(typeof(UnityAdsManager));
+                MPurchase = (PurchasingManager)LocateManager(typeof(PurchasingManager));
 
                 // make myself immortal
                 DontDestroyOnLoad(gameObject);

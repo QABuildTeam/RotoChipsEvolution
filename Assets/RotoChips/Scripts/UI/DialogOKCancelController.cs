@@ -30,8 +30,10 @@ namespace RotoChips.UI
         // message handling
         void OnGUIStartDialogOKCancel(object sender, InstantMessageArgs args)
         {
-            string messageTextId = (string)args.arg;
-            dialogText.text = GlobalManager.MLanguage.Entry(messageTextId);
+            //string messageTextId = (string)args.arg;
+            //dialogText.text = GlobalManager.MLanguage.Entry(messageTextId);
+            string messageText = (string)args.arg;
+            dialogText.text = messageText;
             gameObject.SetActive(true);
         }
 

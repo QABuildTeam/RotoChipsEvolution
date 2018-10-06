@@ -11,6 +11,7 @@ using UnityEngine.Purchasing;
 using RotoChips.Management;
 using RotoChips.Generic;
 using RotoChips.Data;
+using RotoChips.Utility;
 
 namespace RotoChips.Accounting
 {
@@ -18,9 +19,13 @@ namespace RotoChips.Accounting
     public class ProductDesc
     {
         public string id;
-        public decimal price;
-        public decimal value;
-        public string description;
+        public SerializableDecimal price;
+        public SerializableDecimal value;
+        [HideInInspector]
+        public string localizedDescription;
+        public string descriptionId;
+        [HideInInspector]
+        public string localizedPrice;
         public ProductType type;
     }
 
@@ -40,6 +45,11 @@ namespace RotoChips.Accounting
         public override void MakeInitial()
         {
             data = GetComponentInChildren<PurchasingManagerData>();
+            // debug
+            foreach(ProductDesc product in data.products)
+            {
+                Debug.Log("Product " + product.id + " price: " + product.price.value.ToString() + ", value: " + product.value.value.ToString());
+            }
             InitializePurchasing();
             base.MakeInitial();
         }
@@ -91,6 +101,30 @@ namespace RotoChips.Accounting
             {
                 Debug.Log("BuyProduct(" + productId + ") FAILED: Purchasing no initialized");
             }
+        }
+
+        public ProductDesc ProductById(string productId)
+        {
+            foreach (ProductDesc product in data.products)
+            {
+                if (productId == product.id)
+                {
+                    // provide localized description and price strings in case there are no metadata onfo in the app store
+                    product.localizedDescription = GlobalManager.MLanguage.Entry(product.descriptionId);
+                    product.localizedPrice = string.Format("{0:C}", product.price.value);
+                    if (IsPurchasingInitialized())
+                    {
+                        Product storeProduct = storeController.products.WithID(productId);
+                        if (storeProduct != null)
+                        {
+                            product.localizedDescription = storeProduct.metadata.localizedTitle;
+                            product.localizedPrice = storeProduct.metadata.localizedPriceString;
+                        }
+                    }
+                    return product;
+                }
+            }
+            return null;
         }
 
         // Restore purchases made by this customer. Some platforms automatically restore purchases. like Google.
@@ -150,7 +184,7 @@ namespace RotoChips.Accounting
                 if (string.Equals(args.purchasedProduct.definition.id, product.id, System.StringComparison.Ordinal))
                 {
                     Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PurchaseComplete, this, product);
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.ShopPurchaseComplete, this, product);
                     return PurchaseProcessingResult.Complete;
                 }
             }

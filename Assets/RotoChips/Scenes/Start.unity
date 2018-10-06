@@ -655,56 +655,6 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cb26e67699aa5b1409d1628f907cb679, type: 2}
   m_IsPrefabAsset: 0
---- !u!1 &1274490225
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1274490226}
-  - component: {fileID: 1274490227}
-  m_Layer: 0
-  m_Name: PurchasingManagerData
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1274490226
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1274490225}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1318134558}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1274490227
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1274490225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3090a018f90ed6244852615a0b61f29e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  products:
-  - id: 1000_rotocoins
-    description: id1000_rotocoins
-    type: 0
-  - id: 3000_rotocoins
-    description: id3000_rotocoins
-    type: 0
-  - id: 10000_rotocoins
-    description: id10000_rotocoins
-    type: 0
 --- !u!4 &1318134558 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4068434471893272, guid: cb26e67699aa5b1409d1628f907cb679,
@@ -750,7 +700,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a8b50b502fea4e478aab2b57e46f1c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startSceneName: Logo
+  startSceneName: Shop
 --- !u!1001 &1366745041
 Prefab:
   m_ObjectHideFlags: 0
@@ -876,6 +826,63 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27ec48c927c640742a6a551d3089ca20, type: 2}
+  m_IsPrefabAsset: 0
+--- !u!1001 &1429339545
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1318134558}
+    m_Modifications:
+    - target: {fileID: 4697340335004966, guid: 2af94cee09d77e8478e64ecf0a11d50a, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697340335004966, guid: 2af94cee09d77e8478e64ecf0a11d50a, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697340335004966, guid: 2af94cee09d77e8478e64ecf0a11d50a, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697340335004966, guid: 2af94cee09d77e8478e64ecf0a11d50a, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697340335004966, guid: 2af94cee09d77e8478e64ecf0a11d50a, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697340335004966, guid: 2af94cee09d77e8478e64ecf0a11d50a, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697340335004966, guid: 2af94cee09d77e8478e64ecf0a11d50a, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697340335004966, guid: 2af94cee09d77e8478e64ecf0a11d50a, type: 2}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114758614382155526, guid: 2af94cee09d77e8478e64ecf0a11d50a,
+        type: 2}
+      propertyPath: products.Array.data[0].price.data
+      value: 49
+      objectReference: {fileID: 0}
+    - target: {fileID: 114758614382155526, guid: 2af94cee09d77e8478e64ecf0a11d50a,
+        type: 2}
+      propertyPath: products.Array.data[1].price.data
+      value: 119
+      objectReference: {fileID: 0}
+    - target: {fileID: 114758614382155526, guid: 2af94cee09d77e8478e64ecf0a11d50a,
+        type: 2}
+      propertyPath: products.Array.data[2].price.data
+      value: 339
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2af94cee09d77e8478e64ecf0a11d50a, type: 2}
   m_IsPrefabAsset: 0
 --- !u!4 &1581374327 stripped
 Transform:

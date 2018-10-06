@@ -19,7 +19,7 @@ namespace RotoChips.Management
         // GUI messages
         GUIStartDialogOKCancel,         // Command: Start a DialogOKCancel if present
                                         //      Arguments:
-                                        //          string messageId - a localization key of the dialog message
+                                        //          string message - a localized string of the dialog message
         GUIBackButtonPressed,           // Notification: Back button has just been pressed
                                         //      Arguments: None
         GUIRestartButtonPressed,        // Notification: Restart button has just been pressed
@@ -42,6 +42,12 @@ namespace RotoChips.Management
                                         //      Arguments: None
         GUIRotoCoinsPressed,            // Notification: RotoCoins indicator on the scene World has just been pressed (either by mouse or by finger)
                                         //      Arguments: None
+        GUIRotoChipsChanged,            // Notification: Per puzzle/total amount of RotoChips has changed
+                                        //      Arguments:
+                                        //          decimal newValue - the new value of RotoChips (don't forget to cast from long to decimal)
+        GUIRotoCoinsChanged,            // Notification: Amount of RotoCoins has changed
+                                        //      Arguments:
+                                        //          decimal newValue - the new value of the RotoCoins
         GUIFullScreenButtonPressed,     // Notification: A sole fullscreen button in a scene has been pressed
                                         //      Arguments: None
         GUIObjectPressedAsButton,       // Notification: A pointer (mouse/touch) has been pressed and released on an object without moving
@@ -156,11 +162,20 @@ namespace RotoChips.Management
         PuzzleSetVictoryTitle,          // Command: Set the title of a fullscreen button at the Victory scene
                                         //      Arguments:
                                         //          string messageTextId - a localization identifier of a title
+        PuzzleSetForAutostep,           // Command: The PuzzleSceneController delegates the GameManager to check for the autostep availability
+                                        //      Arguments: None
+        PuzzleAutostepAvailable,        // Notification: The GameManager notifies the PuzzleSceneController of the autostep (un)availability
+                                        //      Arguments:
+                                        //          bool available - the autostep function is available (true) or unavailable (false) due to the lack of RotoCoin funds
+        PuzzleReadyToShop,              // Notification: The user is ready to enter shopping mode
+                                        //      Arguments: None
+        PuzzleGoShopping,               // Command: The PuzzleController should load the Shop scene
+                                        //      Argument: None
 
         // Finale
         VictoryStartFireworks,          // Command: Special command to reposition fireworks on the Finale scene adjusting them to selector objects
                                         //      Arguments:
-                                        //          List<GameObject> selectors - a list of selectors on the Finale scene (if aaplicable)
+                                        //          List<GameObject> selectors - a list of selectors on the Finale scene (if applicable)
         FinaleRollText,                 // Command: Roll the text chunk by its index
                                         //      Arguments:
                                         //          int textIndex - an index of a text chunk to roll
@@ -174,12 +189,6 @@ namespace RotoChips.Management
         // General
         LanguageChanged,                // Notification: System language has changed
                                         //      Arguments: None
-        RotoChipsChanged,               // Notification: Per puzzle/total amount of RotoChips has changed
-                                        //      Arguments:
-                                        //          decimal newValue - the new value of RotoChips (don't forget to cast from long to decimal)
-        RotoCoinsChanged,               // Notification: Amount of RotoCoins has changed
-                                        //      Arguments:
-                                        //          decimal newValue - the new value of the RotoCoins
         PlayMusicTrack,                 // Command: MusicPlayer must stop playing background playlist and play a specified track
                                         //      Arguments:
                                         //          RotoChips.Management.AudioTrackEnum trackId - an id of a track to play
@@ -203,7 +212,9 @@ namespace RotoChips.Management
                                         //          bool ready - an ad video is ready (true) or not (false)
 
         // Purchases
-        PurchaseComplete,               // Notification: A product has just been purchased
+        ShopStarted,                    // Notification: Method Start() of the Shop scene has just finished its execution
+                                        //      Arguments: None
+        ShopPurchaseComplete,           // Notification: A product has just been purchased
                                         //      Arguments:
                                         //          RotoChips.Accounting.ProductDesc product - a product description
 

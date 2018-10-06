@@ -51,8 +51,8 @@ namespace RotoChips.World
             // notify that the World scene has just been started
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldStarted, this);
             // update RotoChips and RotoCoins indicators
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)GlobalManager.MStorage.CurrentPoints);
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoChipsChanged, this, (decimal)GlobalManager.MStorage.CurrentPoints);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
         }
 
         void RotateWorldToZero(GameObject targetObject)

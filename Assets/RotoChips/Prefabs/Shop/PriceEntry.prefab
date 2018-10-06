@@ -306,6 +306,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entryNameText: {fileID: 114175730834312406}
   entryValueText: {fileID: 114276894823512236}
+  entryId: 
 --- !u!114 &114598463837406678
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -570,7 +571,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -150}
-  m_SizeDelta: {x: 250, y: 150}
+  m_SizeDelta: {x: 200, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224638081808636626
 RectTransform:
