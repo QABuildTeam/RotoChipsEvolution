@@ -8,10 +8,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.World
 {
-    public class WorldCameraController : MonoBehaviour
+    public class WorldCameraController : GenericMessageHandler
     {
 
         public enum ZoomStatus
@@ -106,25 +107,18 @@ namespace RotoChips.World
             StartCoroutine(SmoothCameraMover(zoomStatus));
         }
 
-        MessageRegistrator registrator;
-        private void Awake()
+        protected override void AwakeInit()
         {
             controlledCamera = GetComponent<Camera>();
             Vector3 position = controlledCamera.transform.position;
             position.z = Mathf.Clamp(position.z, maxDistance, minDistance);
             controlledCamera.transform.position = position;
             SetZoomStatus(position.z);
-            registrator = new MessageRegistrator(
-                InstantMessageType.WorldZoomCameraAtMin, (InstantMessageHandler)OnWorldZoomCamera,
-                InstantMessageType.WorldZoomCameraAtMax, (InstantMessageHandler)OnWorldZoomCamera,
-                InstantMessageType.WorldAutoZoomCamera, (InstantMessageHandler)OnWorldAutoZoomCamera
+            registrator.Add(
+                new MessageRegistrationTuple { type = InstantMessageType.WorldZoomCameraAtMin, handler = OnWorldZoomCamera },
+                new MessageRegistrationTuple { type = InstantMessageType.WorldZoomCameraAtMax, handler = OnWorldZoomCamera },
+                new MessageRegistrationTuple { type = InstantMessageType.WorldAutoZoomCamera, handler = OnWorldAutoZoomCamera }
             );
-            registrator.RegisterHandlers();
-        }
-
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
 
         void ProcessInput()

@@ -44,12 +44,17 @@ namespace RotoChips.Accounting
         bool isShowing;
         public bool ShowAd()
         {
-            ShowOptions showOptions = new ShowOptions();
-            showOptions.resultCallback = CheckAdResult;
+            ShowOptions showOptions = new ShowOptions
+            {
+                resultCallback = CheckAdResult
+            };
             if (Advertisement.IsReady(rewardedVideo))
             {
-                isShowing = true;
-                Advertisement.Show(rewardedVideo, showOptions);
+                if (!isShowing)
+                {
+                    isShowing = true;
+                    Advertisement.Show(rewardedVideo, showOptions);
+                }
                 return true;
             }
             else

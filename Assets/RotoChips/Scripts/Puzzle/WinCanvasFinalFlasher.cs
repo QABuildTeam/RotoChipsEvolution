@@ -17,14 +17,13 @@ namespace RotoChips.Puzzle
     {
         [SerializeField]
         protected RawImage stressImage;
-        MessageRegistrator registrator;
-        private void Awake()
+
+        protected override void AwakeInit()
         {
-            registrator = new MessageRegistrator(
-                InstantMessageType.PuzzleWinImageFinished, (InstantMessageHandler)OnPuzzleWinImageFinished,
-                InstantMessageType.PuzzleShowWinimage, (InstantMessageHandler)OnPuzzleShowWinimage
+            registrator.Add(
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleWinImageFinished, handler = OnPuzzleWinImageFinished },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleShowWinimage, handler = OnPuzzleShowWinimage }
             );
-            registrator.RegisterHandlers();
             Visualize(flashRange.max);
         }
 
@@ -52,9 +51,5 @@ namespace RotoChips.Puzzle
             StartFlash(false);
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
     }
 }

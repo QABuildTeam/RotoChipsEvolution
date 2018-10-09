@@ -8,17 +8,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.Shop
 {
-    public class PriceObjectTouchRedirector : MonoBehaviour
+    public class PriceObjectTouchRedirector : GenericMessageHandler
     {
 
-        MessageRegistrator registrator;
-        private void Awake()
+        protected override void AwakeInit()
         {
-            registrator = new MessageRegistrator(InstantMessageType.GUIObjectPressedAsButton, (InstantMessageHandler)OnGUIObjectPressedAsButton);
-            registrator.RegisterHandlers();
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.GUIObjectPressedAsButton, handler = OnGUIObjectPressedAsButton });
         }
 
         // message handling
@@ -36,9 +35,5 @@ namespace RotoChips.Shop
             }
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
     }
 }

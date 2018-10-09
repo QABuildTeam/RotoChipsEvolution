@@ -7,6 +7,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RotoChips.Management;
 
 namespace RotoChips.Shop
 {
@@ -20,6 +21,9 @@ namespace RotoChips.Shop
 
         private void Awake()
         {
+            texture = GlobalManager.MScreenshot.BlurTexture;
+            textureDimensions = new Vector2(texture.width, texture.height);
+
             MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
             Material[] materials = meshRenderer.materials;
             materials[0].mainTexture = texture;

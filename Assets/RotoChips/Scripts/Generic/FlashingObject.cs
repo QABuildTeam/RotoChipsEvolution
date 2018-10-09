@@ -2,6 +2,7 @@
  * File:        FlashingObject.cs
  * Author:      Igor Spiridonov
  * Descrpition: Abstract class FlashingObject implements a generic GameObject which can flash (periodically change its transparency)
+ *              It also inherits a message handling capability from its base class, GenericMessageHandler
  * Created:     26.08.2018
  */
 using System.Collections;
@@ -11,7 +12,7 @@ using RotoChips.Utility;
 
 namespace RotoChips.Generic
 {
-    public abstract class FlashingObject : MonoBehaviour
+    public abstract class FlashingObject : GenericMessageHandler
     {
         [SerializeField]
         protected FloatRange flashRange;    // minimum & maximum values for visual change

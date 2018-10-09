@@ -8,18 +8,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.Generic
 {
-    public abstract class UIIndicatorController : MonoBehaviour
+    public abstract class UIIndicatorController : GenericMessageHandler
     {
         [SerializeField]
         protected InstantMessageType messageType;
-        MessageRegistrator registrator;
-        private void Start()
+
+        protected override void AwakeInit()
         {
-            registrator = new MessageRegistrator(messageType, (InstantMessageHandler)OnMessageUpdate);
-            registrator.RegisterHandlers();
+            registrator.Add(new MessageRegistrationTuple { type = messageType, handler = OnMessageUpdate });
         }
 
         protected abstract void UpdateIndicator(object sender, InstantMessageArgs args);
@@ -28,11 +28,6 @@ namespace RotoChips.Generic
         void OnMessageUpdate(object sender, InstantMessageArgs args)
         {
             UpdateIndicator(sender, args);
-        }
-
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
 
     }

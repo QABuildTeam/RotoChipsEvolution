@@ -12,10 +12,11 @@ using UnityEngine.EventSystems;
 using RotoChips.Management;
 using RotoChips.Data;
 using RotoChips.Utility;
+using RotoChips.Generic;
 
 namespace RotoChips.World
 {
-    public class WorldSphereBuilder : MonoBehaviour
+    public class WorldSphereBuilder : GenericMessageHandler
     {
 
         // prefabs
@@ -34,12 +35,10 @@ namespace RotoChips.World
         GameObject clouds;
         bool fadeClouds;
 
-        MessageRegistrator registrator;
-        // this method constructs the level selection objects on the world sphere
-        void Awake()
+        protected override void AwakeInit()
         {
-            registrator = new MessageRegistrator(InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded);
-            registrator.RegisterHandlers();
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.GUIWhiteCurtainFaded, handler = OnGUIWhiteCurtainFaded });
+
             fadeClouds = false;
 
             //EnableRotation(false);                                  // make sure the sphere does not rotate while constructing spikes
@@ -143,11 +142,6 @@ namespace RotoChips.World
                 fadeClouds = false;
                 clouds.GetComponent<CloudFader>().FadeOut();
             }
-        }
-
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
 
     }

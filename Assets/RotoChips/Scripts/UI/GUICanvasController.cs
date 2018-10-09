@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.UI
 {
@@ -22,14 +23,12 @@ namespace RotoChips.UI
         public bool rotocoinsPanel;
     }
 
-    public class GUICanvasController : MonoBehaviour
+    public class GUICanvasController : GenericMessageHandler
     {
 
-        MessageRegistrator registrator;
-        private void Awake()
+        protected override void AwakeInit()
         {
-            registrator = new MessageRegistrator(InstantMessageType.GUIConfigureAppearance, (InstantMessageHandler)OnGUIConfigureAppearance);
-            registrator.RegisterHandlers();
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.GUIConfigureAppearance, handler = OnGUIConfigureAppearance });
         }
 
         // message handling
@@ -77,9 +76,5 @@ namespace RotoChips.UI
             }
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
     }
 }

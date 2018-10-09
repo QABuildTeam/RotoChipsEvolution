@@ -9,10 +9,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using RotoChips.Utility;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.Victory
 {
-    public class VictoryFireworker : MonoBehaviour
+    public class VictoryFireworker : GenericMessageHandler
     {
         [SerializeField]
         protected GameObject[] fireworkPrefabs;
@@ -26,12 +27,10 @@ namespace RotoChips.Victory
 
         List<GameObject> selectors;     // selector objects on the Finale scene; only work on this scene
 
-        MessageRegistrator registrator;
-        private void Awake()
+        protected override void AwakeInit()
         {
             currentFireworksCount = 0;
-            registrator = new MessageRegistrator(InstantMessageType.VictoryStartFireworks, (InstantMessageHandler)OnVictoryStartFireworks);
-            registrator.RegisterHandlers();
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.VictoryStartFireworks, handler = OnVictoryStartFireworks });
         }
 
         int NextFireworkIndex()
@@ -137,9 +136,5 @@ namespace RotoChips.Victory
             InitFirework(NextFireworkIndex());
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
     }
 }

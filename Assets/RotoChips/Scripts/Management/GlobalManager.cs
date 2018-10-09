@@ -193,6 +193,19 @@ namespace RotoChips.Management
             }
         }
 
+        protected BlurScreenShotManager mScreenshot;
+        public static BlurScreenShotManager MScreenshot
+        {
+            get
+            {
+                return Instance.mScreenshot;
+            }
+            set
+            {
+                Instance.mScreenshot = value;
+            }
+        }
+
         public bool Initialized
         {
             get; private set;
@@ -239,6 +252,7 @@ namespace RotoChips.Management
                 MHint = (HintManager)LocateManager(typeof(HintManager));
                 MAds = (UnityAdsManager)LocateManager(typeof(UnityAdsManager));
                 MPurchase = (PurchasingManager)LocateManager(typeof(PurchasingManager));
+                MScreenshot=(BlurScreenShotManager)LocateManager(typeof(BlurScreenShotManager));
 
                 // make myself immortal
                 DontDestroyOnLoad(gameObject);

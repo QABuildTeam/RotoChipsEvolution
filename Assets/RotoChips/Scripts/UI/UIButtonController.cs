@@ -15,11 +15,13 @@ namespace RotoChips.UI
     {
         [SerializeField]
         protected InstantMessageType messageType;
-
+        [SerializeField]
+        protected SFXPlayParams buttonClickSFX;
         public void ButtonClick()
         {
             if (gameObject.activeInHierarchy)
             {
+                GlobalManager.MAudio.PlaySFX(buttonClickSFX);
                 GlobalManager.MInstantMessage.DeliverMessage(messageType, this);
             }
         }

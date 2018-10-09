@@ -30,9 +30,7 @@ namespace RotoChips.Puzzle
         protected float marginRatio = 0.1f;
 
         LevelDataManager.Descriptor descriptor;
-        MessageRegistrator registrator;
-        // Use this for initialization
-        void Awake()
+        protected override void AwakeInit()
         {
             descriptor = GlobalManager.MLevel.GetDescriptor(GlobalManager.MStorage.SelectedLevel);
             float puzzleRatioXY = (float)descriptor.init.width / (float)descriptor.init.height;
@@ -77,8 +75,7 @@ namespace RotoChips.Puzzle
             sourceText.text = GlobalManager.MLanguage.Entry(GetSourceTextId());
 
             // message handling
-            registrator = new MessageRegistrator(InstantMessageType.PuzzleViewSourceImage, (InstantMessageHandler)OnPuzzleViewSourceImage);
-            registrator.RegisterHandlers();
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.PuzzleViewSourceImage, handler = OnPuzzleViewSourceImage });
             sourceButton.interactable = true;
         }
 
@@ -158,9 +155,5 @@ namespace RotoChips.Puzzle
             StartFlash(false);
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
     }
 }

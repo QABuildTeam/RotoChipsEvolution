@@ -21,14 +21,13 @@ namespace RotoChips.Victory
         protected Text victoryText;
         [SerializeField]
         protected Outline victoryOutline;
-        MessageRegistrator registrator;
-        private void Awake()
+
+        protected override void AwakeInit()
         {
             newTitle = string.Empty;
             victoryText.text = newTitle;
-            registrator = new MessageRegistrator(InstantMessageType.PuzzleSetVictoryTitle, (InstantMessageHandler)OnPuzzleSetVictoryTitle);
-            registrator.RegisterHandlers();
             Visualize(flashRange.max);
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.PuzzleSetVictoryTitle, handler = OnPuzzleSetVictoryTitle });
         }
 
         // FlashingObject overrides
@@ -61,9 +60,5 @@ namespace RotoChips.Victory
             StartFlash(false);
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
     }
 }

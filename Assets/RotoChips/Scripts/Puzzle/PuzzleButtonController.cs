@@ -11,10 +11,11 @@ using RotoChips.Management;
 using RotoChips.Audio;
 using RotoChips.UI;
 using RotoChips.Utility;
+using RotoChips.Generic;
 
 namespace RotoChips.Puzzle
 {
-    public class PuzzleButtonController : MonoBehaviour
+    public class PuzzleButtonController : GenericMessageHandler
     {
         public class PuzzleButtonArgs
         {
@@ -22,7 +23,6 @@ namespace RotoChips.Puzzle
             public float fast;          // fast factor (1 - normal speed, 0.5 - twice as fast)
         }
 
-        MessageRegistrator registrator;
         Vector2Int buttonId;
         protected float neutralZ;
         protected float pressedZ;
@@ -46,6 +46,14 @@ namespace RotoChips.Puzzle
         [SerializeField]
         protected FloatRange jinglePitchRange;
 
+        protected override void AwakeInit()
+        {
+            registrator.Add(
+                new MessageRegistrationTuple { type = InstantMessageType.GUIObjectPressedAsButton, handler = OnGUIObjectPressedAsButton },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzlePressButton, handler = OnPuzzlePressButton }
+            );
+        }
+
         public void Init(Vector2Int pos, float aNeutralZ, float aPressedZ, float aReleasedZ)
         {
             buttonId = pos;
@@ -53,11 +61,6 @@ namespace RotoChips.Puzzle
             neutralZ = aNeutralZ;
             pressedZ = aPressedZ;
             releasedZ = aReleasedZ;
-            registrator = new MessageRegistrator(
-                InstantMessageType.GUIObjectPressedAsButton, (InstantMessageHandler)OnGUIObjectPressedAsButton,
-                InstantMessageType.PuzzlePressButton, (InstantMessageHandler)OnPuzzlePressButton
-            );
-            registrator.RegisterHandlers();
         }
 
         void OnGUIObjectPressedAsButton(object sender, InstantMessageArgs args)
@@ -148,11 +151,6 @@ namespace RotoChips.Puzzle
                 animating = false;
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleButtonRotated, this, buttonId);
             }
-        }
-
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
 
     }

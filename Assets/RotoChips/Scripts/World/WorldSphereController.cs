@@ -8,26 +8,24 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.World
 {
-    public class WorldSphereController : MonoBehaviour
+    public class WorldSphereController : GenericMessageHandler
     {
 
         [SerializeField]
         protected float rotationTime;
-        MessageRegistrator registrator;
-        void Awake()
+
+        protected override void AwakeInit()
         {
-            registrator = new MessageRegistrator(
-                InstantMessageType.GUIObjectPressedAsButton, (InstantMessageHandler)OnGUIObjectPressedAsButton,
-                InstantMessageType.WorldRotateToObject, (InstantMessageHandler)OnWorldRotateToObject,
-                InstantMessageType.WorldRotationEnable, (InstantMessageHandler)OnWorldRotationEnable
+            registrator.Add(
+                new MessageRegistrationTuple { type = InstantMessageType.GUIObjectPressedAsButton, handler = OnGUIObjectPressedAsButton },
+                new MessageRegistrationTuple { type = InstantMessageType.WorldRotateToObject, handler = OnWorldRotateToObject },
+                new MessageRegistrationTuple { type = InstantMessageType.WorldRotationEnable, handler = OnWorldRotationEnable }
             );
-            registrator.RegisterHandlers();
         }
 
         void Start()
@@ -63,6 +61,7 @@ namespace RotoChips.World
                     float deltaAngle = angle * Time.deltaTime;
                     currentAngle += deltaAngle;
                     transform.Rotate(cross, deltaAngle, Space.World);
+                    Debug.DrawRay(viewer, rotateTarget.transform.position, Color.red);
                 }
                 currentAngle -= angle;
                 if (currentAngle != 0)
@@ -86,11 +85,6 @@ namespace RotoChips.World
         void OnWorldRotationEnable(object sender, InstantMessageArgs args)
         {
             rotationEnabled = (bool)args.arg;
-        }
-
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
 
         [SerializeField]

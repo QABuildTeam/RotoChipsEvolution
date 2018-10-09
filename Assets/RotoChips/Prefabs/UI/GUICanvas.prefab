@@ -253,6 +253,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   messageType: 11
+  buttonClickSFX:
+    id: 20
+    pitchFactor: 1
+    volumeFactor: 0.5
 --- !u!114 &114123275042227866
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -414,6 +418,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   messageType: 3
+  buttonClickSFX:
+    id: 19
+    pitchFactor: 1
+    volumeFactor: 0.5
 --- !u!114 &114379617270725892
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -609,6 +617,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   messageType: 2
+  buttonClickSFX:
+    id: 19
+    pitchFactor: 1
+    volumeFactor: 0.5
 --- !u!114 &114578633135135862
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -621,6 +633,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   messageType: 10
+  buttonClickSFX:
+    id: 20
+    pitchFactor: 1
+    volumeFactor: 0.5
 --- !u!114 &114699110550958148
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -660,6 +676,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   messageType: 4
+  buttonClickSFX:
+    id: 19
+    pitchFactor: 1
+    volumeFactor: 0.5
 --- !u!114 &114724217773993308
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -689,6 +709,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   messageType: 5
+  buttonClickSFX:
+    id: 19
+    pitchFactor: 1
+    volumeFactor: 0.5
 --- !u!114 &114780618813607194
 MonoBehaviour:
   m_ObjectHideFlags: 1

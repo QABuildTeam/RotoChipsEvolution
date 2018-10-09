@@ -11,39 +11,42 @@ using UnityEngine.SceneManagement;
 using RotoChips.Accounting;
 using RotoChips.Management;
 using RotoChips.UI;
+using RotoChips.Generic;
 
 namespace RotoChips.World
 {
-    public class WorldController : MonoBehaviour
+    public class WorldController : GenericMessageHandler
     {
 
         bool worldRotated;
         bool cameraZoomed;
         bool curtainFaded;
         WorldCameraController cameraController;
-        MessageRegistrator registrator;
-        private void Awake()
+
+        protected override void AwakeInit()
         {
             worldRotated = false;
             cameraZoomed = false;
             curtainFaded = false;
+            dialogMode = false;
             cameraController = Camera.main.GetComponent<WorldCameraController>();
-            registrator = new MessageRegistrator(
-                InstantMessageType.WorldCameraZoomedAtMin, (InstantMessageHandler)OnWorldCameraZoomedAtMin,
-                InstantMessageType.WorldGlobePressed, (InstantMessageHandler)OnWorldGlobePressed,
-                InstantMessageType.WorldSelectorPressed, (InstantMessageHandler)OnWorldSelectorPressed,
-                InstantMessageType.WorldRotatedToObject, (InstantMessageHandler)OnWorldRotatedToObject,
-                InstantMessageType.GUIRotoChipsPressed, (InstantMessageHandler)OnGUIRotoChipsPressed,
-                InstantMessageType.GUIRotoCoinsPressed, (InstantMessageHandler)OnGUIRotoCoinsPressed,
-                InstantMessageType.WorldSatellitePressed, (InstantMessageHandler)OnWorldSatellitePressed,
-                InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded,
-                InstantMessageType.GUIRestartButtonPressed, (InstantMessageHandler)OnGUIRestartButtonPressed,
-                InstantMessageType.GUIViewButtonPressed, (InstantMessageHandler)OnGUIViewButtonPressed,
-                InstantMessageType.GUIMagicButtonPressed, (InstantMessageHandler)OnGUIMagicButtonPressed,
-                InstantMessageType.WorldLevelDescriptionClosed, (InstantMessageHandler)OnWorldLevelDescriptionClosed,
-                InstantMessageType.AdvertisementResult, (InstantMessageHandler)OnAdvertisementResult
+            registrator.Add(
+                new MessageRegistrationTuple { type = InstantMessageType.WorldCameraZoomedAtMin, handler = OnWorldCameraZoomedAtMin },
+                new MessageRegistrationTuple { type = InstantMessageType.WorldGlobePressed, handler = OnWorldGlobePressed },
+                new MessageRegistrationTuple { type = InstantMessageType.WorldSelectorPressed, handler = OnWorldSelectorPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.WorldRotatedToObject, handler = OnWorldRotatedToObject },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIRotoChipsPressed, handler = OnGUIRotoChipsPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIRotoCoinsPressed, handler = OnGUIRotoCoinsPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.WorldSatellitePressed, handler = OnWorldSatellitePressed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIWhiteCurtainFaded, handler = OnGUIWhiteCurtainFaded },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIRestartButtonPressed, handler = OnGUIRestartButtonPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIViewButtonPressed, handler = OnGUIViewButtonPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIMagicButtonPressed, handler = OnGUIMagicButtonPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.WorldLevelDescriptionClosed, handler = OnWorldLevelDescriptionClosed },
+                new MessageRegistrationTuple { type = InstantMessageType.AdvertisementResult, handler = OnAdvertisementResult },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIOKButtonPressed, handler = OnGUIOKButtonPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUICancelButtonPressed, handler = OnGUICancelButtonPressed }
             );
-            registrator.RegisterHandlers();
         }
 
         void Start()
@@ -88,6 +91,12 @@ namespace RotoChips.World
 
         [SerializeField]
         protected string puzzleScene = "Puzzle";
+        [SerializeField]
+        protected SFXPlayParams levelDescriptionSFX;
+        [SerializeField]
+        protected SFXPlayParams noLevelSFX;
+        [SerializeField]
+        protected SFXPlayParams startLevelSFX;
         void OnWorldSelectorPressed(object sender, InstantMessageArgs args)
         {
             GameObject targetObject = ((Component)sender).gameObject;
@@ -103,12 +112,14 @@ namespace RotoChips.World
                     if (descriptor.state.Complete)
                     {
                         // show a description of the complete level
+                        GlobalManager.MAudio.PlaySFX(levelDescriptionSFX);
                         GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, false);
                         GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldShowLevelDescription, this, descriptor);
                     }
                     else
                     {
                         // start level
+                        GlobalManager.MAudio.PlaySFX(startLevelSFX);
                         GlobalManager.MStorage.SelectedLevel = descriptor.init.id;
                         GlobalManager.MStorage.GalleryLevel = descriptor.init.id;
                         StartCoroutine(YieldToScene(targetObject, puzzleScene));
@@ -117,6 +128,7 @@ namespace RotoChips.World
                 else
                 {
                     // show hint message
+                    GlobalManager.MAudio.PlaySFX(noLevelSFX);
                     GlobalManager.MInstantMessage.DeliverMessage(
                         InstantMessageType.GUIShowHint,
                         this,
@@ -164,11 +176,43 @@ namespace RotoChips.World
             StartCoroutine(YieldToScene(targetObject, galleryScene));
         }
 
+        [SerializeField]
+        protected string restartGameQuestion = "idGUIRestartGameQuestion";
+        bool dialogMode;
         void OnGUIRestartButtonPressed(object sender, InstantMessageArgs args)
         {
             if (!GlobalManager.MHint.ShowNewHint(HintType.GameRestartButton))
             {
-                
+                if (!GlobalManager.MHint.ShowNewHint(HintType.GameRestartButton))
+                {
+                    dialogMode = true;
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, false);
+                    GlobalManager.MInstantMessage.DeliverMessage(
+                        InstantMessageType.GUIStartDialogOKCancel,
+                        this,
+                        GlobalManager.MLanguage.Entry(restartGameQuestion)
+                    );
+                }
+            }
+        }
+
+        void OnGUIOKButtonPressed(object sender, InstantMessageArgs args)
+        {
+            if (dialogMode)
+            {
+                // clear level states
+                GlobalManager.MLevel.InitializeLevels();
+                // restart the scene
+                YieldToScene(null, SceneManager.GetActiveScene().name);
+            }
+        }
+
+        void OnGUICancelButtonPressed(object sender, InstantMessageArgs args)
+        {
+            if (dialogMode)
+            {
+                dialogMode = false;
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, true);
             }
         }
 
@@ -221,11 +265,6 @@ namespace RotoChips.World
         void OnAdvertisementResult(object sender, InstantMessageArgs args)
         {
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldBlockScreen, this, false);
-        }
-
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
 
     }

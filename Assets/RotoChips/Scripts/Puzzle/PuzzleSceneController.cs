@@ -11,10 +11,11 @@ using UnityEngine.SceneManagement;
 using RotoChips.Management;
 using RotoChips.Audio;
 using RotoChips.UI;
+using RotoChips.Generic;
 
 namespace RotoChips.Puzzle
 {
-    public class PuzzleSceneController : MonoBehaviour
+    public class PuzzleSceneController : GenericMessageHandler
     {
 
         protected enum DialogOKCancelMode
@@ -39,33 +40,35 @@ namespace RotoChips.Puzzle
         protected string worldScene = "World";
         [SerializeField]
         protected string victoryScene = "Victory";
+        [SerializeField]
+        protected string shopScene = "Shop";
 
-        MessageRegistrator registrator;
         bool puzzleBusy;
 
-        private void Awake()
+        protected override void AwakeInit()
         {
             dialogMode = DialogOKCancelMode.None;
             exitMode = Exitmode.World;
-            registrator = new MessageRegistrator(
-                InstantMessageType.PuzzleBusy, (InstantMessageHandler)OnPuzzleBusy,
-                InstantMessageType.PuzzleComplete, (InstantMessageHandler)OnPuzzleComplete,
-                InstantMessageType.PuzzleWinImageStopped, (InstantMessageHandler)OnPuzzleWinImageStopped,
-                InstantMessageType.PuzzleSourceImageClosed, (InstantMessageHandler)OnPuzzleSourceImageClosed,
-                InstantMessageType.GUIBackButtonPressed, (InstantMessageHandler)OnGUIBackButtonPressed,
-                InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded,
-                InstantMessageType.GUIViewButtonPressed, (InstantMessageHandler)OnGUIViewButtonPressed,
-                InstantMessageType.GUIRestartButtonPressed, (InstantMessageHandler)OnGUIRestartButtonPressed,
-                InstantMessageType.GUIMagicButtonPressed, (InstantMessageHandler)OnGUIMagicButtonPressed,
-                InstantMessageType.GUIOKButtonPressed, (InstantMessageHandler)OnGUIOKButtonPressed,
-                InstantMessageType.GUICancelButtonPressed, (InstantMessageHandler)OnGUICancelButtonPressed,
-                InstantMessageType.MusicTrackPlayed, (InstantMessageHandler)OnMusicTrackPlayed,
-                InstantMessageType.GUIRotoCoinsPressed, (InstantMessageHandler)OnGUIRotoCoinsPressed,
-                InstantMessageType.GUIRotoChipsPressed, (InstantMessageHandler)OnGUIRotoChipsPressed,
-                InstantMessageType.PuzzleAutostepAvailable, (InstantMessageHandler)OnPuzzleAutostepAvailable
+            registrator.Add(
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleBusy, handler = OnPuzzleBusy },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleComplete, handler = OnPuzzleComplete },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleWinImageStopped, handler = OnPuzzleWinImageStopped },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleSourceImageClosed, handler = OnPuzzleSourceImageClosed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIBackButtonPressed, handler = OnGUIBackButtonPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIWhiteCurtainFaded, handler = OnGUIWhiteCurtainFaded },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIViewButtonPressed, handler = OnGUIViewButtonPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIRestartButtonPressed, handler = OnGUIRestartButtonPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIMagicButtonPressed, handler = OnGUIMagicButtonPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIOKButtonPressed, handler = OnGUIOKButtonPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUICancelButtonPressed, handler = OnGUICancelButtonPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.MusicTrackPlayed, handler = OnMusicTrackPlayed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIRotoCoinsPressed, handler = OnGUIRotoCoinsPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIRotoChipsPressed, handler = OnGUIRotoChipsPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleAutostepAvailable, handler = OnPuzzleAutostepAvailable },
+                new MessageRegistrationTuple { type = InstantMessageType.ShopBlurryScreenshotTaken, handler = OnShopBlurryScreenshotTaken }
             );
-            registrator.RegisterHandlers();
         }
+
         // Use this for initialization
         void Start()
         {
@@ -185,9 +188,16 @@ namespace RotoChips.Puzzle
                     GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutostep, this);
                     break;
                 case DialogOKCancelMode.Shopping:
+                    GlobalManager.MScreenshot.TakeShot();
                     GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleReadyToShop, this);
                     break;
             }
+        }
+
+        void OnShopBlurryScreenshotTaken(object sender, InstantMessageArgs args)
+        {
+            exitMode = Exitmode.Shop;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
         }
 
         void OnGUICancelButtonPressed(object sender, InstantMessageArgs args)
@@ -210,6 +220,9 @@ namespace RotoChips.Puzzle
                     case Exitmode.Victory:
                         GlobalManager.MAudio.PlayMusicTrack(AudioTrackEnum.Unknown);
                         SceneManager.LoadScene(victoryScene);
+                        break;
+                    case Exitmode.Shop:
+                        SceneManager.LoadScene(shopScene);
                         break;
                 }
             }
@@ -284,10 +297,6 @@ namespace RotoChips.Puzzle
                     target = null
                 }
             );
-        }
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
     }
 }

@@ -9,21 +9,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.UI
 {
-    public class DialogOKCancelController : MonoBehaviour
+    public class DialogOKCancelController : GenericMessageHandler
     {
 
         [SerializeField]
         Text dialogText;
 
-        MessageRegistrator registrator;
-        // Use this for initialization
-        void Awake()
+        protected override void AwakeInit()
         {
-            registrator = new MessageRegistrator(InstantMessageType.GUIStartDialogOKCancel, (InstantMessageHandler)OnGUIStartDialogOKCancel);
-            registrator.RegisterHandlers();
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.GUIStartDialogOKCancel, handler = OnGUIStartDialogOKCancel });
             gameObject.SetActive(false);
         }
 
@@ -37,19 +35,20 @@ namespace RotoChips.UI
             gameObject.SetActive(true);
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
-
+        [SerializeField]
+        protected SFXPlayParams okButtonClickSFX;
+        [SerializeField]
+        protected SFXPlayParams cancelButtonClickSFX;
         public void OKButtonPressed()
         {
+            GlobalManager.MAudio.PlaySFX(okButtonClickSFX);
             gameObject.SetActive(false);
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIOKButtonPressed, this);
         }
 
         public void CancelButtonPressed()
         {
+            GlobalManager.MAudio.PlaySFX(cancelButtonClickSFX);
             gameObject.SetActive(false);
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUICancelButtonPressed, this);
         }

@@ -7,22 +7,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RotoChips.Management;
 
 namespace RotoChips.Generic
 {
-    public class GenericMessageHandler : MonoBehaviour
+    public abstract class GenericMessageHandler : MonoBehaviour
     {
 
-        // Use this for initialization
-        void Start()
-        {
+        protected MessageRegistrator registrator;
 
+        // this method is called from within Awake right between creation of registrator and registering its handlers
+        protected abstract void AwakeInit();
+
+        private void Awake()
+        {
+            //Debug.Log("Registering handlers of " + gameObject.name + "." + GetType().ToString());
+            registrator = new MessageRegistrator();
+            AwakeInit();
+            registrator.RegisterHandlers();
         }
 
-        // Update is called once per frame
-        void Update()
+        private void OnDestroy()
         {
-
+            //Debug.Log("Unregistering handlers of " + gameObject.name + "." + GetType().ToString());
+            registrator.UnregisterHandlers();
         }
     }
 }

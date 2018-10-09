@@ -10,10 +10,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.UI
 {
-    public class LocalizedText : MonoBehaviour
+    public class LocalizedText : GenericMessageHandler
     {
 
         // a referenced Text component is calculated automatically
@@ -64,19 +65,22 @@ namespace RotoChips.UI
             Value = argValue;
         }
 
-        MessageRegistrator registrator;
+        protected override void AwakeInit()
+        {
+            Init();
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.LanguageChanged, handler = OnLanguageChange });
+        }
+
         void Init()
         {
             if (textControl == null)
             {
                 textControl = GetComponent<Text>();
                 Value = argValue;  // default text value
-                registrator = new MessageRegistrator(InstantMessageType.LanguageChanged, (InstantMessageHandler)OnLanguageChange);
-                registrator.RegisterHandlers();
             }
         }
 
-        private void Awake()
+        private void Start()
         {
             Init();
         }
@@ -84,11 +88,6 @@ namespace RotoChips.UI
         private void OnEnable()
         {
             Init();
-        }
-
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
 
     }

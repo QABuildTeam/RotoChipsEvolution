@@ -16,11 +16,9 @@ namespace RotoChips.World
 {
     public class LevelDescriptionController : FlashingObject
     {
-        MessageRegistrator registrator;
-        private void Awake()
+        protected override void AwakeInit()
         {
-            registrator = new MessageRegistrator(InstantMessageType.WorldShowLevelDescription, (InstantMessageHandler)OnWorldShowLevelDescription);
-            registrator.RegisterHandlers();
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.WorldShowLevelDescription, handler = OnWorldShowLevelDescription });
         }
 
         private void Start()
@@ -30,8 +28,6 @@ namespace RotoChips.World
         }
 
         // initialization
-        //[SerializeField]
-        //protected GameObject backgroundButton;
         [SerializeField]
         protected GameObject descriptionDialog;
         [SerializeField]
@@ -44,8 +40,6 @@ namespace RotoChips.World
         protected GameObject vDescriptionText;
         [SerializeField]
         protected GameObject hDescriptionText;
-        //[SerializeField]
-        //protected GameObject CompletionText;
         [SerializeField]
         protected GameObject okButton;
         [SerializeField]
@@ -130,15 +124,10 @@ namespace RotoChips.World
         void OnWorldShowLevelDescription(object sender, InstantMessageArgs args)
         {
             LevelDataManager.Descriptor descriptor = (LevelDataManager.Descriptor)args.arg;
-            if (descriptor!=null)
+            if (descriptor != null)
             {
                 InitializeDialog(descriptor);
             }
-        }
-
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
 
         public void OKButtonPressed()

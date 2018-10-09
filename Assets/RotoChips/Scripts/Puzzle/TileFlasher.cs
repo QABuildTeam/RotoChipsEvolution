@@ -47,17 +47,17 @@ namespace RotoChips.Puzzle
         }
         MeshRenderer meshRenderer;
 
-        MessageRegistrator registrator;
         public void Init(Vector2Int id)
         {
             tileId = id;
             meshRenderer = GetComponent<MeshRenderer>();
             type = FlashType.None;
             Visualize(flashRange.min);
-            registrator = new MessageRegistrator(
-                InstantMessageType.PuzzleFlashTile, (InstantMessageHandler)OnPuzzleFlashTile
-            );
-            registrator.RegisterHandlers();
+        }
+
+        protected override void AwakeInit()
+        {
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.PuzzleFlashTile, handler = OnPuzzleFlashTile });
         }
 
         // message handling
@@ -89,11 +89,6 @@ namespace RotoChips.Puzzle
                     }
                 }
             }
-        }
-
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
 
         protected override bool IsValidPeriod(int periodCounter)

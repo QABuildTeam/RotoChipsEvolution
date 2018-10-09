@@ -12,6 +12,7 @@ using RotoChips.Data;
 using RotoChips.Audio;
 using RotoChips.UI;
 using RotoChips.Utility;
+using RotoChips.Generic;
 
 namespace RotoChips.Puzzle
 {
@@ -34,9 +35,8 @@ namespace RotoChips.Puzzle
         public Vector2Int current;      // current tile in place
     }
 
-    public class PuzzleController : MonoBehaviour
+    public class PuzzleController : GenericMessageHandler
     {
-        MessageRegistrator registrator;         // standard message handlers registrator
         LevelDataManager.Descriptor descriptor; // a descriptor of a currently played level
         TileStatus[,] tileNeighbours;           // a 2-dimensional array of tile statuses
         int[,] buttonAngles;                    // a 2-dimensional array of button angle codes
@@ -53,8 +53,7 @@ namespace RotoChips.Puzzle
 
         bool startVictoryScreen;                // a flag to start the victory screen
 
-        // Use this for initialization
-        private void Awake()
+        protected override void AwakeInit()
         {
             descriptor = GlobalManager.MLevel.GetDescriptor(GlobalManager.MStorage.SelectedLevel);
             tileNeighbours = new TileStatus[descriptor.init.width, descriptor.init.height];
@@ -65,21 +64,20 @@ namespace RotoChips.Puzzle
             puzzleComplete = false;
             autostepUsed = false;
             startVictoryScreen = true;
-            registrator = new MessageRegistrator(
-                InstantMessageType.PuzzleButtonPressed, (InstantMessageHandler)OnPuzzleButtonPressed,
-                InstantMessageType.PuzzleButtonRotated, (InstantMessageHandler)OnPuzzleButtonRotated,
-                InstantMessageType.PuzzleTileFlashed, (InstantMessageHandler)OnPuzzleTileFlashed,
-                InstantMessageType.PuzzleAutostepUsed, (InstantMessageHandler)OnPuzzleAutostepUsed,
-                InstantMessageType.PuzzleShuffle, (InstantMessageHandler)OnPuzzleShuffle,
-                InstantMessageType.PuzzleReset, (InstantMessageHandler)OnPuzzleReset,
-                InstantMessageType.PuzzlePrepareAutostep, (InstantMessageHandler)OnPuzzlePrepareAutostep,
-                InstantMessageType.PuzzleAutostep, (InstantMessageHandler)OnPuzzleAutostep,
-                InstantMessageType.PuzzleAutocomplete, (InstantMessageHandler)OnPuzzleAutocomplete,
-                InstantMessageType.PuzzleBusy, (InstantMessageHandler)OnPuzzleBusy,
-                InstantMessageType.RedirectFirstTileButtons, (InstantMessageHandler)OnRedirectFirstTileButtons,
-                InstantMessageType.RedirectSecondTileButtons, (InstantMessageHandler)OnRedirectSecondTileButtons
+            registrator.Add(
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleButtonPressed, handler = OnPuzzleButtonPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleButtonRotated, handler = OnPuzzleButtonRotated },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleTileFlashed, handler = OnPuzzleTileFlashed },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleAutostepUsed, handler = OnPuzzleAutostepUsed },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleShuffle, handler = OnPuzzleShuffle },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleReset, handler = OnPuzzleReset },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzlePrepareAutostep, handler = OnPuzzlePrepareAutostep },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleAutostep, handler = OnPuzzleAutostep },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleAutocomplete, handler = OnPuzzleAutocomplete },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleBusy, handler = OnPuzzleBusy },
+                new MessageRegistrationTuple { type = InstantMessageType.RedirectFirstTileButtons, handler = OnRedirectFirstTileButtons },
+                new MessageRegistrationTuple { type = InstantMessageType.RedirectSecondTileButtons, handler = OnRedirectSecondTileButtons }
             );
-            registrator.RegisterHandlers();
         }
 
         void Start()
@@ -617,10 +615,6 @@ namespace RotoChips.Puzzle
             GlobalManager.MHint.ShowNewHint(HintType.SecondTileButtonsHint, builder.ButtonById(secondButtonId));
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
         #endregion
 
         #region Logic checking

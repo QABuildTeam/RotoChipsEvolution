@@ -333,6 +333,7 @@ GameObject:
   - component: {fileID: 321023817}
   - component: {fileID: 321023816}
   - component: {fileID: 321023815}
+  - component: {fileID: 321023819}
   m_Layer: 0
   m_Name: BlurCamera
   m_TagString: Untagged
@@ -412,6 +413,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &321023819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 321023814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f69d2f071fc90bd4a9f7445127f411ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &678035738
 Prefab:
   m_ObjectHideFlags: 0
@@ -1030,6 +1042,7 @@ MonoBehaviour:
   backQuestionId: idGUIBackQuestion
   restartlevelQuestionId: idGUIRestartLevelQuestion
   magicQuestionId: idGUIMagicQuestion
+  shopQuestionId: idShopQuestion
   victoryId: idVictory
   levelCompletedOnceAgainId: idLevelCompletedOnceAgain
   victoryMusicId: 3

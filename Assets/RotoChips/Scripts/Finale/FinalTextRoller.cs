@@ -9,10 +9,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.Finale
 {
-    public class FinalTextRoller : MonoBehaviour
+    public class FinalTextRoller : GenericMessageHandler
     {
 
         [SerializeField]
@@ -44,11 +45,9 @@ namespace RotoChips.Finale
         [SerializeField]
         protected string textId;
 
-        MessageRegistrator registrator;
-        private void Awake()
+        protected override void AwakeInit()
         {
-            registrator = new MessageRegistrator(InstantMessageType.FinaleRollText, (InstantMessageHandler)OnFinaleRollText);
-            registrator.RegisterHandlers();
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.FinaleRollText, handler = OnFinaleRollText });
         }
 
         Vector2 OffsetToPosition(MovementKey movementKey)
@@ -135,9 +134,5 @@ namespace RotoChips.Finale
             }
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
     }
 }

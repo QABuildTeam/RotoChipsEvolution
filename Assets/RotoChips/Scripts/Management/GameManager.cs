@@ -14,6 +14,8 @@ using RotoChips.UI;
 using RotoChips.Accounting;
 using RotoChips.Utility;
 
+using UnityEngine.SceneManagement;
+
 namespace RotoChips.Management
 {
     public class GameManager : GenericManager
@@ -43,25 +45,26 @@ namespace RotoChips.Management
             return true;
         }
 
+        // GameManager is already inherited from GenericManager so it cannot be a GenericMessageHandler
         MessageRegistrator registrator;
         public override void MakeReady()
         {
             registrator = new MessageRegistrator(
-                InstantMessageType.GalleryStarted, (InstantMessageHandler)OnGalleryStarted,
-                InstantMessageType.WorldStarted, (InstantMessageHandler)OnWorldStarted,
-                InstantMessageType.PuzzleStarted, (InstantMessageHandler)OnPuzzleStarted,
-                InstantMessageType.PuzzleComplete, (InstantMessageHandler)OnPuzzleComplete,
-                InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded,
-                InstantMessageType.PuzzleSourceImageClosed, (InstantMessageHandler)OnPuzzleSourceImageClosed,
-                InstantMessageType.PuzzleHasShuffled, (InstantMessageHandler)OnPuzzleHasShuffled,
-                InstantMessageType.PuzzleTileInPlace, (InstantMessageHandler)OnPuzzleTileInPlace,
-                InstantMessageType.GUIHintClosed, (InstantMessageHandler)OnGUIHintClosed,
-                InstantMessageType.AdvertisementResult, (InstantMessageHandler)OnAdvertisementResult,
-                InstantMessageType.AdvertisementReady, (InstantMessageHandler)OnAdvertisementReady,
-                InstantMessageType.ShopPurchaseComplete, (InstantMessageHandler)OnPurchaseComplete,
-                InstantMessageType.PuzzleSetForAutostep, (InstantMessageHandler)OnPuzzleSetForAutostep,
-                InstantMessageType.PuzzleAutostep, (InstantMessageHandler)OnPuzzleAutostep,
-                InstantMessageType.ShopStarted, (InstantMessageHandler)OnShopStarted
+                new MessageRegistrationTuple { type = InstantMessageType.GalleryStarted, handler = OnGalleryStarted },
+                new MessageRegistrationTuple { type = InstantMessageType.WorldStarted, handler = OnWorldStarted },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleStarted, handler = OnPuzzleStarted },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleComplete, handler = OnPuzzleComplete },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIWhiteCurtainFaded, handler = OnGUIWhiteCurtainFaded },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleSourceImageClosed, handler = OnPuzzleSourceImageClosed },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleHasShuffled, handler = OnPuzzleHasShuffled },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleTileInPlace, handler = OnPuzzleTileInPlace },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIHintClosed, handler = OnGUIHintClosed },
+                new MessageRegistrationTuple { type = InstantMessageType.AdvertisementResult, handler = OnAdvertisementResult },
+                new MessageRegistrationTuple { type = InstantMessageType.AdvertisementReady, handler = OnAdvertisementReady },
+                new MessageRegistrationTuple { type = InstantMessageType.ShopPurchaseComplete, handler = OnShopPurchaseComplete },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleSetForAutostep, handler = OnPuzzleSetForAutostep },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleAutostep, handler = OnPuzzleAutostep },
+                new MessageRegistrationTuple { type = InstantMessageType.ShopStarted, handler = OnShopStarted }
             );
             registrator.RegisterHandlers();
 
@@ -103,6 +106,57 @@ namespace RotoChips.Management
         [SerializeField]
         protected SerializableDecimal adBonus = new SerializableDecimal { value = 50m };
 
+        // utility methods for clamped increasing/decreasing points/coins
+        void AddPoints(ref long points, long deltaPoints)
+        {
+            if (deltaPoints >= 0)
+            {
+                if (maximumPoints - points >= deltaPoints)
+                {
+                    points += deltaPoints;
+                }
+                else
+                {
+                    points = maximumPoints;
+                }
+            }else if (deltaPoints < 0)
+            {
+                if (points >= -deltaPoints)
+                {
+                    points += deltaPoints;
+                }
+                else
+                {
+                    points = 0;
+                }
+            }
+        }
+
+        void AddCoins(ref decimal coins, decimal deltaCoins)
+        {
+            if (deltaCoins >= 0)
+            {
+                if (maximumCoins.value - coins >= deltaCoins)
+                {
+                    coins += deltaCoins;
+                }
+                else
+                {
+                    coins = maximumCoins.value;
+                }
+            }
+            else if (deltaCoins < 0)
+            {
+                if (coins >= -deltaCoins)
+                {
+                    coins += deltaCoins;
+                }
+                else
+                {
+                    coins = 0;
+                }
+            }
+        }
 
         // message handling
         // all the game logic contains here
@@ -393,6 +447,18 @@ namespace RotoChips.Management
             }
         }
 
+        void AddBonusCoins()
+        {
+            if (!GlobalManager.MStorage.BonusCoinsAdded)
+            {
+                GlobalManager.MStorage.BonusCoinsAdded = true;
+                decimal coins = GlobalManager.MStorage.CurrentCoins;
+                AddCoins(ref coins, tutorialBonus.value);
+                GlobalManager.MStorage.CurrentCoins = coins;
+                //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
+            }
+        }
+
         void OnGUIHintClosed(object sender, InstantMessageArgs args)
         {
             HintRequest hintRequest = (HintRequest)args.arg;
@@ -452,12 +518,7 @@ namespace RotoChips.Management
                                         GlobalManager.MHint.ShowNewHint(HintType.TwoRowsInPlace2);
                                         break;
                                     case HintType.TwoRowsInPlace2:
-                                        if (!GlobalManager.MStorage.BonusCoinsAdded)
-                                        {
-                                            GlobalManager.MStorage.BonusCoinsAdded = true;
-                                            GlobalManager.MStorage.CurrentCoins += tutorialBonus.value;
-                                            //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
-                                        }
+                                        AddBonusCoins();
                                         GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutocomplete, this);
                                         break;
                                 }
@@ -479,6 +540,8 @@ namespace RotoChips.Management
                 switch (selectedLevel)
                 {
                     case 0:
+                        // only (0,0), (1,0), and (2,0) tiles are counted
+                        // the total points value for the completed level is recalculated in OnPuzzleComplete
                         if (tilesInPlace.current == new Vector2Int(0, 0))
                         {
                             // tile (0,0) is in place
@@ -492,23 +555,31 @@ namespace RotoChips.Management
                         else if (tilesInPlace.current == new Vector2Int(descriptor.init.width - 1, 0))
                         {
                             // tile (2,0) is in place; first row assembled
-                            descriptor.state.EarnedPoints += firstRunLevel0Row0Bonus;
+                            long earnedPoints = descriptor.state.EarnedPoints;
+                            AddPoints(ref earnedPoints, firstRunLevel0Row0Bonus);
+                            descriptor.state.EarnedPoints = earnedPoints;
                             //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
                             GlobalManager.MHint.ShowNewHint(HintType.ThirdTileInPlace);
                         }
                         return;
                     case 1:
+                        // only (2,0) and (2,1) tiles are counted
+                        // the total points value for the completed level is recalculated in OnPuzzleComplete
                         if (tilesInPlace.current == new Vector2Int(descriptor.init.width - 1, 0))
                         {
                             // first row assembled
-                            descriptor.state.EarnedPoints += firstRunLevel1Row0Bonus;
+                            long earnedPoints = descriptor.state.EarnedPoints;
+                            AddPoints(ref earnedPoints, firstRunLevel1Row0Bonus);
+                            descriptor.state.EarnedPoints = earnedPoints;
                             //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
                             GlobalManager.MHint.ShowNewHint(HintType.FirstRowCongratulation);
                         }
                         else if (tilesInPlace.current == new Vector2Int(descriptor.init.width - 1, 1))
                         {
                             // second row assembled
-                            descriptor.state.EarnedPoints += firstRunLevel1Row1Bonus;
+                            long earnedPoints = descriptor.state.EarnedPoints;
+                            AddPoints(ref earnedPoints, firstRunLevel1Row1Bonus);
+                            descriptor.state.EarnedPoints = earnedPoints;
                             //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
                             GlobalManager.MHint.ShowNewHint(HintType.TwoRowsInPlace);
                         }
@@ -529,7 +600,9 @@ namespace RotoChips.Management
                     if (x == puzzleWidth - 1)
                     {
                         // a row is assembled
-                        descriptor.state.EarnedPoints += (y + 1) * puzzleAssembledRowBonusStep;
+                        long earnedPoints = descriptor.state.EarnedPoints;
+                        AddPoints(ref earnedPoints, (y + 1) * puzzleAssembledRowBonusStep);
+                        descriptor.state.EarnedPoints = earnedPoints;
                         //scoreChanged = true;
                     }
                 }
@@ -561,7 +634,9 @@ namespace RotoChips.Management
                         return;
                 }
             }
-            GlobalManager.MStorage.CurrentCoins -= autostepPrice.value;
+            decimal coins = GlobalManager.MStorage.CurrentCoins;
+            AddCoins(ref coins, -autostepPrice.value);
+            GlobalManager.MStorage.CurrentCoins = coins;
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
         }
 
@@ -621,27 +696,40 @@ namespace RotoChips.Management
                 }
 
                 // Do the accounting chores
+                long earnedPoints = completeStatus.descriptor.state.EarnedPoints;
                 if (firstRound)
                 {
                     switch (completeStatus.descriptor.init.id)
                     {
                         case 0:
-                            completeStatus.descriptor.state.EarnedPoints = firstRunLevel0Row0Bonus + ((completeStatus.descriptor.init.height + 1) * completeStatus.descriptor.init.height / 2) * puzzleAssembledRowBonusStep;
+                            completeStatus.descriptor.state.EarnedPoints =
+                                ((completeStatus.descriptor.init.height + 1) * completeStatus.descriptor.init.height / 2) * puzzleAssembledRowBonusStep +
+                                firstRunLevel0Row0Bonus +
+                                puzzleCompleteBonus;
                             break;
                         case 1:
-                            completeStatus.descriptor.state.EarnedPoints = firstRunLevel1Row0Bonus + ((completeStatus.descriptor.init.height + 1) * completeStatus.descriptor.init.height / 2) * puzzleAssembledRowBonusStep;
+                            completeStatus.descriptor.state.EarnedPoints =
+                                ((completeStatus.descriptor.init.height + 1) * completeStatus.descriptor.init.height / 2) * puzzleAssembledRowBonusStep +
+                                firstRunLevel1Row0Bonus +
+                                firstRunLevel1Row1Bonus +
+                                puzzleCompleteBonus;
+                            AddBonusCoins();
                             break;
                         default:
-                            completeStatus.descriptor.state.EarnedPoints += puzzleCompleteBonus;
+                            AddPoints(ref earnedPoints, puzzleCompleteBonus);
+                            completeStatus.descriptor.state.EarnedPoints = earnedPoints;
                             break;
                     }
                 }
                 else
                 {
-                    completeStatus.descriptor.state.EarnedPoints += puzzleCompleteBonus;
+                    AddPoints(ref earnedPoints, puzzleCompleteBonus);
+                    completeStatus.descriptor.state.EarnedPoints = earnedPoints;
                 }
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoChipsChanged, this, (decimal)completeStatus.descriptor.state.EarnedPoints);
-                GlobalManager.MStorage.CurrentPoints += completeStatus.descriptor.state.EarnedPoints;
+                earnedPoints = GlobalManager.MStorage.CurrentPoints;
+                AddPoints(ref earnedPoints, completeStatus.descriptor.state.EarnedPoints);
+                GlobalManager.MStorage.CurrentPoints = earnedPoints;
                 completeStatus.descriptor.state.Complete = true;
 
                 // set all the levels in the current realm revealed
@@ -704,7 +792,9 @@ namespace RotoChips.Management
             {
                 case AdvertisementResult.Successful:
                     Debug.Log("Adding coins: " + adBonus.ToString());
-                    GlobalManager.MStorage.CurrentCoins += adBonus.value;
+                    decimal coins = GlobalManager.MStorage.CurrentCoins;
+                    AddCoins(ref coins, adBonus.value);
+                    GlobalManager.MStorage.CurrentCoins = coins;
                     GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
                     break;
             }
@@ -722,12 +812,14 @@ namespace RotoChips.Management
         }
 
         // purchases
-        void OnPurchaseComplete(object sender, InstantMessageArgs args)
+        void OnShopPurchaseComplete(object sender, InstantMessageArgs args)
         {
             ProductDesc product = (ProductDesc)args.arg;
             if (product != null)
             {
-                GlobalManager.MStorage.CurrentCoins += product.value.value;
+                decimal coins = GlobalManager.MStorage.CurrentCoins;
+                AddCoins(ref coins, product.value.value);
+                GlobalManager.MStorage.CurrentCoins = coins;
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
             }
         }

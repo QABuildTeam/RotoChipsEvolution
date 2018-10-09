@@ -26,15 +26,11 @@ namespace RotoChips.Puzzle
         [SerializeField]
         protected Outline winOutline;
 
-        MessageRegistrator registrator;
-        private void Awake()
+        protected override void AwakeInit()
         {
             winButton.interactable = false;
-            registrator = new MessageRegistrator(InstantMessageType.PuzzleShowWinimage, (InstantMessageHandler)OnPuzzleShowWinimage);
-            registrator.RegisterHandlers();
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.PuzzleShowWinimage, handler = OnPuzzleShowWinimage });
             Visualize(flashRange.min);
-            // Debug
-            //StartCoroutine(Flash(true));
         }
 
         protected override bool IsValidPeriod(int periodCounter)
@@ -76,11 +72,6 @@ namespace RotoChips.Puzzle
                 gameObject.SetActive(true);
             }
             StartFlash(true);
-        }
-
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
 
         public void WinButtonPressed()

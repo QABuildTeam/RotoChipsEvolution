@@ -9,20 +9,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using RotoChips.Management;
 using RotoChips.UI;
+using RotoChips.Generic;
 
 namespace RotoChips.World
 {
-    public class SatelliteController : MonoBehaviour
+    public class SatelliteController : GenericMessageHandler
     {
 
-        MessageRegistrator registrator;
-        private void Awake()
+        protected override void AwakeInit()
         {
-            registrator = new MessageRegistrator(
-                InstantMessageType.GUIObjectPressedAsButton, (InstantMessageHandler)OnGUIObjectPressedAsButton,
-                InstantMessageType.RedirectGalleryOpened, (InstantMessageHandler)OnRedirectGalleryOpened
+            registrator.Add(
+                new MessageRegistrationTuple { type = InstantMessageType.GUIObjectPressedAsButton, handler = OnGUIObjectPressedAsButton },
+                new MessageRegistrationTuple { type = InstantMessageType.RedirectGalleryOpened, handler = OnRedirectGalleryOpened }
             );
-            registrator.RegisterHandlers();
         }
 
         private void Start()
@@ -52,9 +51,5 @@ namespace RotoChips.World
             }
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
     }
 }

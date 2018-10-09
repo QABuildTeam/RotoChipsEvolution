@@ -24,6 +24,11 @@ namespace RotoChips.Logo
         protected GameObject parentButton;
         protected Text text;
 
+        protected override void AwakeInit()
+        {
+            // nothing
+        }
+
         // Use this for initialization
         void Start()
         {

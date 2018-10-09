@@ -23,7 +23,8 @@ namespace RotoChips.Management
         LevelTrack03,
         LevelTrack04,
         LevelTrack05,
-        WorldTheme
+        WorldTheme,
+        ShopTheme
     }
 
     public enum SFXEnum
@@ -49,9 +50,13 @@ namespace RotoChips.Management
         WorldSelectorPressed,
         WorldDescriptionOpen,
         WorldDescriptionClose,
-        UIButtonClick,
+        UIButtonClick1,
+        UIButtonClick2,
+        UIButtonClick3,
         UIPanelClick,
         UIHintShow,
-        UIHintClose
+        UIHintClose,
+        WorldSelectorNoLevel,
+        ShopPurchase
     }
 }

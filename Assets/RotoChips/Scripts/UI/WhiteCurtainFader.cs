@@ -41,15 +41,14 @@ namespace RotoChips.UI
         [SerializeField]
         protected bool fadeOut = true;
 
-        MessageRegistrator registrator;
-        private void Awake()
+        protected override void AwakeInit()
         {
-            registrator = new MessageRegistrator(InstantMessageType.GUIFadeWhiteCurtain, (InstantMessageHandler)OnGUIFadeWhiteCurtain);
             fader = GetComponentInChildren<Image>();
             flashRange.min = 0;
             flashRange.max = 1;
-            registrator.RegisterHandlers();
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.GUIFadeWhiteCurtain, handler = OnGUIFadeWhiteCurtain });
         }
+
         void Start()
         {
             if (fadeIn)
@@ -78,7 +77,7 @@ namespace RotoChips.UI
         protected override void PeriodFinished(bool up)
         {
             gameObject.SetActive(up);
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIWhiteCurtainFaded, gameObject, up);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIWhiteCurtainFaded, this, up);
         }
 
         // this method starts fading transparency in or out
@@ -112,9 +111,5 @@ namespace RotoChips.UI
             }
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
     }
 }

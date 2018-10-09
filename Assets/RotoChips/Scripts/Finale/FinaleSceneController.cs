@@ -9,24 +9,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.Finale
 {
-    public class FinaleSceneController : MonoBehaviour
+    public class FinaleSceneController : GenericMessageHandler
     {
 
         [SerializeField]
         protected int[] finaleTextIndexes;
-        MessageRegistrator registrator;
-        private void Awake()
+
+        protected override void AwakeInit()
         {
-            registrator = new MessageRegistrator(
-                InstantMessageType.GUIFullScreenButtonPressed, (InstantMessageHandler)OnGUIFullScreenButtonPressed,
-                InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded,
-                InstantMessageType.FinaleTextRolled, (InstantMessageHandler)OnFinaleTextRolled,
-                InstantMessageType.FinaleTextPostDelayed, (InstantMessageHandler)OnFinaleTextPostDelayed
+            registrator.Add(
+                new MessageRegistrationTuple { type = InstantMessageType.GUIFullScreenButtonPressed, handler = OnGUIFullScreenButtonPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIWhiteCurtainFaded, handler = OnGUIWhiteCurtainFaded },
+                new MessageRegistrationTuple { type = InstantMessageType.FinaleTextRolled, handler = OnFinaleTextRolled },
+                new MessageRegistrationTuple { type = InstantMessageType.FinaleTextPostDelayed, handler = OnFinaleTextPostDelayed }
             );
-            registrator.RegisterHandlers();
         }
 
         // Use this for initialization
@@ -93,9 +93,5 @@ namespace RotoChips.Finale
             }
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
     }
 }

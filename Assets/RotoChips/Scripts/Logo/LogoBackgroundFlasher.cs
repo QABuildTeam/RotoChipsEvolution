@@ -16,6 +16,10 @@ namespace RotoChips.Logo
     {
         SpriteRenderer sr;
 
+        protected override void AwakeInit()
+        {
+            // nothing
+        }
         protected override void Visualize(float alpha)
         {
             if (sr != null)

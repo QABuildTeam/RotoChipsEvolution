@@ -212,6 +212,10 @@ namespace RotoChips.Management
                                         //          bool ready - an ad video is ready (true) or not (false)
 
         // Purchases
+        ShopTakeBlurryScreenshot,       // Command: Take a blurry screenshot of a current scene. Actually this command is used at the Puzzle scene
+                                        //      Arguments: None
+        ShopBlurryScreenshotTaken,      // Notification: A blurry screenshot of a current scene has just been taken
+                                        //      Arguments: None
         ShopStarted,                    // Notification: Method Start() of the Shop scene has just finished its execution
                                         //      Arguments: None
         ShopPurchaseComplete,           // Notification: A product has just been purchased

@@ -41,16 +41,18 @@ namespace RotoChips.World
         [SerializeField]
         protected GameObject lightBeacon;
         protected MeshRenderer meshRenderer;
-        MessageRegistrator registrator;
+
+        protected override void AwakeInit()
+        {
+            registrator.Add(
+                new MessageRegistrationTuple { type = InstantMessageType.GUIObjectPressedAsButton, handler = OnGUIObjectPressedAsButton },
+                new MessageRegistrationTuple { type = InstantMessageType.WorldRotateToSelected, handler = OnWorldRotateToSelected },
+                new MessageRegistrationTuple { type = InstantMessageType.RedirectFirstTimeWelcome2, handler = OnRedirectFirstTimeWelcome2 }
+            );
+        }
 
         public void Init(LevelDataManager.Descriptor descriptor, SelectorPrefab prefab, bool noStatusCheck = false)
         {
-            registrator = new MessageRegistrator(
-                InstantMessageType.GUIObjectPressedAsButton, (InstantMessageHandler)OnGUIObjectPressedAsButton,
-                InstantMessageType.WorldRotateToSelected, (InstantMessageHandler)OnWorldRotateToSelected,
-                InstantMessageType.RedirectFirstTimeWelcome2, (InstantMessageHandler)OnRedirectFirstTimeWelcome2
-            );
-            registrator.RegisterHandlers();
             levelDescriptor = descriptor;
             meshRenderer = GetComponent<MeshRenderer>();
             lightBeacon.SetActive(false);
@@ -91,12 +93,6 @@ namespace RotoChips.World
                 {
                     StartFlash();
                 }
-                /*
-                else
-                {
-                    Visualize(flashRange.min);
-                }
-                */
             }
             else
             {
@@ -129,11 +125,6 @@ namespace RotoChips.World
             {
                 GlobalManager.MHint.ShowNewHint(HintType.FirstTimeWelcome2, gameObject);
             }
-        }
-
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
 
         protected override void Visualize(float factor)

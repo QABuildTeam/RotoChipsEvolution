@@ -8,18 +8,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.World
 {
-    public class ScreenBlocker : MonoBehaviour
+    public class ScreenBlocker : GenericMessageHandler
     {
 
-        MessageRegistrator registrator;
-
-        private void Awake()
+        protected override void AwakeInit()
         {
-            registrator = new MessageRegistrator(InstantMessageType.WorldBlockScreen, (InstantMessageHandler)OnWorldBlockScreen);
-            registrator.RegisterHandlers();
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.WorldBlockScreen, handler = OnWorldBlockScreen });
         }
 
         private void Start()
@@ -34,9 +32,5 @@ namespace RotoChips.World
             gameObject.SetActive(on);
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
     }
 }

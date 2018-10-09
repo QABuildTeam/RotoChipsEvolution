@@ -50,6 +50,8 @@ namespace RotoChips.UI
         SecondLevelChallenge,
         TwoRowsInPlace2,
         TwoRowsInPlace1,
-        ShowAdHint
+        ShowAdHint,
+        RestorePurchases,
+        BackToPuzzle
     }
 }

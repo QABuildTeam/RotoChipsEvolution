@@ -97,6 +97,11 @@ MonoBehaviour:
     volume: 0.4
     subclips: []
     subclipOrder: 
+  - id: 10
+    clip: {fileID: 8300000, guid: f7d487bae1ae9134cb8551717fd4a280, type: 3}
+    volume: 0.3
+    subclips: []
+    subclipOrder: 
   sfx:
   - id: 1
     clip: {fileID: 8300000, guid: 0afc04de06d5746b4981f321b75fa8af, type: 3}
@@ -160,6 +165,41 @@ MonoBehaviour:
     volume: 1
   - id: 13
     clip: {fileID: 8300000, guid: 3719753ad541a0749ada1f276f18d702, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 19
+    clip: {fileID: 8300000, guid: 68dc7d5e2437ac04487b96309fb326e3, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 20
+    clip: {fileID: 8300000, guid: c4a4a2367dfa1c849836fc1851a91cd1, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 21
+    clip: {fileID: 8300000, guid: 20af933b5739a1e4a9d53c01bc57c4a9, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 17
+    clip: {fileID: 8300000, guid: 02495eca95488c243a6a6cb8716b7f1d, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 16
+    clip: {fileID: 8300000, guid: 7a180a8690dc30e478bfd5a30e76ce67, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 25
+    clip: {fileID: 8300000, guid: 127bd831689b1a74db9286c06df5cdfa, type: 3}
+    loop: 0
+    pitch: 1
+    volume: 1
+  - id: 26
+    clip: {fileID: 8300000, guid: 0469e8e9bb42bd84996df4dfc9bf31c4, type: 3}
     loop: 0
     pitch: 1
     volume: 1

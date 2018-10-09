@@ -11,10 +11,11 @@ using UnityEngine.UI;
 using UnityEngine.Advertisements;
 using RotoChips.Management;
 using RotoChips.Accounting;
+using RotoChips.Generic;
 
 namespace RotoChips.Shop
 {
-    public class PriceEntryController : MonoBehaviour
+    public class PriceEntryController : GenericMessageHandler
     {
         [SerializeField]
         protected Text entryNameText;
@@ -24,9 +25,8 @@ namespace RotoChips.Shop
         protected string entryId;
 
         bool dialogMode;
-        MessageRegistrator registrator;
 
-        void Awake()
+        protected override void AwakeInit()
         {
             dialogMode = false;
             ProductDesc product = GlobalManager.MPurchase.ProductById(entryId);
@@ -35,11 +35,10 @@ namespace RotoChips.Shop
                 entryNameText.text = product.localizedDescription;
                 entryValueText.text = product.localizedPrice;
             }
-            registrator = new MessageRegistrator(
-                InstantMessageType.GUIOKButtonPressed, (InstantMessageHandler)OnGUIOKButtonPressed,
-                InstantMessageType.GUICancelButtonPressed, (InstantMessageHandler)OnGUICancelButtonPressed
+            registrator.Add(
+                new MessageRegistrationTuple { type = InstantMessageType.GUIOKButtonPressed, handler = OnGUIOKButtonPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUICancelButtonPressed, handler = OnGUICancelButtonPressed }
             );
-            registrator.RegisterHandlers();
         }
 
         // message handling
@@ -67,9 +66,5 @@ namespace RotoChips.Shop
             dialogMode = false;
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
     }
 }

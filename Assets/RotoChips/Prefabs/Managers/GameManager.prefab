@@ -52,6 +52,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initOrder: 100
+  maximumPoints: 2000000000
+  maximumCoins:
+    data: 2000000000
+  firstRunLevel0Row0Bonus: 100
+  firstRunLevel1Row0Bonus: 100
+  firstRunLevel1Row1Bonus: 200
+  puzzleCompleteBonus: 1000
+  puzzleAssembledRowBonusStep: 100
+  autostepPrice:
+    data: 1000
+  tutorialBonus:
+    data: 15000
+  adBonus:
+    data: 50
   tutorial0ShuffleConfig: 1.1.1.1.1.1.0.1.0.1.0.1.0.0.0.0.0.0
   tutorial1ShuffleConfig: 
   levelCompletedId: idLevelCompleted

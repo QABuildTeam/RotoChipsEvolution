@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.Audio
 {
@@ -18,7 +19,7 @@ namespace RotoChips.Audio
         One,    // repeat playing one track from the playlist
         All     // play all tracks from playlist in a random order
     }
-    public class MusicPlayer : MonoBehaviour
+    public class MusicPlayer : GenericMessageHandler
     {
 
         [SerializeField]
@@ -28,18 +29,15 @@ namespace RotoChips.Audio
         [SerializeField]
         protected BackGroundMusicMode musicMode;
 
-        MessageRegistrator registrator;
-        private void Awake()
+        protected override void AwakeInit()
         {
             currentTrack = AudioTrackEnum.Unknown;
-            registrator = new MessageRegistrator(
-                InstantMessageType.PlayMusicTrack, (InstantMessageHandler)OnPlayMusicTrack,
-                InstantMessageType.BackgroundMusic, (InstantMessageHandler)OnBackgroundMusic,
-                InstantMessageType.MusicTrackPlayed, (InstantMessageHandler)OnMusicTrackPlayed
+            registrator.Add(
+                new MessageRegistrationTuple { type = InstantMessageType.PlayMusicTrack, handler = OnPlayMusicTrack },
+                new MessageRegistrationTuple { type = InstantMessageType.BackgroundMusic, handler = OnBackgroundMusic },
+                new MessageRegistrationTuple { type = InstantMessageType.MusicTrackPlayed, handler = OnMusicTrackPlayed }
             );
-            registrator.RegisterHandlers();
         }
-
         // Use this for initialization
         void Start()
         {
@@ -111,10 +109,5 @@ namespace RotoChips.Audio
             }
         }
 
-        private void OnDestroy()
-        {
-            Debug.Log("MusicPlayer: unregistering handlers");
-            registrator.UnregisterHandlers();
-        }
     }
 }

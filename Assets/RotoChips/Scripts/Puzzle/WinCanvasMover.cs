@@ -48,7 +48,6 @@ namespace RotoChips.Puzzle
         Vector2 sourceCanvasSize;
         protected FloatRange currentScale;
         LevelDataManager.Descriptor descriptor;
-        MessageRegistrator registrator;
 
         bool effectFinished;
         public void Initialize()
@@ -107,7 +106,7 @@ namespace RotoChips.Puzzle
             effectFinished = false;
         }
 
-        private void Awake()
+        protected override void AwakeInit()
         {
             for (int i = 0; i < imageParams.Length; i++)
             {
@@ -116,14 +115,10 @@ namespace RotoChips.Puzzle
                 // positions
                 imageParams[i].originalPosition = imageParams[i].imageTransform.localPosition;
             }
-            registrator = new MessageRegistrator(
-                InstantMessageType.PuzzleShowWinimage, (InstantMessageHandler)OnPuzzleShowWinimage,
-                InstantMessageType.PuzzleWinImageFinished, (InstantMessageHandler)OnPuzzleWinImageFinished
+            registrator.Add(
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleShowWinimage, handler = OnPuzzleShowWinimage },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleWinImageFinished, handler = OnPuzzleWinImageFinished }
             );
-            registrator.RegisterHandlers();
-            //Initialize();
-            // Debugging
-            //StartFlash();
         }
 
         void GenerateNewStep(bool up)
@@ -175,10 +170,6 @@ namespace RotoChips.Puzzle
             effectFinished = true;
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
     }
 
 }

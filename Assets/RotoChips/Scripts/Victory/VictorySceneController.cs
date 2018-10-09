@@ -10,10 +10,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.Victory
 {
-    public class VictorySceneController : MonoBehaviour
+    public class VictorySceneController : GenericMessageHandler
     {
 
         protected enum ExitMode
@@ -28,16 +29,14 @@ namespace RotoChips.Victory
         protected string worldScene = "World";
         [SerializeField]
         protected string finaleScene = "Finale";
-        MessageRegistrator registrator;
 
-        private void Awake()
+        protected override void AwakeInit()
         {
             exitMode = GlobalManager.MStorage.GameFinished ? ExitMode.Finale : ExitMode.World;
-            registrator = new MessageRegistrator(
-                InstantMessageType.GUIFullScreenButtonPressed, (InstantMessageHandler)OnGUIFullScreenButtonPressed,
-                InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIWhiteCurtainFaded
+            registrator.Add(
+                new MessageRegistrationTuple { type = InstantMessageType.GUIFullScreenButtonPressed, handler = OnGUIFullScreenButtonPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIWhiteCurtainFaded, handler = OnGUIWhiteCurtainFaded }
             );
-            registrator.RegisterHandlers();
         }
 
         // Use this for initialization
@@ -84,11 +83,6 @@ namespace RotoChips.Victory
                         break;
                 }
             }
-        }
-
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
 
     }

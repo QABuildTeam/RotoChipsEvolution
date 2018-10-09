@@ -9,10 +9,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.Puzzle
 {
-    public class WinCanvasPainter : MonoBehaviour
+    public class WinCanvasPainter : GenericMessageHandler
     {
 
         [SerializeField]
@@ -28,15 +29,14 @@ namespace RotoChips.Puzzle
 
         int xSteps, ySteps;                 // number of steps on x- and y- coordinates, respectively
 
-        MessageRegistrator registrator;
-        // Use this for initialization
+        protected override void AwakeInit()
+        {
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.PuzzleShowWinimage, handler = OnPuzzleShowWinimage });
+        }
+
         void Start()
         {
-            registrator = new MessageRegistrator(InstantMessageType.PuzzleShowWinimage, (InstantMessageHandler)OnPuzzleShowWinimage);
-            registrator.RegisterHandlers();
             gameObject.SetActive(false);
-            // Debug
-            //StartCoroutine(Painter());
         }
 
         void Initialize()
@@ -62,6 +62,10 @@ namespace RotoChips.Puzzle
         Coroutine currentCoroutine;
         IEnumerator Painter()
         {
+            // wait while the stress image texture is set
+            yield return null;
+            Initialize();
+
             int cX = startX;
             int cY = startY;
 
@@ -115,13 +119,8 @@ namespace RotoChips.Puzzle
             {
                 StopCoroutine(currentCoroutine);
             }
-            Initialize();
             currentCoroutine = StartCoroutine(Painter());
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
     }
 }

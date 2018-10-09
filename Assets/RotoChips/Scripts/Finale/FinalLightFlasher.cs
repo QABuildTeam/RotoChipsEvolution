@@ -17,7 +17,8 @@ namespace RotoChips.Finale
 
         int start, end, realmIndex;
         Light worldLight;
-        private void Awake()
+
+        protected override void AwakeInit()
         {
             worldLight = GetComponent<Light>();
             start = 0;

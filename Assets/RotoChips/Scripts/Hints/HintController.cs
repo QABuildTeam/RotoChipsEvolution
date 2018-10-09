@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.UI
 {
@@ -19,7 +20,7 @@ namespace RotoChips.UI
         public GameObject target;
     }
 
-    public class HintController : MonoBehaviour
+    public class HintController : GenericMessageHandler
     {
 
         [SerializeField]
@@ -29,11 +30,13 @@ namespace RotoChips.UI
         [SerializeField]
         protected GameObject hintArrow;
 
-        MessageRegistrator registrator;
-        private void Awake()
+        protected override void AwakeInit()
         {
-            registrator = new MessageRegistrator(InstantMessageType.GUIShowHint, (InstantMessageHandler)OnGUIShowHint);
-            registrator.RegisterHandlers();
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.GUIShowHint, handler = OnGUIShowHint });
+        }
+
+        private void Start()
+        {
             gameObject.SetActive(false);
         }
 
@@ -131,11 +134,6 @@ namespace RotoChips.UI
                     GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIHintClosed, this, hintRequest);
                 }
             }
-        }
-
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
 
         public void BackgroundButtonPressed()

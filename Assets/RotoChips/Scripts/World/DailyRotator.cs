@@ -9,10 +9,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.World
 {
-    public class DailyRotator : MonoBehaviour
+    public class DailyRotator : GenericMessageHandler
     {
         [SerializeField]
         protected float rotationDeltaAngle;
@@ -25,11 +26,9 @@ namespace RotoChips.World
         bool isRotating;
         float selfRotationStartTime;
 
-        MessageRegistrator registrator;
-        void Awake()
+        protected override void AwakeInit()
         {
-            registrator = new MessageRegistrator(InstantMessageType.WorldRotationEnable, (InstantMessageHandler)OnWorldRotationEnable);
-            registrator.RegisterHandlers();
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.WorldRotationEnable, handler = OnWorldRotationEnable });
         }
 
         private void Start()
@@ -72,13 +71,7 @@ namespace RotoChips.World
         // message handling
         void OnWorldRotationEnable(object sender, InstantMessageArgs args)
         {
-            //Debug.Log("Rotation enabled: " + ((bool)args.arg).ToString());
             EnableRotation((bool)args.arg);
-        }
-
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
 
     }

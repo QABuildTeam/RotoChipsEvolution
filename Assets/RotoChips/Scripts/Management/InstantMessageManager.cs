@@ -113,46 +113,39 @@ namespace RotoChips.Management
 
     }
 
+    // main configuration parameter for message handling - a pair of message type and its corresponding handler
+    public class MessageRegistrationTuple
+    {
+        public InstantMessageType type;
+        public InstantMessageHandler handler;
+    }
+
     // utility class for registering and unregistering message handlers in classes
     public class MessageRegistrator
     {
-        protected class RegistrationTuple
+        List<MessageRegistrationTuple> registry;
+
+        public MessageRegistrator(params MessageRegistrationTuple[] regparams)
         {
-            public InstantMessageType type;
-            public InstantMessageHandler handler;
+            registry = new List<MessageRegistrationTuple>();
+            Add(regparams);
         }
 
-        List<RegistrationTuple> registry;
-
-        public MessageRegistrator(params object[] regparams)
+        public void Add(params MessageRegistrationTuple[] regtuples)
         {
-            registry = new List<RegistrationTuple>();
-            for (int i = 0; i < regparams.Length; i += 2)
+            for(int i = 0; i < regtuples.Length; i++)
             {
-                InstantMessageType regtype = (InstantMessageType)regparams[i];
-                if (i + 1 < regparams.Length)
+                MessageRegistrationTuple regtuple = regtuples[i];
+                if (regtuple != null && regtuple.handler != null)
                 {
-                    InstantMessageHandler reghandler = (InstantMessageHandler)regparams[i + 1];
-                    if (reghandler != null)
-                    {
-                        registry.Add(new RegistrationTuple
-                        {
-                            type = regtype,
-                            handler = reghandler
-                        });
-                    }
-                }
-                else
-                {
-                    break;
+                    registry.Add(regtuple);
                 }
             }
-
         }
 
         public void RegisterHandlers()
         {
-            foreach (RegistrationTuple reg in registry)
+            foreach (MessageRegistrationTuple reg in registry)
             {
                 GlobalManager.MInstantMessage.AddListener(reg.type, reg.handler);
             }
@@ -160,7 +153,7 @@ namespace RotoChips.Management
 
         public void UnregisterHandlers()
         {
-            foreach (RegistrationTuple reg in registry)
+            foreach (MessageRegistrationTuple reg in registry)
             {
                 GlobalManager.MInstantMessage.RemoveListener(reg.type, reg.handler);
             }

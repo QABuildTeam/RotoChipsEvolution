@@ -10,10 +10,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using RotoChips.Management;
 using RotoChips.UI;
+using RotoChips.Generic;
 
 namespace RotoChips.Logo
 {
-    public class LogoSceneScript : MonoBehaviour
+    public class LogoSceneScript : GenericMessageHandler
     {
 
         [SerializeField]
@@ -96,11 +97,13 @@ namespace RotoChips.Logo
         protected string NextScene;
 
         // Use this for initialization
-        MessageRegistrator registrator;
+        protected override void AwakeInit()
+        {
+            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.GUIWhiteCurtainFaded, handler = OnWhiteCurtainFaded });
+        }
+
         void Start()
         {
-            registrator = new MessageRegistrator(InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnWhiteCurtainFaded);
-            registrator.RegisterHandlers();
             logoText.SetActive(false);
             StartCoroutine(LogoAnimation());
         }
@@ -175,11 +178,6 @@ namespace RotoChips.Logo
                     SceneManager.LoadScene(NextScene);
                 }
             }
-        }
-
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
         }
 
         // Button handler

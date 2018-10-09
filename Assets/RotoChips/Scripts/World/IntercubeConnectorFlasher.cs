@@ -15,6 +15,11 @@ namespace RotoChips.World
     {
         LineRenderer lineRenderer;
 
+        protected override void AwakeInit()
+        {
+            //nothing
+        }
+
         public void Init(Color lineColor, Vector3 endPosition)
         {
             lineColor.a = 1;

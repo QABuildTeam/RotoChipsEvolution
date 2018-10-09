@@ -9,10 +9,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.Gallery
 {
-    public class GalleryController : MonoBehaviour
+    public class GalleryController : GenericMessageHandler
     {
 
         protected enum ExitMode
@@ -21,17 +22,16 @@ namespace RotoChips.Gallery
             World
         }
         ExitMode exitMode;
-        MessageRegistrator registrator;
-        private void Awake()
+
+        protected override void AwakeInit()
         {
             exitMode = ExitMode.Gallery;
-            registrator = new MessageRegistrator(
-                InstantMessageType.GUIWhiteCurtainFaded, (InstantMessageHandler)OnGUIFadeWhiteCurtain,
-                InstantMessageType.PuzzleWinImageStopped, (InstantMessageHandler)OnPuzzleWinImageStopped,
-                InstantMessageType.PuzzleWinImageFinished, (InstantMessageHandler)OnPuzzleWinImageFinished,
-                InstantMessageType.GUIBackButtonPressed, (InstantMessageHandler)OnGUIBackButtonPressed
+            registrator.Add(
+                new MessageRegistrationTuple { type = InstantMessageType.GUIWhiteCurtainFaded, handler = OnGUIFadeWhiteCurtain },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleWinImageStopped, handler = OnPuzzleWinImageStopped },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleWinImageFinished, handler = OnPuzzleWinImageFinished },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIBackButtonPressed, handler = OnGUIBackButtonPressed }
             );
-            registrator.RegisterHandlers();
         }
 
         // Use this for initialization
@@ -98,9 +98,5 @@ namespace RotoChips.Gallery
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
         }
 
-        private void OnDestroy()
-        {
-            registrator.UnregisterHandlers();
-        }
     }
 }
