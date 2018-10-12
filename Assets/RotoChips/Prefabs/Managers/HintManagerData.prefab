@@ -72,7 +72,7 @@ MonoBehaviour:
     yGap: 100
     arrowOn: 1
     target: {fileID: 0}
-    arrowAngle: -45
+    arrowAngle: 45
     arrowMessage: 15
   - type: 3
     hintMsgId: idHelpBackButton
@@ -248,7 +248,7 @@ MonoBehaviour:
     yGap: 100
     arrowOn: 1
     target: {fileID: 0}
-    arrowAngle: 45
+    arrowAngle: 135
     arrowMessage: 15
   - type: 28
     hintMsgId: idHelpFirstTileInPlace

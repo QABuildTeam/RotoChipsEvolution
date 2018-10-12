@@ -58,6 +58,7 @@ namespace RotoChips.Management
                 new MessageRegistrationTuple { type = InstantMessageType.PuzzleSourceImageClosed, handler = OnPuzzleSourceImageClosed },
                 new MessageRegistrationTuple { type = InstantMessageType.PuzzleHasShuffled, handler = OnPuzzleHasShuffled },
                 new MessageRegistrationTuple { type = InstantMessageType.PuzzleTileInPlace, handler = OnPuzzleTileInPlace },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleButtonRotated, handler = OnPuzzleButtonRotated },
                 new MessageRegistrationTuple { type = InstantMessageType.GUIHintClosed, handler = OnGUIHintClosed },
                 new MessageRegistrationTuple { type = InstantMessageType.AdvertisementResult, handler = OnAdvertisementResult },
                 new MessageRegistrationTuple { type = InstantMessageType.AdvertisementReady, handler = OnAdvertisementReady },
@@ -515,10 +516,10 @@ namespace RotoChips.Management
                                 switch (hintRequest.type)
                                 {
                                     case HintType.TwoRowsInPlace:
+                                        AddBonusCoins();
                                         GlobalManager.MHint.ShowNewHint(HintType.TwoRowsInPlace2);
                                         break;
                                     case HintType.TwoRowsInPlace2:
-                                        AddBonusCoins();
                                         GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutocomplete, this);
                                         break;
                                 }
@@ -563,6 +564,25 @@ namespace RotoChips.Management
             }
         }
 
+        // auxillary method which waits for button rotation
+        bool buttonRotated;
+        void OnPuzzleButtonRotated(object sender, InstantMessageArgs args)
+        {
+            buttonRotated = true;
+        }
+
+        // special method which starts autocompletion of the level 0 and 1 puzzles
+        // it ensures that hints are shown and autocomplete is started only after the buttons become in a steady state
+        IEnumerator WaitForButtonRotation(HintType hintType)
+        {
+            buttonRotated = false;
+            while (!buttonRotated)
+            {
+                yield return null;
+            }
+            GlobalManager.MHint.ShowNewHint(hintType);
+        }
+
         void OnPuzzleTileInPlace(object sender, InstantMessageArgs args)
         {
             bool firstRound = GlobalManager.MStorage.FirstRound;
@@ -581,17 +601,20 @@ namespace RotoChips.Management
                             // tile (2,0) is in place; first row assembled
                             descriptor.state.EarnedPoints = firstRunLevel0Row0Bonus + puzzleAssembledRowBonusStep;
                             //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
-                            GlobalManager.MHint.ShowNewHint(HintType.ThirdTileInPlace);
+                            StartCoroutine(WaitForButtonRotation(HintType.ThirdTileInPlace));
+                            //GlobalManager.MHint.ShowNewHint(HintType.ThirdTileInPlace);
                         }
                         else if (IsTileInPlace(new Vector2Int(1, 0), tilesInPlace, descriptor))
                         {
                             // tile (1,0) is in place
-                            GlobalManager.MHint.ShowNewHint(HintType.SecondTileInPlace);
+                            StartCoroutine(WaitForButtonRotation(HintType.SecondTileInPlace));
+                            //GlobalManager.MHint.ShowNewHint(HintType.SecondTileInPlace);
                         }
                         else if (IsTileInPlace(new Vector2Int(0, 0), tilesInPlace, descriptor))
                         {
                             // tile (0,0) is in place
-                            GlobalManager.MHint.ShowNewHint(HintType.FirstTileInPlace);
+                            StartCoroutine(WaitForButtonRotation(HintType.FirstTileInPlace));
+                            //GlobalManager.MHint.ShowNewHint(HintType.FirstTileInPlace);
                         }
                         return;
                     case 1:
@@ -601,7 +624,8 @@ namespace RotoChips.Management
                         {
                             // second row assembled
                             descriptor.state.EarnedPoints = firstRunLevel1Row1Bonus + firstRunLevel1Row0Bonus + (2 + 1) * puzzleAssembledRowBonusStep;
-                            GlobalManager.MHint.ShowNewHint(HintType.TwoRowsInPlace);
+                            StartCoroutine(WaitForButtonRotation(HintType.TwoRowsInPlace));
+                            //GlobalManager.MHint.ShowNewHint(HintType.TwoRowsInPlace);
                         }
                         else
                         if (IsTileInPlace(new Vector2Int(descriptor.init.width - 1, 0), tilesInPlace, descriptor))
@@ -609,7 +633,8 @@ namespace RotoChips.Management
                             // first row assembled
                             descriptor.state.EarnedPoints = firstRunLevel1Row0Bonus + puzzleAssembledRowBonusStep;
                             //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
-                            GlobalManager.MHint.ShowNewHint(HintType.FirstRowCongratulation);
+                            StartCoroutine(WaitForButtonRotation(HintType.FirstRowCongratulation));
+                            //GlobalManager.MHint.ShowNewHint(HintType.FirstRowCongratulation);
                         }
                         return;
                 }
