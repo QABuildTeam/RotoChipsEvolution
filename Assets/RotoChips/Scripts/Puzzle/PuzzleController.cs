@@ -140,7 +140,7 @@ namespace RotoChips.Puzzle
         {
             Vector2Int thisTile, otherTile;
             bool good = IsPuzzleStateBetter(descriptor.state.LastGoodState, out thisTile, out otherTile) > 0;
-            Debug.Log("PuzzleController.SaveAll: new state is better - " + good.ToString());
+            //Debug.Log("PuzzleController.SaveAll: new state is better - " + good.ToString());
             SaveButtonStatuses(good);
             SaveTileStatuses(good);
             if (good)

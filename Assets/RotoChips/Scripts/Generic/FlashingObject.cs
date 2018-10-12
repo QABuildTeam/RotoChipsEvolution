@@ -94,12 +94,18 @@ namespace RotoChips.Generic
             currentFlash = null;
         }
 
-        public virtual void StartFlash(bool up = true)
+        public virtual void StopFlash()
         {
             if (currentFlash != null)
             {
                 StopCoroutine(currentFlash);
+                currentFlash = null;
             }
+        }
+
+        public virtual void StartFlash(bool up = true)
+        {
+            StopFlash();
             currentFlash = StartCoroutine(Flash(up));
         }
 

@@ -382,5 +382,5 @@ MonoBehaviour:
     target: {fileID: 0}
     arrowAngle: 0
     arrowMessage: 0
-  level0Hints: 
-  level1Hints: 
+  level0Hints: 010000000200000014000000200000001c0000001d0000001e000000210000002200000025000000
+  level1Hints: 1000000023000000240000001f0000000c000000

@@ -43,7 +43,8 @@ namespace RotoChips.Puzzle
         // message handling
         void OnPuzzleShowWinimage(object sender, InstantMessageArgs args)
         {
-            Visualize(flashRange.max);
+            string title = (string)args.arg;
+            Visualize(title == null ? flashRange.min : flashRange.max);
         }
 
         void OnPuzzleWinImageFinished(object sender, InstantMessageArgs args)

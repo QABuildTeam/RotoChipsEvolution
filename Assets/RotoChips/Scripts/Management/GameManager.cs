@@ -455,7 +455,7 @@ namespace RotoChips.Management
                 decimal coins = GlobalManager.MStorage.CurrentCoins;
                 AddCoins(ref coins, tutorialBonus.value);
                 GlobalManager.MStorage.CurrentCoins = coins;
-                //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
             }
         }
 
@@ -529,6 +529,40 @@ namespace RotoChips.Management
             }
         }
 
+        int TileId(Vector2Int tile, LevelDataManager.Descriptor descriptor)
+        {
+            return tile.y * descriptor.init.width + tile.x;
+        }
+
+        bool IsTileInPlace(Vector2Int tile, TileInPlaceReport tileInPlaceReport, LevelDataManager.Descriptor descriptor)
+        {
+            int tileId = TileId(tile, descriptor);
+            int currentTileId = TileId(tileInPlaceReport.current, descriptor);
+            return tileId <= currentTileId;
+        }
+
+        // this method adds bonus points for each assembled puzzle row
+        void AddPointsBonuses(TileInPlaceReport tileInPlaceReport, LevelDataManager.Descriptor descriptor)
+        {
+            int startId = TileId(tileInPlaceReport.previous, descriptor) + 1;
+            int endId = TileId(tileInPlaceReport.current, descriptor);
+            int puzzleWidth = descriptor.init.width;
+            //bool scoreChanged = false;
+            for (int runId = startId; runId <= endId; runId++)
+            {
+                int x = runId % puzzleWidth;
+                int y = runId / puzzleWidth;
+                if (x == puzzleWidth - 1)
+                {
+                    // a row is assembled
+                    long earnedPoints = descriptor.state.EarnedPoints;
+                    AddPoints(ref earnedPoints, (y + 1) * puzzleAssembledRowBonusStep);
+                    descriptor.state.EarnedPoints = earnedPoints;
+                    //scoreChanged = true;
+                }
+            }
+        }
+
         void OnPuzzleTileInPlace(object sender, InstantMessageArgs args)
         {
             bool firstRound = GlobalManager.MStorage.FirstRound;
@@ -542,46 +576,40 @@ namespace RotoChips.Management
                     case 0:
                         // only (0,0), (1,0), and (2,0) tiles are counted
                         // the total points value for the completed level is recalculated in OnPuzzleComplete
-                        if (tilesInPlace.current == new Vector2Int(0, 0))
+                        if (IsTileInPlace(new Vector2Int(descriptor.init.width - 1, 0), tilesInPlace, descriptor))
                         {
-                            // tile (0,0) is in place
-                            GlobalManager.MHint.ShowNewHint(HintType.FirstTileInPlace);
+                            // tile (2,0) is in place; first row assembled
+                            descriptor.state.EarnedPoints = firstRunLevel0Row0Bonus + puzzleAssembledRowBonusStep;
+                            //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
+                            GlobalManager.MHint.ShowNewHint(HintType.ThirdTileInPlace);
                         }
-                        else if (tilesInPlace.current == new Vector2Int(1, 0))
+                        else if (IsTileInPlace(new Vector2Int(1, 0), tilesInPlace, descriptor))
                         {
                             // tile (1,0) is in place
                             GlobalManager.MHint.ShowNewHint(HintType.SecondTileInPlace);
                         }
-                        else if (tilesInPlace.current == new Vector2Int(descriptor.init.width - 1, 0))
+                        else if (IsTileInPlace(new Vector2Int(0, 0), tilesInPlace, descriptor))
                         {
-                            // tile (2,0) is in place; first row assembled
-                            long earnedPoints = descriptor.state.EarnedPoints;
-                            AddPoints(ref earnedPoints, firstRunLevel0Row0Bonus);
-                            descriptor.state.EarnedPoints = earnedPoints;
-                            //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
-                            GlobalManager.MHint.ShowNewHint(HintType.ThirdTileInPlace);
+                            // tile (0,0) is in place
+                            GlobalManager.MHint.ShowNewHint(HintType.FirstTileInPlace);
                         }
                         return;
                     case 1:
                         // only (2,0) and (2,1) tiles are counted
                         // the total points value for the completed level is recalculated in OnPuzzleComplete
-                        if (tilesInPlace.current == new Vector2Int(descriptor.init.width - 1, 0))
-                        {
-                            // first row assembled
-                            long earnedPoints = descriptor.state.EarnedPoints;
-                            AddPoints(ref earnedPoints, firstRunLevel1Row0Bonus);
-                            descriptor.state.EarnedPoints = earnedPoints;
-                            //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
-                            GlobalManager.MHint.ShowNewHint(HintType.FirstRowCongratulation);
-                        }
-                        else if (tilesInPlace.current == new Vector2Int(descriptor.init.width - 1, 1))
+                        if (IsTileInPlace(new Vector2Int(descriptor.init.width - 1, 1), tilesInPlace, descriptor))
                         {
                             // second row assembled
-                            long earnedPoints = descriptor.state.EarnedPoints;
-                            AddPoints(ref earnedPoints, firstRunLevel1Row1Bonus);
-                            descriptor.state.EarnedPoints = earnedPoints;
-                            //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
+                            descriptor.state.EarnedPoints = firstRunLevel1Row1Bonus + firstRunLevel1Row0Bonus + (2 + 1) * puzzleAssembledRowBonusStep;
                             GlobalManager.MHint.ShowNewHint(HintType.TwoRowsInPlace);
+                        }
+                        else
+                        if (IsTileInPlace(new Vector2Int(descriptor.init.width - 1, 0), tilesInPlace, descriptor))
+                        {
+                            // first row assembled
+                            descriptor.state.EarnedPoints = firstRunLevel1Row0Bonus + puzzleAssembledRowBonusStep;
+                            //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
+                            GlobalManager.MHint.ShowNewHint(HintType.FirstRowCongratulation);
                         }
                         return;
                 }
@@ -589,23 +617,7 @@ namespace RotoChips.Management
             // calculate points bonuses
             if (!descriptor.state.AutocompleteUsed)
             {
-                int startId = tilesInPlace.previous.y * descriptor.init.width + tilesInPlace.previous.x + 1;
-                int endId = tilesInPlace.current.y * descriptor.init.width + tilesInPlace.current.x;
-                int puzzleWidth = descriptor.init.width;
-                //bool scoreChanged = false;
-                for (int runId = startId; runId <= endId; runId++)
-                {
-                    int x = runId % puzzleWidth;
-                    int y = runId / puzzleWidth;
-                    if (x == puzzleWidth - 1)
-                    {
-                        // a row is assembled
-                        long earnedPoints = descriptor.state.EarnedPoints;
-                        AddPoints(ref earnedPoints, (y + 1) * puzzleAssembledRowBonusStep);
-                        descriptor.state.EarnedPoints = earnedPoints;
-                        //scoreChanged = true;
-                    }
-                }
+                AddPointsBonuses(tilesInPlace, descriptor);
                 /*
                 if (scoreChanged)
                 {
@@ -617,7 +629,8 @@ namespace RotoChips.Management
 
         void OnPuzzleSetForAutostep(object sender, InstantMessageArgs args)
         {
-            bool available = GlobalManager.MStorage.CurrentPoints >= autostepPrice.value;
+            bool available = GlobalManager.MStorage.CurrentCoins >= autostepPrice.value;
+            //Debug.Log("Autostep available: " + available.ToString());
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutostepAvailable, this, available);
         }
 

@@ -72,12 +72,14 @@ namespace RotoChips.Puzzle
         // Use this for initialization
         void Start()
         {
-            // notify that the Puzzle scene has just been started
+            // notify that the Puzzle scene has just started
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleStarted, this);
             // update RotoChips and RotoCoins indicators
             LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(GlobalManager.MStorage.SelectedLevel);
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
+            // hide WinCanvas
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleShowWinimage, this, null);
         }
 
         // message handling
@@ -152,7 +154,7 @@ namespace RotoChips.Puzzle
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
             if (available)
             {
-                Debug.Log("Autostep available, running DialogOkCancel");
+                //Debug.Log("Autostep available, running DialogOkCancel");
                 dialogMode = DialogOKCancelMode.Autostep;
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzlePrepareAutostep, this);
                 GlobalManager.MInstantMessage.DeliverMessage(

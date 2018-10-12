@@ -61,7 +61,7 @@ namespace RotoChips.Gallery
                         }
                         GlobalManager.MStorage.GalleryLevel = nextGalleryLevel;
                         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                        GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleShowWinimage, this);
+                        GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleShowWinimage, this, string.Empty);
                         GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this, false);
                         break;
                     case ExitMode.World:
@@ -75,7 +75,7 @@ namespace RotoChips.Gallery
         void OnPuzzleWinImageStopped(object sender, InstantMessageArgs args)
         {
             exitMode = ExitMode.Gallery;
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this, true);
         }
 
         [SerializeField]
@@ -84,7 +84,7 @@ namespace RotoChips.Gallery
         {
             yield return new WaitForSeconds(fullImageDelay);
             exitMode = ExitMode.Gallery;
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this, true);
         }
 
         void OnPuzzleWinImageFinished(object sender, InstantMessageArgs args)
@@ -95,7 +95,7 @@ namespace RotoChips.Gallery
         void OnGUIBackButtonPressed(object sender, InstantMessageArgs args)
         {
             exitMode = ExitMode.World;
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this, true);
         }
 
     }

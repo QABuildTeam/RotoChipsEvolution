@@ -57,4 +57,4 @@ MonoBehaviour:
   stressRadius: 200
   samplesCount: 5
   iterationsCount: 5
-  breakCycle: 1024
+  breakCycle: 1536

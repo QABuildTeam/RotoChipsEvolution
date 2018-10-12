@@ -58,20 +58,27 @@ namespace RotoChips.Puzzle
         void OnPuzzleShowWinimage(object sender, InstantMessageArgs args)
         {
             string winTextId = (string)args.arg;
-            if (!string.IsNullOrEmpty(winTextId))
+            if (winTextId != null)
             {
-                winText.text = GlobalManager.MLanguage.Entry(winTextId);
+                if (!string.IsNullOrEmpty(winTextId))
+                {
+                    winText.text = GlobalManager.MLanguage.Entry(winTextId);
+                }
+                else
+                {
+                    winText.text = string.Empty;
+                }
+                winButton.interactable = true;
+                if (!gameObject.activeInHierarchy)
+                {
+                    gameObject.SetActive(true);
+                }
+                StartFlash(true);
             }
             else
             {
-                winText.text = string.Empty;
+                gameObject.SetActive(false);
             }
-            winButton.interactable = true;
-            if (!gameObject.activeInHierarchy)
-            {
-                gameObject.SetActive(true);
-            }
-            StartFlash(true);
         }
 
         public void WinButtonPressed()

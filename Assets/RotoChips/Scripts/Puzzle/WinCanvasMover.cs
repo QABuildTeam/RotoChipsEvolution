@@ -40,6 +40,8 @@ namespace RotoChips.Puzzle
             [HideInInspector]
             public Vector2 originalPosition;        // original image position (usually should be (0,0))
             [HideInInspector]
+            public Rect originalRect;               // original image size (usually should be (0,0,100,100))
+            [HideInInspector]
             public Vector2[] movePosition;          // Flash loop positions
         }
         [SerializeField]
@@ -71,21 +73,20 @@ namespace RotoChips.Puzzle
             // the size of the canvas excluding margins
             Rect sourceCanvasRect = new Rect(0, 0, canvasScaler.referenceResolution.x * (1 - marginRatio), canvasScaler.referenceResolution.y * (1 - marginRatio));
             sourceCanvasSize = new Vector2(sourceCanvasRect.width, sourceCanvasRect.height);
+            // SourceCanvas matches screen by width, so the final scaling should be adjusted by:
+            float heightAdjustFactor = sourceCanvasRect.width / sourceCanvasRect.height / screenAspect;
             for (int i = 0; i < imageParams.Length; i++)
             {
                 imageParams[i].imageTransform.localPosition = imageParams[i].originalPosition;
-                Rect sourceRect = imageParams[i].imageTransform.rect;
                 Vector2 canvasToImageRatio = new Vector2(
-                    sourceCanvasRect.width / sourceRect.width,
-                    sourceCanvasRect.height / sourceRect.height
+                    sourceCanvasRect.width / imageParams[i].originalRect.width,
+                    sourceCanvasRect.height * heightAdjustFactor / imageParams[i].originalRect.height
                 );
-                // SourceCanvas matches screen by width, so the final scaling should be multiplied by:
-                float heightAdjustFactor = sourceCanvasRect.width / sourceCanvasRect.height / screenAspect;
                 imageParams[i].sourceScale = new Vector2(
                     finalRatioXY > screenAspect ? canvasToImageRatio.y * finalRatioXY : canvasToImageRatio.x,
                     finalRatioXY > screenAspect ? canvasToImageRatio.y : canvasToImageRatio.x / finalRatioXY
                 );
-                imageParams[i].effectiveSize = Vector2.Scale(new Vector2(sourceRect.width, sourceRect.height), imageParams[i].sourceScale);
+                imageParams[i].effectiveSize = Vector2.Scale(new Vector2(imageParams[i].originalRect.width, imageParams[i].originalRect.height), imageParams[i].sourceScale);
                 imageParams[i].imageTransform.localScale = imageParams[i].sourceScale;
                 currentScale = new FloatRange
                 {
@@ -102,8 +103,8 @@ namespace RotoChips.Puzzle
                     imageParams[i].originalPosition
                 };
             }
-            GenerateNewStep(true);
             effectFinished = false;
+            GenerateNewStep(true);
         }
 
         protected override void AwakeInit()
@@ -114,6 +115,8 @@ namespace RotoChips.Puzzle
                 imageParams[i].imageTransform = imageParams[i].winImage.GetComponent<RectTransform>();
                 // positions
                 imageParams[i].originalPosition = imageParams[i].imageTransform.localPosition;
+                // sizes
+                imageParams[i].originalRect = imageParams[i].imageTransform.rect;
             }
             registrator.Add(
                 new MessageRegistrationTuple { type = InstantMessageType.PuzzleShowWinimage, handler = OnPuzzleShowWinimage },
@@ -157,12 +160,18 @@ namespace RotoChips.Puzzle
         // message handling
         void OnPuzzleShowWinimage(object sender, InstantMessageArgs args)
         {
-            if (!gameObject.activeInHierarchy)
+            string title = (string)args.arg;
+            if (title == null)
+            {
+                gameObject.SetActive(false);
+            }
+            else
             {
                 gameObject.SetActive(true);
+                StopFlash();
+                Initialize();
+                StartFlash();
             }
-            Initialize();
-            StartFlash();
         }
 
         void OnPuzzleWinImageFinished(object sender, InstantMessageArgs args)

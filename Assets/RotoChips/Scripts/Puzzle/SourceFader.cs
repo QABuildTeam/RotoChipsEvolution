@@ -54,12 +54,15 @@ namespace RotoChips.Puzzle
             RectTransform sourceTransform = sourceImage.GetComponent<RectTransform>();
             // the original size of the source image (square)
             Rect sourceRect = sourceTransform.rect;
-            Vector2 canvasToImageRatio = new Vector2(sourceCanvasRect.width / sourceRect.width, sourceCanvasRect.height / sourceRect.height);
+            Vector2 canvasToImageRatio = new Vector2(
+                sourceCanvasRect.width / sourceRect.width,
+                sourceCanvasRect.height * heightAdjustFactor / sourceRect.height
+            );
             Vector3 sourceRectScale = new Vector3(
                 puzzleRatioXY > screenAspect ? canvasToImageRatio.x : canvasToImageRatio.y * puzzleRatioXY,
                 puzzleRatioXY > screenAspect ? canvasToImageRatio.x / puzzleRatioXY : canvasToImageRatio.y,
                 1
-            ) * heightAdjustFactor;
+            );
             //Debug.Log("Image sizes: canvas: " + sourceCanvasRect.ToString() + ", image: " + sourceRect.ToString() + ", image/canvas: " + canvasToImageRatio.ToString() + ", scale: " + sourceRectScale.ToString());
             sourceTransform.localScale = sourceRectScale;
             // UV-coordinates of the image

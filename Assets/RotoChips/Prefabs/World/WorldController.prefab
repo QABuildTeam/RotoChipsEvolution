@@ -52,5 +52,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puzzleScene: Puzzle
+  levelDescriptionSFX:
+    id: 17
+    pitchFactor: 1
+    volumeFactor: 0.5
+  noLevelSFX:
+    id: 25
+    pitchFactor: 1
+    volumeFactor: 0.5
+  startLevelSFX:
+    id: 16
+    pitchFactor: 1
+    volumeFactor: 0.5
   galleryScene: Gallery
+  restartGameQuestion: idGUIRestartGameQuestion
   finaleScene: Finale

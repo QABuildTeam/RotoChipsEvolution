@@ -31,6 +31,7 @@ namespace RotoChips.Shop
         void Start()
         {
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.ShopStarted, this);
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
         }
 
         // message handling

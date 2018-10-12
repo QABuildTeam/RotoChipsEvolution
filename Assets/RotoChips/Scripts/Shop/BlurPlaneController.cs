@@ -31,7 +31,7 @@ namespace RotoChips.Shop
 
             BoxCollider boxCollider = GetComponent<BoxCollider>();
             Vector3 planeSize = boxCollider.bounds.size;
-            Debug.Log("Plane size is " + planeSize.ToString());
+            //Debug.Log("Plane size is " + planeSize.ToString());
 
             Camera mainCamera = Camera.main;
             Vector3 cameraDistance = transform.position - mainCamera.transform.position;

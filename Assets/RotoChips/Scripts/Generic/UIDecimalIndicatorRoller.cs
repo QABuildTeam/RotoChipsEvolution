@@ -39,7 +39,7 @@ namespace RotoChips.Generic
         public int rollSteps = 10;
         public float rollTime = 1f;
 
-        decimal previousScore = 0M;
+        decimal previousScore = 0m;
         Queue<decimal> scoreQueue = new Queue<decimal>();
         bool isRolling = false;
 
@@ -72,13 +72,9 @@ namespace RotoChips.Generic
                 {
                     decimal deltaScore = (newScore - previousScore) / rollSteps;
                     float deltaTime = rollTime / rollSteps;
-                    if (deltaScore < 1M)
-                    {
-                        deltaScore = newScore - previousScore;
-                    }
                     for (int i = 0; i < rollSteps; i++)
                     {
-                        //Debug.Log("delta score = " + deltaScore.ToString() + ", decimal score:" + previousScoreDecimal.ToString());
+                        //Debug.Log("delta score = " + deltaScore.ToString() + ", decimal score:" + previousScore.ToString());
                         decimal currentScore = previousScore;
                         ControlledText.text = Decimal.Round(currentScore, 0).ToString();
                         previousScore += deltaScore;

@@ -59,7 +59,8 @@ namespace RotoChips.Audio
                         {
                             currentTrack = playList[Random.Range(0, playList.Count)];
                         }
-                        GlobalManager.MAudio.PlayMusicTrack(currentTrack, false);   // play the same track over and over again
+                        //GlobalManager.MAudio.PlayMusicTrack(currentTrack, false);   // play the same track over and over again
+                        GlobalManager.MAudio.PlayMusicTrack(currentTrack, true);    // play the same track over and over again
                         break;
                     case BackGroundMusicMode.All:
                         // shuffle the original playlist but make sure each track is only played once
@@ -99,7 +100,7 @@ namespace RotoChips.Audio
 
         void OnMusicTrackPlayed(object sender, InstantMessageArgs args)
         {
-            if (musicMode != BackGroundMusicMode.Off)
+            if (musicMode == BackGroundMusicMode.All)
             {
                 AudioTrackEnum trackId = (AudioTrackEnum)args.arg;
                 if (trackId == currentTrack && currentTrack != AudioTrackEnum.Unknown)

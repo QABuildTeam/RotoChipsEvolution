@@ -34,11 +34,6 @@ namespace RotoChips.Puzzle
             registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.PuzzleShowWinimage, handler = OnPuzzleShowWinimage });
         }
 
-        void Start()
-        {
-            gameObject.SetActive(false);
-        }
-
         void Initialize()
         {
             // make the stress image texture modifiable
@@ -111,15 +106,20 @@ namespace RotoChips.Puzzle
         // message handling
         void OnPuzzleShowWinimage(object sender, InstantMessageArgs args)
         {
-            if (!gameObject.activeInHierarchy)
+            string title = (string)args.arg;
+            if (title != null)
             {
                 gameObject.SetActive(true);
+                if (currentCoroutine != null)
+                {
+                    StopCoroutine(currentCoroutine);
+                }
+                currentCoroutine = StartCoroutine(Painter());
             }
-            if (currentCoroutine != null)
+            else
             {
-                StopCoroutine(currentCoroutine);
+                gameObject.SetActive(false);
             }
-            currentCoroutine = StartCoroutine(Painter());
         }
 
     }

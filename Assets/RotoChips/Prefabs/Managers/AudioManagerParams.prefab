@@ -58,27 +58,27 @@ MonoBehaviour:
   musicCrossFadeSteps: 32
   tracks:
   - id: 9
-    clip: {fileID: 8300000, guid: 5da9da0b01409438cbd0f73051f49cd7, type: 3}
+    clip: {fileID: 8300000, guid: eac95e65515fa544b82261dfa62bd9c8, type: 3}
     volume: 0.4
     subclips: []
     subclipOrder: 
   - id: 4
-    clip: {fileID: 8300000, guid: 6d24e7e5626a4440e872bd98ad8bf826, type: 3}
+    clip: {fileID: 8300000, guid: 449c9612c5040a54b80b8c629123e82b, type: 3}
     volume: 0.4
     subclips: []
     subclipOrder: 
   - id: 5
-    clip: {fileID: 8300000, guid: ed225ea503af2448cb8b05c333ef615a, type: 3}
+    clip: {fileID: 8300000, guid: bfa18ce35aa24214d86e0c26ecbb4bb8, type: 3}
     volume: 0.4
     subclips: []
     subclipOrder: 
   - id: 6
-    clip: {fileID: 8300000, guid: 00ed0ecaa244c4872a56f4ccd438da5f, type: 3}
+    clip: {fileID: 8300000, guid: 05afd8d291d74f849bd7afec1d93bb7c, type: 3}
     volume: 0.4
     subclips: []
     subclipOrder: 
   - id: 7
-    clip: {fileID: 8300000, guid: d56bf1156b0f5414099762ec5f3bd493, type: 3}
+    clip: {fileID: 8300000, guid: 95db266d2caa7d443aab6f1ad3c8e558, type: 3}
     volume: 0.4
     subclips: []
     subclipOrder: 

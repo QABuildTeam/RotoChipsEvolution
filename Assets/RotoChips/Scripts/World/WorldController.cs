@@ -92,6 +92,12 @@ namespace RotoChips.World
         [SerializeField]
         protected string puzzleScene = "Puzzle";
         [SerializeField]
+        protected string galleryScene = "Gallery";
+        [SerializeField]
+        protected string finaleScene = "Finale";
+        [SerializeField]
+        protected string restartGameQuestion = "idGUIRestartGameQuestion";
+        [SerializeField]
         protected SFXPlayParams levelDescriptionSFX;
         [SerializeField]
         protected SFXPlayParams noLevelSFX;
@@ -168,16 +174,12 @@ namespace RotoChips.World
             );
         }
 
-        [SerializeField]
-        protected string galleryScene = "Gallery";
         void OnWorldSatellitePressed(object sender, InstantMessageArgs args)
         {
             GameObject targetObject = ((Component)sender).gameObject;
             StartCoroutine(YieldToScene(targetObject, galleryScene));
         }
 
-        [SerializeField]
-        protected string restartGameQuestion = "idGUIRestartGameQuestion";
         bool dialogMode;
         void OnGUIRestartButtonPressed(object sender, InstantMessageArgs args)
         {
@@ -216,8 +218,6 @@ namespace RotoChips.World
             }
         }
 
-        [SerializeField]
-        protected string finaleScene = "Finale";
         void OnGUIViewButtonPressed(object sender, InstantMessageArgs args)
         {
             if (!GlobalManager.MHint.ShowNewHint(HintType.GameRollsButton))

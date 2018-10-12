@@ -154,7 +154,7 @@ namespace RotoChips.Management
                                         //      Arguments: None
         PuzzleShowWinimage,             // Command: Show a final image of the completed puzzle
                                         //      Arguments:
-                                        //          string messageTextId - a localization identifier of a message
+                                        //          string messageTextId - a localization identifier of a message; if null, then hide WinImage
         PuzzleWinImageFinished,         // Notification: Final image fully exhibited
                                         //      Arguments: None
         PuzzleWinImageStopped,          // Notification: The final image has stopped exhibition (a button has been pressed)
