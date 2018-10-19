@@ -153,6 +153,7 @@ namespace RotoChips.UI
         public void ArrowSpotPressed()
         {
             gameObject.SetActive(false);
+            // now enable world rotation
             GlobalManager.MInstantMessage.DeliverMessage(
                 InstantMessageType.GUIHintClosed, 
                 this,
@@ -162,7 +163,7 @@ namespace RotoChips.UI
                     target = hintParams.target
                 }
             );
-            Debug.Log("ArrowSpotPressed, sending " + hintParams.arrowMessage.ToString());
+            //Debug.Log("ArrowSpotPressed, sending " + hintParams.arrowMessage.ToString());
             GlobalManager.MInstantMessage.DeliverMessage(hintParams.arrowMessage, this, hintParams.target);
         }
     }

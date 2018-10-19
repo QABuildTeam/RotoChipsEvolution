@@ -13,6 +13,7 @@ using RotoChips.Generic;
 
 namespace RotoChips.UI
 {
+    [System.Serializable]
     public class GUIConfiguration
     {
         public bool restartButton;

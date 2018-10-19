@@ -156,7 +156,7 @@ namespace RotoChips.Accounting
             }
             else
             {
-                Debug.Log("RestorePurchases FAILSED: Not initialized");
+                Debug.Log("RestorePurchases FAILED: Not initialized");
             }
         }
 

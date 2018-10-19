@@ -433,11 +433,6 @@ Prefab:
     m_Modifications:
     - target: {fileID: 224896044111534254, guid: 56c88bf13eef2ff43a573a565e006235,
         type: 2}
-      propertyPath: m_RootOrder
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 224896044111534254, guid: 56c88bf13eef2ff43a573a565e006235,
-        type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -525,11 +520,6 @@ Prefab:
         type: 2}
       propertyPath: m_Pivot.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 223705401389837854, guid: 56c88bf13eef2ff43a573a565e006235,
-        type: 2}
-      propertyPath: m_SortingOrder
-      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56c88bf13eef2ff43a573a565e006235, type: 2}
@@ -1039,6 +1029,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldScene: World
   victoryScene: Victory
+  shopScene: Shop
   backQuestionId: idGUIBackQuestion
   restartlevelQuestionId: idGUIRestartLevelQuestion
   magicQuestionId: idGUIMagicQuestion

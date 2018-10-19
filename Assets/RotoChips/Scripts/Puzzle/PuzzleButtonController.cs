@@ -76,6 +76,7 @@ namespace RotoChips.Puzzle
             PuzzleButtonArgs buttonArgs = (PuzzleButtonArgs)args.arg;
             if (buttonArgs.id == buttonId)
             {
+                Debug.Log("Received command: rotate button " + buttonId.ToString());
                 StartCoroutine(AnimatePress(buttonArgs.fast));
             }
         }
@@ -149,6 +150,7 @@ namespace RotoChips.Puzzle
                 position.z = neutralZ;
                 transform.position = position;
                 animating = false;
+                Debug.Log("Button " + buttonId.ToString() + " fully rotated, notifying");
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleButtonRotated, this, buttonId);
             }
         }

@@ -45,7 +45,9 @@ namespace RotoChips.World
                 new MessageRegistrationTuple { type = InstantMessageType.WorldLevelDescriptionClosed, handler = OnWorldLevelDescriptionClosed },
                 new MessageRegistrationTuple { type = InstantMessageType.AdvertisementResult, handler = OnAdvertisementResult },
                 new MessageRegistrationTuple { type = InstantMessageType.GUIOKButtonPressed, handler = OnGUIOKButtonPressed },
-                new MessageRegistrationTuple { type = InstantMessageType.GUICancelButtonPressed, handler = OnGUICancelButtonPressed }
+                new MessageRegistrationTuple { type = InstantMessageType.GUICancelButtonPressed, handler = OnGUICancelButtonPressed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIShowHint, handler = OnGUIShowHint },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIHintClosed, handler = OnGUIHintClosed }
             );
         }
 
@@ -87,6 +89,16 @@ namespace RotoChips.World
         void OnWorldGlobePressed(object sender, InstantMessageArgs args)
         {
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldAutoZoomCamera, this);
+        }
+
+        void OnGUIShowHint(object sender, InstantMessageArgs args)
+        {
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, false);
+        }
+
+        void OnGUIHintClosed(object sender, InstantMessageArgs args)
+        {
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, true);
         }
 
         [SerializeField]

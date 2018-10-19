@@ -145,18 +145,20 @@ namespace RotoChips.Management
                 );
                 return true;
             }
+            /*
             else
             {
                 // if a hint has already been shown, do not show it again
                 // but notify that it is closed
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIHintClosed, this, hintRequest);
+                //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIHintClosed, this, hintRequest);
             }
+            */
             return false;
         }
 
         protected void ResetHintsFromList(List<HintType> hintList)
         {
-            foreach(HintType hintType in hintList)
+            foreach (HintType hintType in hintList)
             {
                 hintShown[hintType] = false;
             }

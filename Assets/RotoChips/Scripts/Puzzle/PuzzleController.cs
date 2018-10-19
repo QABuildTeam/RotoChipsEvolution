@@ -311,9 +311,12 @@ namespace RotoChips.Puzzle
                 }
             }
 
+            Debug.Log("Attaching tiles to button " + buttonId.ToString());
             builder.AttachTilesToButton(buttonId, tileIds);
+            Debug.Log("Calculating rotation");
             RotateTilesWith(buttonId, saveAfterRotation);
             buttonRotated = false;
+            Debug.Log("Performing rotation");
             builder.RotateButtonWithTiles(buttonArgs);
         }
         #endregion
@@ -435,6 +438,9 @@ namespace RotoChips.Puzzle
         protected FloatRange autostepPitchRange;
         IEnumerator PerformAutoStep()
         {
+            // wait for a frame to ensure a clean steady puzzle state
+            yield return null;
+            Debug.Log("Starting autostep");
             Vector2Int lastGood, nextGood;
             CheckPuzzleStateComplete(false, out lastGood, out nextGood);
             TileStatus tileStatus = tileNeighbours[nextGood.x, nextGood.y];
@@ -448,32 +454,39 @@ namespace RotoChips.Puzzle
             );
             if (solution != null)
             {
+                Debug.Log("Running autostep for " + nextGood.ToString() + " to " + lastGood.ToString());
                 descriptor.state.AutocompleteUsed = true;
                 PuzzleButtonController.PuzzleButtonArgs buttonArgs = new PuzzleButtonController.PuzzleButtonArgs
                 {
                     id = new Vector2Int(0, 0),
                     fast = 0.5f
                 };
-                for (int i = 0; i < solution.Length; i++)
+                for (int i = 0; i < solution.Length && !puzzleComplete; i++)
                 {
                     buttonArgs.id.y = (solution[i] >> 4) & 0xf;
                     buttonArgs.id.x = solution[i] & 0xf;
+                    Debug.Log(">> Step " + i.ToString() + ": rotating button " + buttonArgs.id.ToString());
                     RotateButton(buttonArgs, false);
                     while (!buttonRotated)
                     {
                         yield return null;
                     }
                 }
+                Debug.Log("Saving state");
                 SaveAll();
                 // tight vibe sound
                 autostepJingle.pitchFactor = autostepPitchRange.Random;
                 GlobalManager.MAudio.PlaySFX(autostepJingle);
+                Debug.Log("Notifying of autostep");
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutostepUsed, this);
             }
         }
 
         IEnumerator PerformAutocomplete()
         {
+            // wait for a frame to ensure a clean steady puzzle state
+            yield return null;
+            Debug.Log("Starting autocomplete");
             while (!puzzleComplete)
             {
                 Autostep();
@@ -548,7 +561,9 @@ namespace RotoChips.Puzzle
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoCoinsChanged, this, GlobalManager.MStorage.CurrentCoins);
 
+            Debug.Log("Detaching tiles from button " + ((Vector2Int)args.arg).ToString());
             builder.DetachTilesFromButton((Vector2Int)args.arg);
+            Debug.Log("Flashing tiles");
             buttonRotated = true;
             FlashTilesInPlaces();
         }
@@ -565,7 +580,7 @@ namespace RotoChips.Puzzle
                 };
                 // ok, the puzzle is complete, the player has won
                 /**/
-                descriptor.state.Complete = true;
+                //descriptor.state.Complete = true;
                 /**/
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleComplete, this, completeStatus);
             }
@@ -593,6 +608,7 @@ namespace RotoChips.Puzzle
 
         void OnPuzzleAutocomplete(object sender, InstantMessageArgs args)
         {
+            Debug.Log("Autocomplete command received from " + sender.ToString());
             Autocomplete();
         }
 

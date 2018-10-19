@@ -73,7 +73,7 @@ namespace RotoChips.Puzzle
             // the size of the canvas excluding margins
             Rect sourceCanvasRect = new Rect(0, 0, canvasScaler.referenceResolution.x * (1 - marginRatio), canvasScaler.referenceResolution.y * (1 - marginRatio));
             sourceCanvasSize = new Vector2(sourceCanvasRect.width, sourceCanvasRect.height);
-            // SourceCanvas matches screen by width, so the final scaling should be adjusted by:
+            // SourceCanvas matches screen by width, so the final height scaling should be adjusted by:
             float heightAdjustFactor = sourceCanvasRect.width / sourceCanvasRect.height / screenAspect;
             for (int i = 0; i < imageParams.Length; i++)
             {

@@ -32,12 +32,6 @@ namespace RotoChips.UI
             if (CheckAgainstAutoStepPrice)
             {
                 return purchaseColor;
-                /*
-                if (newScore >= Purchases.AutoStepPrice)
-                {
-                    t.color = purchaseColor;
-                }
-                */
             }
             return normalColor;
         }

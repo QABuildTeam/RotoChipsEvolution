@@ -30,19 +30,39 @@ namespace RotoChips.Management
             base.MakeInitial();
         }
 
-        bool CheckForLevelComplete(int levelId)
+        void CheckForTutorialCompletion()
         {
-            if (!GlobalManager.MStorage.BonusCoinsAdded)
+            // the application might have been suddenly aborted or crashed
+            // so check for the completeness of the very first two levels in the very first run
+            // the level states are already loaded before MakeReady()
+            if (GlobalManager.MStorage.FirstRound && !GlobalManager.MStorage.BonusCoinsAdded)
             {
-                LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(levelId);
-                if (!descriptor.state.Complete)
+                LevelDataManager.Descriptor descriptor1 = GlobalManager.MLevel.GetDescriptor(1);
+                if (!descriptor1.state.Complete)
                 {
-                    GlobalManager.MHint.ResetHintFlags(levelId);
-                    GlobalManager.MLevel.ResetLevel(levelId);
-                    return false;
+                    GlobalManager.MHint.ResetHintFlags(1);
+                    GlobalManager.MLevel.ResetLevel(1);
+                    LevelDataManager.Descriptor descriptor0 = GlobalManager.MLevel.GetDescriptor(0);
+                    // ensure descriptor1 has actual level info
+                    descriptor1 = GlobalManager.MLevel.GetDescriptor(1);
+                    if (descriptor0.state.Complete)
+                    {
+                        descriptor1.state.Revealed = true;
+                        descriptor1.state.Playable = true;
+                    }
+                    else
+                    {
+                        // reset remaining hints
+                        GlobalManager.MHint.ResetHintFlags(0);
+                        // totally reset the game
+                        foreach (LevelDataManager.Descriptor descriptor in GlobalManager.MLevel.LevelDescriptors())
+                        {
+                            GlobalManager.MLevel.ResetLevel(descriptor.init.id);
+                        }
+                    }
                 }
             }
-            return true;
+
         }
 
         // GameManager is already inherited from GenericManager so it cannot be a GenericMessageHandler
@@ -50,37 +70,27 @@ namespace RotoChips.Management
         public override void MakeReady()
         {
             registrator = new MessageRegistrator(
+                new MessageRegistrationTuple { type = InstantMessageType.GUIWhiteCurtainFaded, handler = OnGUIWhiteCurtainFaded },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIHintClosed, handler = OnGUIHintClosed },
                 new MessageRegistrationTuple { type = InstantMessageType.GalleryStarted, handler = OnGalleryStarted },
                 new MessageRegistrationTuple { type = InstantMessageType.WorldStarted, handler = OnWorldStarted },
+                new MessageRegistrationTuple { type = InstantMessageType.WorldRotatedToObject, handler = OnWorldRotatedToObject },
                 new MessageRegistrationTuple { type = InstantMessageType.PuzzleStarted, handler = OnPuzzleStarted },
                 new MessageRegistrationTuple { type = InstantMessageType.PuzzleComplete, handler = OnPuzzleComplete },
-                new MessageRegistrationTuple { type = InstantMessageType.GUIWhiteCurtainFaded, handler = OnGUIWhiteCurtainFaded },
                 new MessageRegistrationTuple { type = InstantMessageType.PuzzleSourceImageClosed, handler = OnPuzzleSourceImageClosed },
                 new MessageRegistrationTuple { type = InstantMessageType.PuzzleHasShuffled, handler = OnPuzzleHasShuffled },
                 new MessageRegistrationTuple { type = InstantMessageType.PuzzleTileInPlace, handler = OnPuzzleTileInPlace },
                 new MessageRegistrationTuple { type = InstantMessageType.PuzzleButtonRotated, handler = OnPuzzleButtonRotated },
-                new MessageRegistrationTuple { type = InstantMessageType.GUIHintClosed, handler = OnGUIHintClosed },
-                new MessageRegistrationTuple { type = InstantMessageType.AdvertisementResult, handler = OnAdvertisementResult },
-                new MessageRegistrationTuple { type = InstantMessageType.AdvertisementReady, handler = OnAdvertisementReady },
-                new MessageRegistrationTuple { type = InstantMessageType.ShopPurchaseComplete, handler = OnShopPurchaseComplete },
                 new MessageRegistrationTuple { type = InstantMessageType.PuzzleSetForAutostep, handler = OnPuzzleSetForAutostep },
                 new MessageRegistrationTuple { type = InstantMessageType.PuzzleAutostep, handler = OnPuzzleAutostep },
-                new MessageRegistrationTuple { type = InstantMessageType.ShopStarted, handler = OnShopStarted }
+                new MessageRegistrationTuple { type = InstantMessageType.AdvertisementResult, handler = OnAdvertisementResult },
+                new MessageRegistrationTuple { type = InstantMessageType.AdvertisementReady, handler = OnAdvertisementReady },
+                new MessageRegistrationTuple { type = InstantMessageType.ShopStarted, handler = OnShopStarted },
+                new MessageRegistrationTuple { type = InstantMessageType.ShopPurchaseComplete, handler = OnShopPurchaseComplete }
             );
             registrator.RegisterHandlers();
 
-            // the application might be suddenly aborted or crashed
-            // so check for the completeness of the very first two levels in the very first run
-            if (GlobalManager.MStorage.FirstRound)
-            {
-                for (int i = 1; i >= 0; i--)
-                {
-                    if (CheckForLevelComplete(i))
-                    {
-                        break;
-                    }
-                }
-            }
+            CheckForTutorialCompletion();
 
             base.MakeReady();
         }
@@ -206,6 +216,7 @@ namespace RotoChips.Management
             rotocoinsPanel = true
         };
         // first run level 0 puzzle gui configuration
+        [SerializeField]
         protected GUIConfiguration puzzleLevel0GUIConfiguration = new GUIConfiguration
         {
             backButton = false,
@@ -339,6 +350,25 @@ namespace RotoChips.Management
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIConfigureAppearance, this, shopGUIConfiguration);
         }
 
+        bool worldRotated;
+        void OnWorldRotatedToObject(object sender, InstantMessageArgs args)
+        {
+            worldRotated = true;
+        }
+
+        Coroutine worldWaits;
+        IEnumerator WorldWaitsForHint()
+        {
+            worldRotated = false;
+            while (!worldRotated)
+            {
+                yield return null;
+            }
+            // do not rotate the world while some hints are shown
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, false);
+            worldWaits = null;
+        }
+
         [SerializeField]
         protected string tutorial0ShuffleConfig = "";
         [SerializeField]
@@ -370,6 +400,7 @@ namespace RotoChips.Management
                                     // hint GalleryOpened
                                     // requires the gallery satellite as an argument
                                     GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RedirectGalleryOpened, this);
+                                    worldWaits = StartCoroutine(WorldWaitsForHint());
                                 }
                                 else
                                 {
@@ -478,6 +509,28 @@ namespace RotoChips.Management
                                     case HintType.FirstTimeWelcome:
                                         GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotateToSelected, this);
                                         GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RedirectFirstTimeWelcome2, this);
+                                        worldWaits = StartCoroutine(WorldWaitsForHint());
+                                        break;
+                                    case HintType.FirstTimeWelcome2:
+                                        if (worldWaits != null)
+                                        {
+                                            // if hint has been closed before the world finishes to rotate
+                                            StopCoroutine(worldWaits);
+                                            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, true);
+                                        }
+                                        break;
+                                }
+                                break;
+                            case 1:
+                                switch (hintRequest.type)
+                                {
+                                    case HintType.GalleryOpened:
+                                        if (worldWaits != null)
+                                        {
+                                            // if hint has been closed before the world finishes to rotate
+                                            StopCoroutine(worldWaits);
+                                            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, true);
+                                        }
                                         break;
                                 }
                                 break;
@@ -571,8 +624,8 @@ namespace RotoChips.Management
             buttonRotated = true;
         }
 
-        // special method which starts autocompletion of the level 0 and 1 puzzles
-        // it ensures that hints are shown and autocomplete is started only after the buttons become in a steady state
+        // a special method which waits while a puzzle button rotates and then shows a specific hint
+        // it ensures that hints are shown (and autocomplete is started) only after the buttons become in a steady state
         IEnumerator WaitForButtonRotation(HintType hintType)
         {
             buttonRotated = false;
@@ -580,9 +633,14 @@ namespace RotoChips.Management
             {
                 yield return null;
             }
+            Debug.Log("GM: Button rotated, showing hint " + hintType.ToString());
             GlobalManager.MHint.ShowNewHint(hintType);
         }
 
+
+        // OnPuzzleTileInPlace is called whenever PuzzleController detects a new "good" puzzle state
+        // This happens before any button rotation, so to correctly show a hint we have to wait until ther button rotation ends
+        // Hence the usage of WaitForButtonRotation
         void OnPuzzleTileInPlace(object sender, InstantMessageArgs args)
         {
             bool firstRound = GlobalManager.MStorage.FirstRound;
@@ -625,16 +683,13 @@ namespace RotoChips.Management
                             // second row assembled
                             descriptor.state.EarnedPoints = firstRunLevel1Row1Bonus + firstRunLevel1Row0Bonus + (2 + 1) * puzzleAssembledRowBonusStep;
                             StartCoroutine(WaitForButtonRotation(HintType.TwoRowsInPlace));
-                            //GlobalManager.MHint.ShowNewHint(HintType.TwoRowsInPlace);
                         }
                         else
                         if (IsTileInPlace(new Vector2Int(descriptor.init.width - 1, 0), tilesInPlace, descriptor))
                         {
                             // first row assembled
                             descriptor.state.EarnedPoints = firstRunLevel1Row0Bonus + puzzleAssembledRowBonusStep;
-                            //GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
                             StartCoroutine(WaitForButtonRotation(HintType.FirstRowCongratulation));
-                            //GlobalManager.MHint.ShowNewHint(HintType.FirstRowCongratulation);
                         }
                         return;
                 }
@@ -643,12 +698,6 @@ namespace RotoChips.Management
             if (!descriptor.state.AutocompleteUsed)
             {
                 AddPointsBonuses(tilesInPlace, descriptor);
-                /*
-                if (scoreChanged)
-                {
-                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.RotoChipsChanged, this, (decimal)descriptor.state.EarnedPoints);
-                }
-                */
             }
         }
 

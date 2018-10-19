@@ -51,6 +51,11 @@ namespace RotoChips.World
             );
         }
 
+        // these are opacities for the selector icon
+        [SerializeField]
+        protected float normalIconOpacity = 1f;
+        [SerializeField]
+        protected float disabledIconOpacity = 0.5f;
         public void Init(LevelDataManager.Descriptor descriptor, SelectorPrefab prefab, bool noStatusCheck = false)
         {
             levelDescriptor = descriptor;
@@ -61,6 +66,7 @@ namespace RotoChips.World
                 // set up height above the world sphere
                 string iconPath = LevelDataManager.GraphicsResource(levelDescriptor.init.id);
                 bool glow = false;
+                float iconOpacity = normalIconOpacity;
                 Material[] materials = meshRenderer.materials;
                 if (noStatusCheck)
                 {
@@ -85,10 +91,14 @@ namespace RotoChips.World
                 else
                 {
                     iconPath += "/grayicon";
+                    iconOpacity = disabledIconOpacity;
                     materials[0] = prefab.transparentMaterial;
                 }
                 meshRenderer.materials = materials;
                 iconRenderer.sprite = Resources.Load<Sprite>(iconPath);
+                Color c = iconRenderer.color;
+                c.a = iconOpacity;
+                iconRenderer.color = c;
                 if (glow)
                 {
                     StartFlash();

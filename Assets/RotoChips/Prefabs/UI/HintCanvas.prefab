@@ -39,6 +39,8 @@ GameObject:
   - component: {fileID: 224230228460446678}
   - component: {fileID: 222908031581753320}
   - component: {fileID: 114176010356021246}
+  - component: {fileID: 114366130977254878}
+  - component: {fileID: 114382364745750596}
   m_Layer: 5
   m_Name: HintArrow
   m_TagString: Untagged
@@ -196,7 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: -98529514, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: a84de67976ce5b3429e092083c70719b, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -204,7 +206,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Texture: {fileID: 2800000, guid: cc7c0da99293945a8a2b5ce415e5904e, type: 3}
+  m_Texture: {fileID: 2800000, guid: 44e7c7b49a24d274e8fb020d2eb5a96f, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -315,6 +317,43 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &114366130977254878
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1032349710482626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b292ee5889ccce94f964ad90500b54bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashRange:
+    min: 0
+    max: 1
+  flashDuration:
+    min: 0.25
+    max: 0.25
+  bouncingDistance: 10
+  bouncingTimes: 2
+  pauseTime: 2
+--- !u!114 &114382364745750596
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1032349710482626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 007007cc2f9fc1740a5e327d6b7d72fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashRange:
+    min: 0.7
+    max: 1.8
+  flashDuration:
+    min: 0.4
+    max: 0.4
 --- !u!114 &114413019009298140
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -582,10 +621,10 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'This is hint text This is hint text This is hint text This is hint text
-    This is hint text This is hint text This is hint text This is hint text This is
-    hint text This is hint text This is hint text This is hint text This is hint text
-    This is hint text '
+  m_Text: "\u041F\u0435\u0440\u0432\u0443\u044E \u043F\u043B\u0438\u0442\u043A\u0443
+    \u043C\u043E\u0436\u043D\u043E \u043F\u043E\u0441\u0442\u0430\u0432\u0438\u0442\u044C
+    \u043D\u0430 \u043C\u0435\u0441\u0442\u043E, \u043D\u0430\u0436\u0430\u0432 \u044D\u0442\u0443
+    \u043A\u043D\u043E\u043F\u043A\u0443."
 --- !u!222 &222025464652265484
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -667,7 +706,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_TargetDisplay: 0
 --- !u!224 &224094229074635912
 RectTransform:
@@ -703,7 +742,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 49.999996, y: 0}
+  m_AnchoredPosition: {x: 50, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!224 &224438286630001504
@@ -778,11 +817,11 @@ RectTransform:
   m_Father: {fileID: 224896044111534254}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 400, y: 200}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -100, y: 100}
+  m_SizeDelta: {x: 400, y: 150}
+  m_Pivot: {x: 1, y: 0}
 --- !u!224 &224732228830505840
 RectTransform:
   m_ObjectHideFlags: 1
