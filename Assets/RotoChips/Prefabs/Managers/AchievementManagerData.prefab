@@ -51,4 +51,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3362be372c22034f8b6783c1b4bb588, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  achievements: []
+  leaderboardName: RotoChipsScore
+  achievements:
+  - type: 1
+    achievementId: FirstPuzzleAssembled
+    points: 10
+  - type: 2
+    achievementId: SecondPuzzleAssembled
+    points: 10
+  - type: 3
+    achievementId: ThirdPuzzleAssembled
+    points: 10
+  - type: 4
+    achievementId: Realm1Assembled
+    points: 10
+  - type: 5
+    achievementId: Realm2Assembled
+    points: 10
+  - type: 6
+    achievementId: Realm3Assembled
+    points: 10
+  - type: 7
+    achievementId: Realm4Assembled
+    points: 10
+  - type: 8
+    achievementId: Realm5Assembled
+    points: 10
+  - type: 9
+    achievementId: Realm6Assembled
+    points: 10
+  - type: 10
+    achievementId: Realm7Assembled
+    points: 10
+  - type: 11
+    achievementId: FirstRunFinished
+    points: 10

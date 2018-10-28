@@ -28,6 +28,8 @@ namespace RotoChips.Management
                                         //      Arguments: None
         GUIMagicButtonPressed,          // Notification: Magic button has just been pressed
                                         //      Arguments: None
+        GUICupButtonPressed,            // Notification: Cup button has just been pressed
+                                        //      Arguments: None
         GUIFadeWhiteCurtain,            // Command: Fade the entire screen in or out
                                         //      Arguments:
                                         //          bool up - where to fade: transparent (false) or opaque (true) (default if null)

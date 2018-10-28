@@ -20,6 +20,7 @@ namespace RotoChips.UI
         public bool viewButton;
         public bool backButton;
         public bool magicButon;
+        public bool cupButton;
         public bool rotochipsPanel;
         public bool rotocoinsPanel;
     }
@@ -41,6 +42,8 @@ namespace RotoChips.UI
         protected GameObject backButton;
         [SerializeField]
         protected GameObject magicButton;
+        [SerializeField]
+        protected GameObject cupButton;
         [SerializeField]
         protected GameObject rotochipsPanel;
         [SerializeField]
@@ -65,6 +68,10 @@ namespace RotoChips.UI
                 if (magicButton != null)
                 {
                     magicButton.SetActive(configuration.magicButon);
+                }
+                if (cupButton != null)
+                {
+                    cupButton.SetActive(configuration.cupButton);
                 }
                 if (rotochipsPanel != null)
                 {

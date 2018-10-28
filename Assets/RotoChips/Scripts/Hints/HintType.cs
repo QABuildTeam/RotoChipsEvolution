@@ -52,6 +52,7 @@ namespace RotoChips.UI
         TwoRowsInPlace1,
         ShowAdHint,
         RestorePurchases,
-        BackToPuzzle
+        BackToPuzzle,
+        CupButton
     }
 }

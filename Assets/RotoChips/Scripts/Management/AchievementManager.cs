@@ -19,11 +19,8 @@ namespace RotoChips.Management
     {
         None,
         FirstPuzzleAssembled,
-        First1000PointsScored,
         SecondPuzzleAssembled,
-        Second1000PointsScored,
         ThirdPuzzleAssembled,
-        Third1000PointsScored,
         Realm1Assembled,
         Realm2Assembled,
         Realm3Assembled,
@@ -39,35 +36,50 @@ namespace RotoChips.Management
     {
         public AchievementType type;
         public string achievementId;
+        public float points;
     }
 
     public class AchievementManager : GenericManager
     {
         protected AchievementManagerData data;
-        protected Dictionary<AchievementType, string> achievementDictionary;
+        protected Dictionary<AchievementType, Achievement> achievementDictionary;
         public override void MakeInitial()
         {
+            achievementDictionary = new Dictionary<AchievementType, Achievement>();
             data = GetComponentInChildren<AchievementManagerData>();
             if (data != null)
             {
-                achievementDictionary = new Dictionary<AchievementType, string>();
                 foreach (Achievement achievement in data.achievements)
                 {
-                    achievementDictionary.Add(achievement.type, achievement.achievementId);
+                    achievementDictionary.Add(achievement.type, achievement);
                 }
             }
-            //Social.localUser.Authenticate(ProcessAuthentication);
+            Social.localUser.Authenticate(ProcessAuthentication);
             base.MakeInitial();
         }
 
-        [SerializeField]
-        protected string leaderboardName = "RotoChipsScore";
+        protected string LeaderboardName
+        {
+            get
+            {
+                if (data != null)
+                {
+                    return data.leaderboardName;
+                }
+                return null;
+            }
+        }
+
         void ProcessAuthentication(bool success)
         {
             if (success)
             {
                 Social.LoadAchievements(ProcessLoadedAchievements);
-                Social.LoadScores(leaderboardName, ProcessScores);
+                Debug.Log("Creating leaderboard " + LeaderboardName);
+                ILeaderboard leaderboard = Social.CreateLeaderboard();
+                leaderboard.id = LeaderboardName;
+                Debug.Log("Loading scores for leaderboard " + LeaderboardName);
+                Social.LoadScores(LeaderboardName, ProcessScores);
             }
         }
 
@@ -85,20 +97,23 @@ namespace RotoChips.Management
 
         public void ReportNewScore(long score)
         {
-            Social.ReportScore(score, leaderboardName, success =>
+            if (data != null)
             {
-                Debug.Log("Score " + score.ToString() + " has been " + (success ? "successfully" : "unsuccessfully") + " reported of");
-            });
+                Social.ReportScore(score, LeaderboardName, success =>
+                {
+                    Debug.Log("Score " + score.ToString() + " has been " + (success ? "successfully" : "unsuccessfully") + " reported of");
+                });
+            }
         }
 
-        public void ReportNewAchievement(AchievementType achievement)
+        public void ReportNewAchievement(AchievementType achievementType)
         {
-            string achievementId;
-            if (achievementDictionary.TryGetValue(achievement, out achievementId))
+            Achievement achievement;
+            if (achievementDictionary.TryGetValue(achievementType, out achievement))
             {
-                Social.ReportProgress(achievementId, 100, success =>
+                Social.ReportProgress(achievement.achievementId, 100, success =>
                 {
-                    Debug.Log("Achievement " + achievementId + " has been " + (success ? "successfully" : "unsuccessfully") + " reported of");
+                    Debug.Log("Achievement " + achievement + " has been " + (success ? "successfully" : "unsuccessfully") + " reported of");
                 });
             }
         }

@@ -47,7 +47,8 @@ namespace RotoChips.World
                 new MessageRegistrationTuple { type = InstantMessageType.GUIOKButtonPressed, handler = OnGUIOKButtonPressed },
                 new MessageRegistrationTuple { type = InstantMessageType.GUICancelButtonPressed, handler = OnGUICancelButtonPressed },
                 new MessageRegistrationTuple { type = InstantMessageType.GUIShowHint, handler = OnGUIShowHint },
-                new MessageRegistrationTuple { type = InstantMessageType.GUIHintClosed, handler = OnGUIHintClosed }
+                new MessageRegistrationTuple { type = InstantMessageType.GUIHintClosed, handler = OnGUIHintClosed },
+                new MessageRegistrationTuple { type = InstantMessageType.GUICupButtonPressed, handler = OnGUICupButtonPressed }
             );
         }
 
@@ -238,6 +239,14 @@ namespace RotoChips.World
             }
         }
 
+        void OnGUICupButtonPressed(object sender, InstantMessageArgs args)
+        {
+            if (!GlobalManager.MHint.ShowNewHint(HintType.CupButton))
+            {
+                // show achievements
+                GlobalManager.MAchievement.ShowAchievements();
+            }
+        }
         IEnumerator YieldToScene(GameObject initiator, string sceneName)
         {
             if (initiator != null)

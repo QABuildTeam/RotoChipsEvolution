@@ -206,6 +206,19 @@ namespace RotoChips.Management
             }
         }
 
+        protected AchievementManager mAchievement;
+        public static AchievementManager MAchievement
+        {
+            get
+            {
+                return Instance.mAchievement;
+            }
+            set
+            {
+                Instance.mAchievement = value;
+            }
+        }
+
         public bool Initialized
         {
             get; private set;
@@ -252,7 +265,8 @@ namespace RotoChips.Management
                 MHint = (HintManager)LocateManager(typeof(HintManager));
                 MAds = (UnityAdsManager)LocateManager(typeof(UnityAdsManager));
                 MPurchase = (PurchasingManager)LocateManager(typeof(PurchasingManager));
-                MScreenshot=(BlurScreenShotManager)LocateManager(typeof(BlurScreenShotManager));
+                MScreenshot = (BlurScreenShotManager)LocateManager(typeof(BlurScreenShotManager));
+                MAchievement = (AchievementManager)LocateManager(typeof(AchievementManager));
 
                 // make myself immortal
                 DontDestroyOnLoad(gameObject);

@@ -202,7 +202,7 @@ namespace RotoChips.Puzzle
 
         public void RotateButtonWithTiles(PuzzleButtonController.PuzzleButtonArgs buttonArgs)
         {
-            Debug.Log("Commanding a button to have a rotation");
+            //Debug.Log("Commanding a button to have a rotation");
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzlePressButton, this, buttonArgs);
         }
 

@@ -625,7 +625,8 @@ MonoBehaviour:
     id: 5
     pitchFactor: 1
     volumeFactor: 0.25
-  NextScene: World
+  worldScene: World
+  introScene: Story
 --- !u!4 &791053379
 Transform:
   m_ObjectHideFlags: 0

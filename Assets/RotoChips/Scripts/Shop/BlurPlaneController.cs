@@ -31,7 +31,6 @@ namespace RotoChips.Shop
 
             BoxCollider boxCollider = GetComponent<BoxCollider>();
             Vector3 planeSize = boxCollider.bounds.size;
-            //Debug.Log("Plane size is " + planeSize.ToString());
 
             Camera mainCamera = Camera.main;
             Vector3 cameraDistance = transform.position - mainCamera.transform.position;
@@ -39,7 +38,6 @@ namespace RotoChips.Shop
             float screenAspect = mainCamera.aspect;
             float fov = mainCamera.fieldOfView;
 
-            float textureHeight = textureDimensions.y;
             float textureAspect = textureDimensions.x / textureDimensions.y;
 
             Vector3 localScale = Vector3.one;
@@ -47,7 +45,6 @@ namespace RotoChips.Shop
             float halfPlaneWidth = halfPlaneHeight * textureAspect;
             localScale.z = 2 * halfPlaneHeight / transform.localScale.z / planeSize.y;
             localScale.x = 2 * halfPlaneWidth / transform.localScale.x / planeSize.x;
-            Debug.Log("localScale is " + localScale.ToString());
             transform.localScale = localScale;
         }
 

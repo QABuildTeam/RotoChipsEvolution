@@ -94,7 +94,9 @@ namespace RotoChips.Logo
         [SerializeField]
         protected SFXPlayParams fallingSFX;
         [SerializeField]
-        protected string NextScene;
+        protected string worldScene;
+        [SerializeField]
+        protected string introScene;
 
         // Use this for initialization
         protected override void AwakeInit()
@@ -173,9 +175,19 @@ namespace RotoChips.Logo
             bool up = (bool)args.arg;
             if (up)
             {
-                if (!string.IsNullOrEmpty(NextScene))
+                if (GlobalManager.MStorage.IntroShown)
                 {
-                    SceneManager.LoadScene(NextScene);
+                    if (!string.IsNullOrEmpty(worldScene))
+                    {
+                        SceneManager.LoadScene(worldScene);
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(introScene))
+                    {
+                        SceneManager.LoadScene(introScene);
+                    }
                 }
             }
         }

@@ -171,7 +171,7 @@ namespace RotoChips.Generic
         protected IEnumerator CheckStreamableAsset(string assetName, ProcessAssetExistence assetProcessor)
         {
             IsLoaded = false;
-            Debug.Log("GenericManager.CheckStreamableAsset: running assetProcessor for " + assetName + "...");
+            //Debug.Log("GenericManager.CheckStreamableAsset: running assetProcessor for " + assetName + "...");
 #if !UNITY_ANDROID
             if (IsLoaded)
             {
@@ -185,7 +185,7 @@ namespace RotoChips.Generic
                 assetProcessor(assetName, get.downloadHandler.data != null && get.downloadHandler.data.Length > 0);
             }
 #endif
-            Debug.Log("GenericManager.CheckStreamableAsset: ...done");
+            //Debug.Log("GenericManager.CheckStreamableAsset: ...done");
             IsLoaded = true;
         }
 

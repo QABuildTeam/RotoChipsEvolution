@@ -29,7 +29,7 @@ namespace RotoChips.Management
         }
         Dictionary<string, string> vocabulary;
         [SerializeField]
-        string localizationFileTemplate = "localizationStrings-{0}.json";
+        protected string localizationFileTemplate = "localizationStrings-{0}.json";
         string LocalizationFileName(SystemLanguage language)
         {
             return Path.Combine(Application.streamingAssetsPath, string.Format(localizationFileTemplate, language.ToString()));

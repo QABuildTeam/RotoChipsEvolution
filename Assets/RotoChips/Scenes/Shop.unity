@@ -1554,9 +1554,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puzzleScene: Puzzle
   purchaseCompleteSFX:
-    id: 0
-    pitchFactor: 0
-    volumeFactor: 0
+    id: 26
+    pitchFactor: 1
+    volumeFactor: 0.5
 --- !u!4 &853984681
 Transform:
   m_ObjectHideFlags: 0

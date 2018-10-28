@@ -633,7 +633,7 @@ namespace RotoChips.Management
             {
                 yield return null;
             }
-            Debug.Log("GM: Button rotated, showing hint " + hintType.ToString());
+            //Debug.Log("GM: Button rotated, showing hint " + hintType.ToString());
             GlobalManager.MHint.ShowNewHint(hintType);
         }
 
@@ -743,6 +743,18 @@ namespace RotoChips.Management
         protected string realmOpenedId = "idRealmOpened";
         [SerializeField]
         protected string gameCompletedId = "idGameCompleted";
+
+        AchievementType[] realmAchievements = new AchievementType[]
+        {
+            AchievementType.Realm1Assembled,
+            AchievementType.Realm2Assembled,
+            AchievementType.Realm3Assembled,
+            AchievementType.Realm4Assembled,
+            AchievementType.Realm5Assembled,
+            AchievementType.Realm6Assembled,
+            AchievementType.Realm7Assembled
+        };
+
         void OnPuzzleComplete(object sender, InstantMessageArgs args)
         {
             bool firstRound = GlobalManager.MStorage.FirstRound;
@@ -783,6 +795,7 @@ namespace RotoChips.Management
                 }
 
                 // Do the accounting chores
+                // Also report of achievements
                 long earnedPoints = completeStatus.descriptor.state.EarnedPoints;
                 if (firstRound)
                 {
@@ -793,6 +806,7 @@ namespace RotoChips.Management
                                 ((completeStatus.descriptor.init.height + 1) * completeStatus.descriptor.init.height / 2) * puzzleAssembledRowBonusStep +
                                 firstRunLevel0Row0Bonus +
                                 puzzleCompleteBonus;
+                            GlobalManager.MAchievement.ReportNewAchievement(AchievementType.FirstPuzzleAssembled);
                             break;
                         case 1:
                             completeStatus.descriptor.state.EarnedPoints =
@@ -801,6 +815,10 @@ namespace RotoChips.Management
                                 firstRunLevel1Row1Bonus +
                                 puzzleCompleteBonus;
                             AddBonusCoins();
+                            GlobalManager.MAchievement.ReportNewAchievement(AchievementType.SecondPuzzleAssembled);
+                            break;
+                        case 2:
+                            GlobalManager.MAchievement.ReportNewAchievement(AchievementType.ThirdPuzzleAssembled);
                             break;
                         default:
                             AddPoints(ref earnedPoints, puzzleCompleteBonus);
@@ -835,6 +853,18 @@ namespace RotoChips.Management
                     }
                 }
 
+                // now add an achievement
+                if (firstRound)
+                {
+                    switch (completeStatus.descriptor.init.id)
+                    {
+                        case 0:
+                            break;
+                        case 1:
+                            break;
+                    }
+                }
+
                 if (nextLevelId >= 0)
                 {
                     // make next level revealed and playable
@@ -855,12 +885,17 @@ namespace RotoChips.Management
                 if (realmComplete)
                 {
                     GlobalManager.MQueue.PostMessage(realmCompletedId);
+                    if (realmData.id >= 0 && realmData.id < realmAchievements.Length)
+                    {
+                        GlobalManager.MAchievement.ReportNewAchievement(realmAchievements[realmData.id]);
+                    }
                     if (nextLevelId < 0)    // no more new levels
                     {
                         // the game is complete
                         GlobalManager.MStorage.GameFinished = true;
                         GlobalManager.MStorage.FirstRound = false;
                         GlobalManager.MQueue.PostMessage(gameCompletedId);
+                        GlobalManager.MAchievement.ReportNewAchievement(AchievementType.FirstRunFinished);
                     }
                     else
                     {

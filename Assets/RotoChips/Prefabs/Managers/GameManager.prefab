@@ -66,6 +66,78 @@ MonoBehaviour:
     data: 15000
   adBonus:
     data: 50
+  worldLevel0GUIConfiguration:
+    restartButton: 0
+    viewButton: 0
+    backButton: 0
+    magicButon: 0
+    cupButton: 0
+    rotochipsPanel: 0
+    rotocoinsPanel: 0
+  worldLevel1GUIConfiguration:
+    restartButton: 0
+    viewButton: 0
+    backButton: 0
+    magicButon: 0
+    cupButton: 1
+    rotochipsPanel: 1
+    rotocoinsPanel: 0
+  worldRun1GUIConfiguration:
+    restartButton: 0
+    viewButton: 0
+    backButton: 0
+    magicButon: 0
+    cupButton: 1
+    rotochipsPanel: 1
+    rotocoinsPanel: 1
+  worldGenericGUIConfiguration:
+    restartButton: 1
+    viewButton: 1
+    backButton: 0
+    magicButon: 0
+    cupButton: 1
+    rotochipsPanel: 1
+    rotocoinsPanel: 1
+  puzzleLevel0GUIConfiguration:
+    restartButton: 0
+    viewButton: 0
+    backButton: 0
+    magicButon: 0
+    cupButton: 0
+    rotochipsPanel: 1
+    rotocoinsPanel: 0
+  puzzleLevel1GUIConfiguration:
+    restartButton: 0
+    viewButton: 1
+    backButton: 0
+    magicButon: 0
+    cupButton: 0
+    rotochipsPanel: 1
+    rotocoinsPanel: 1
+  puzzleGenericGUIConfiguration:
+    restartButton: 1
+    viewButton: 1
+    backButton: 1
+    magicButon: 1
+    cupButton: 0
+    rotochipsPanel: 1
+    rotocoinsPanel: 1
+  galleryGUIConfiguration:
+    restartButton: 0
+    viewButton: 0
+    backButton: 1
+    magicButon: 0
+    cupButton: 0
+    rotochipsPanel: 0
+    rotocoinsPanel: 0
+  shopGUIConfiguration:
+    restartButton: 1
+    viewButton: 0
+    backButton: 1
+    magicButon: 0
+    cupButton: 0
+    rotochipsPanel: 0
+    rotocoinsPanel: 1
   tutorial0ShuffleConfig: 1.1.1.1.1.1.0.1.0.1.0.1.0.0.0.0.0.0
   tutorial1ShuffleConfig: 
   levelCompletedId: idLevelCompleted

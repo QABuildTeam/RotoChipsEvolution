@@ -281,6 +281,27 @@ namespace RotoChips.ImageProcessing
             }
         }
 
+        // this method pre-generates stress files
+        // needed for an intro story
+        [SerializeField]
+        // this is the list of stress images ids neede for the intro story
+        // it should end with the id 0
+        protected int[] pregeneratedStressImages;
+        IEnumerator PreGenerateStressFiels()
+        {
+            foreach (int levelId in pregeneratedStressImages)
+            {
+                if (!HasFinalImage(levelId))
+                {
+                    StartCoroutine(BgStressImage(levelId));
+                    while (!HasFinalImage(levelId))
+                    {
+                        yield return null;
+                    }
+                }
+            }
+        }
+
         // this method checks for stress image files presence
         // and starts their generation if needed
         IEnumerator GenerateStressFiles()
@@ -319,7 +340,8 @@ namespace RotoChips.ImageProcessing
 
         public override void MakeLoading()
         {
-            StartCoroutine(GenerateStressFiles());
+            // MakeLoading only generates stress images neede for the intro
+            StartCoroutine(PreGenerateStressFiels());
             base.MakeLoading();
         }
 
@@ -335,6 +357,9 @@ namespace RotoChips.ImageProcessing
             {
                 yield return null;
             }
+            // ok, all intro stress images are generated
+            // now generate the rest
+            StartCoroutine(GenerateStressFiles());
         }
     }
 }

@@ -73,7 +73,7 @@ MonoBehaviour:
     arrowOn: 1
     target: {fileID: 0}
     arrowAngle: 45
-    arrowMessage: 15
+    arrowMessage: 16
   - type: 3
     hintMsgId: idHelpBackButton
     layout: 7
@@ -128,7 +128,7 @@ MonoBehaviour:
     arrowOn: 1
     target: {fileID: 0}
     arrowAngle: 45
-    arrowMessage: 15
+    arrowMessage: 16
   - type: 18
     hintMsgId: idHelpGameRestartButton
     layout: 1
@@ -249,7 +249,7 @@ MonoBehaviour:
     arrowOn: 1
     target: {fileID: 0}
     arrowAngle: 135
-    arrowMessage: 15
+    arrowMessage: 16
   - type: 28
     hintMsgId: idHelpFirstTileInPlace
     layout: 0
@@ -271,7 +271,7 @@ MonoBehaviour:
     arrowOn: 1
     target: {fileID: 0}
     arrowAngle: -45
-    arrowMessage: 15
+    arrowMessage: 16
   - type: 29
     hintMsgId: idHelpSecondTileInPlace
     layout: 0
@@ -373,11 +373,22 @@ MonoBehaviour:
     arrowMessage: 0
   - type: 40
     hintMsgId: idBackToPuzzle
-    layout: 0
-    width: 500
-    height: 200
-    xGap: 0
-    yGap: 0
+    layout: 7
+    width: 400
+    height: 150
+    xGap: 100
+    yGap: 100
+    arrowOn: 0
+    target: {fileID: 0}
+    arrowAngle: 0
+    arrowMessage: 0
+  - type: 41
+    hintMsgId: idHelpCupButton
+    layout: 7
+    width: 400
+    height: 150
+    xGap: 100
+    yGap: 100
     arrowOn: 0
     target: {fileID: 0}
     arrowAngle: 0

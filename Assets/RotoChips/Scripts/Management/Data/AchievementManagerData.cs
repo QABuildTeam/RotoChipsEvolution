@@ -14,6 +14,8 @@ namespace RotoChips.Data
     public class AchievementManagerData : MonoBehaviour
     {
         [SerializeField]
+        public string leaderboardName = "RotoChipsScore";
+        [SerializeField]
         public List<Achievement> achievements;
     }
 }

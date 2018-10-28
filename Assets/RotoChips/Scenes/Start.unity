@@ -871,6 +871,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114915506306463338, guid: 30673284a2e9db44d892be16f900f09d,
+        type: 2}
+      propertyPath: currentLanguage
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30673284a2e9db44d892be16f900f09d, type: 2}
   m_IsPrefabAsset: 0
@@ -1069,6 +1074,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 1581374327}
     m_Modifications:
+    - target: {fileID: 114154558556032904, guid: 0056f2534d7559e4abb04c069de0886c,
+        type: 2}
+      propertyPath: pregeneratedStressImages.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4990228621190528, guid: 0056f2534d7559e4abb04c069de0886c, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1100,6 +1110,16 @@ Prefab:
     - target: {fileID: 4990228621190528, guid: 0056f2534d7559e4abb04c069de0886c, type: 2}
       propertyPath: m_RootOrder
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114154558556032904, guid: 0056f2534d7559e4abb04c069de0886c,
+        type: 2}
+      propertyPath: pregeneratedStressImages.Array.data[0]
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 114154558556032904, guid: 0056f2534d7559e4abb04c069de0886c,
+        type: 2}
+      propertyPath: breakCycle
+      value: 2048
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0056f2534d7559e4abb04c069de0886c, type: 2}

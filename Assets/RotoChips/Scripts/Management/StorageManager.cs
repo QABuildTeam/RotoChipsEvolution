@@ -47,6 +47,10 @@ namespace RotoChips.Management
                                                 // reset after all the first welcome messages have been displayed
             public bool bonusCoinsAdded;        // the player has already received bonus coins
                                                 // set after adding the bonus coins to the player's balance and never reset
+            public bool introShown;             // the Story scene has been shown
+                                                // set after the Story scene has been shown and is never reset
+            public bool finaleShown;            // the Finale scene has been shown
+                                                // set after the Finale scene has been shown and is never reset
         }
 
         // real storage
@@ -256,6 +260,38 @@ namespace RotoChips.Management
                 if (storage.bonusCoinsAdded != value)
                 {
                     storage.bonusCoinsAdded = value;
+                    GlobalManager.Instance.Save();
+                }
+            }
+        }
+
+        public bool IntroShown
+        {
+            get
+            {
+                return storage.introShown;
+            }
+            set
+            {
+                if (storage.introShown != value)
+                {
+                    storage.introShown = value;
+                    GlobalManager.Instance.Save();
+                }
+            }
+        }
+
+        public bool FinaleShown
+        {
+            get
+            {
+                return storage.finaleShown;
+            }
+            set
+            {
+                if (storage.finaleShown != value)
+                {
+                    storage.finaleShown = value;
                     GlobalManager.Instance.Save();
                 }
             }
