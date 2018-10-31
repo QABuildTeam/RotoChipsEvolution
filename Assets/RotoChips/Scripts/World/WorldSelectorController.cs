@@ -74,25 +74,28 @@ namespace RotoChips.World
                     materials[0] = prefab.opaqueMaterial;
                 }
                 else
-                if (levelDescriptor.state.Playable)
                 {
-                    iconPath += "/icon";
-                    if (levelDescriptor.init.id == GlobalManager.MStorage.SelectedLevel)
+                    if (levelDescriptor.state.Playable)
                     {
-                        materials[0] = prefab.glowMaterial;
-                        lightBeacon.SetActive(true);
-                        glow = true;
+                        Debug.Log("WorldSelectorController.Init: id=" + levelDescriptor.init.id.ToString() + ", playable=" + levelDescriptor.state.Playable.ToString());
+                        iconPath += "/icon";
+                        if (levelDescriptor.init.id == GlobalManager.MStorage.SelectedLevel)
+                        {
+                            materials[0] = prefab.glowMaterial;
+                            lightBeacon.SetActive(true);
+                            glow = true;
+                        }
+                        else
+                        {
+                            materials[0] = prefab.opaqueMaterial;
+                        }
                     }
                     else
                     {
-                        materials[0] = prefab.opaqueMaterial;
+                        iconPath += "/grayicon";
+                        iconOpacity = disabledIconOpacity;
+                        materials[0] = prefab.transparentMaterial;
                     }
-                }
-                else
-                {
-                    iconPath += "/grayicon";
-                    iconOpacity = disabledIconOpacity;
-                    materials[0] = prefab.transparentMaterial;
                 }
                 meshRenderer.materials = materials;
                 iconRenderer.sprite = Resources.Load<Sprite>(iconPath);

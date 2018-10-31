@@ -123,7 +123,9 @@ namespace RotoChips.World
 
         void ProcessInput()
         {
-            switch (GlobalManager.MInput.CheckInput())
+            TouchInput.InputStatus inputStatus = GlobalManager.MInput.CheckInput();
+            //Debug.Log("WorldCameraController.ProcessInput: " + inputStatus.ToString());
+            switch (inputStatus)
             {
                 case TouchInput.InputStatus.DoubleMove:
                     ManualZoom(GlobalManager.MInput.MoveDelta);

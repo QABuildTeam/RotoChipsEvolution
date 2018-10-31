@@ -28,11 +28,6 @@ namespace RotoChips.World
             );
         }
 
-        void Start()
-        {
-        }
-
-
         // message handling
         void OnGUIObjectPressedAsButton(object sender, InstantMessageArgs args)
         {
@@ -61,7 +56,7 @@ namespace RotoChips.World
                     float deltaAngle = angle * Time.deltaTime;
                     currentAngle += deltaAngle;
                     transform.Rotate(cross, deltaAngle, Space.World);
-                    Debug.DrawRay(viewer, rotateTarget.transform.position, Color.red);
+                    //Debug.DrawRay(viewer, rotateTarget.transform.position, Color.red);
                 }
                 currentAngle -= angle;
                 if (currentAngle != 0)
@@ -82,14 +77,15 @@ namespace RotoChips.World
             }
         }
 
+        bool rotationEnabled;
         void OnWorldRotationEnable(object sender, InstantMessageArgs args)
         {
             rotationEnabled = (bool)args.arg;
+            //Debug.Log("WorldSphereController: rotation enabled = " + rotationEnabled.ToString());
         }
 
         [SerializeField]
         protected float worldRotateFactor;
-        bool rotationEnabled;
         void EnableRotation(bool on)
         {
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, on);
@@ -97,20 +93,20 @@ namespace RotoChips.World
 
         void ProcessInput()
         {
-            switch (GlobalManager.MInput.CheckInput())
+            //Debug.Log("WorldSphereController.ProcesInput: rotation enabled = " + rotationEnabled.ToString());
+            if (rotationEnabled)
             {
-                case TouchInput.InputStatus.SinglePress:
-                case TouchInput.InputStatus.DoublePress:
-                    if (rotationEnabled)
-                    {
+                TouchInput.InputStatus inputStatus = GlobalManager.MInput.CheckInput();
+                //Debug.Log("WorldSphereController.ProcessInput: " + inputStatus.ToString());
+                switch (inputStatus)
+                {
+                    case TouchInput.InputStatus.SinglePress:
+                    case TouchInput.InputStatus.DoublePress:
                         EnableRotation(false);
                         EnableRotation(true);
-                    }
-                    break;
+                        break;
 
-                case TouchInput.InputStatus.SingleMove:
-                    if (rotationEnabled)
-                    {
+                    case TouchInput.InputStatus.SingleMove:
                         // rotate the world to the direction of a finger/mouse move
                         EnableRotation(false);
                         Vector3 moveDelta = GlobalManager.MInput.MoveDelta;
@@ -118,26 +114,22 @@ namespace RotoChips.World
                         Vector3 rotateDelta = new Vector3(moveDelta.y, -moveDelta.x, 0) * cameraDistance * worldRotateFactor;
                         transform.Rotate(rotateDelta, Space.World);
                         EnableRotation(true);
-                    }
-                    break;
+                        break;
 
-                case TouchInput.InputStatus.DoubleMove:
-                    if (rotationEnabled)
-                    {
+                    case TouchInput.InputStatus.DoubleMove:
                         // rotate the world around z-axis
                         EnableRotation(false);
                         transform.Rotate(new Vector3(0, 0, GlobalManager.MInput.AngleDelta), Space.World);
                         EnableRotation(true);
-                    }
-                    break;
+                        break;
 
+                }
             }
         }
-        // Update is called once per frame
-        void Update()
+
+        private void Update()
         {
             ProcessInput();
         }
-
     }
 }

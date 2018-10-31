@@ -153,7 +153,6 @@ namespace RotoChips.UI
         public void ArrowSpotPressed()
         {
             gameObject.SetActive(false);
-            // now enable world rotation
             GlobalManager.MInstantMessage.DeliverMessage(
                 InstantMessageType.GUIHintClosed, 
                 this,

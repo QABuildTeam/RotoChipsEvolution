@@ -874,7 +874,7 @@ Prefab:
     - target: {fileID: 114915506306463338, guid: 30673284a2e9db44d892be16f900f09d,
         type: 2}
       propertyPath: currentLanguage
-      value: 10
+      value: 42
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30673284a2e9db44d892be16f900f09d, type: 2}

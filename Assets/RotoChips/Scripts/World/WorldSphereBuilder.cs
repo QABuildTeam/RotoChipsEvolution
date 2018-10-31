@@ -71,8 +71,8 @@ namespace RotoChips.World
                     RealmData.Init realmData = RealmData.initializers[descriptor.init.realmId];
                     Vector3 newPosition = position + new Vector3(0, 0, (descriptor.init.id == realmData.mainLevelId ? -selectorHeight.max : -selectorHeight.min));
                     selector.transform.position = newPosition;
-                    WorldSelectorController wss = selector.GetComponent<WorldSelectorController>();
-                    wss.Init(descriptor, prefab, noStatusCheck);
+                    WorldSelectorController wsc = selector.GetComponent<WorldSelectorController>();
+                    wsc.Init(descriptor, prefab, noStatusCheck);
                     selector.transform.SetParent(transform);
 
                     // check for clouds effect
@@ -104,6 +104,7 @@ namespace RotoChips.World
                             connectorLine.GetComponent<IntercubeConnectorFlasher>().Init(realmData.connectorColor, previousSelector.transform.position - newPosition);
                         }
                     }
+                    Debug.Log("Creating selector " + descriptor.init.id.ToString() + ": revealed=" + descriptor.state.Revealed.ToString() + ", complete=" + descriptor.state.Complete.ToString());
                     previousSelector = selector;
                 }
             }

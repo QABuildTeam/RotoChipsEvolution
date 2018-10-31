@@ -111,7 +111,7 @@ MonoBehaviour:
     hintMsgId: idHelpMagicButton
     layout: 5
     width: 500
-    height: 200
+    height: 250
     xGap: -100
     yGap: 100
     arrowOn: 0
@@ -351,22 +351,22 @@ MonoBehaviour:
     arrowMessage: 0
   - type: 38
     hintMsgId: idShowAd
-    layout: 0
+    layout: 5
     width: 500
     height: 200
-    xGap: 0
-    yGap: 0
+    xGap: -100
+    yGap: 100
     arrowOn: 0
     target: {fileID: 0}
     arrowAngle: 0
     arrowMessage: 0
   - type: 39
     hintMsgId: idRestorePurcases
-    layout: 0
+    layout: 1
     width: 500
     height: 200
-    xGap: 0
-    yGap: 0
+    xGap: 100
+    yGap: -100
     arrowOn: 0
     target: {fileID: 0}
     arrowAngle: 0

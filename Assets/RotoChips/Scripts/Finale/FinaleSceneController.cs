@@ -37,7 +37,7 @@ namespace RotoChips.Finale
 
         int IndexByValue(int value)
         {
-            for(int i = 0; i < finaleTextIndexes.Length; i++)
+            for (int i = 0; i < finaleTextIndexes.Length; i++)
             {
                 if (finaleTextIndexes[i] == value)
                 {
@@ -50,7 +50,11 @@ namespace RotoChips.Finale
         // message handling
         void OnGUIFullScreenButtonPressed(object sender, InstantMessageArgs args)
         {
-            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
+            // the button only works after the roll has been shown at least once
+            if (GlobalManager.MStorage.FinaleShown)
+            {
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this);
+            }
         }
 
         [SerializeField]
@@ -86,6 +90,7 @@ namespace RotoChips.Finale
             int i = IndexByValue((int)args.arg);
             if (i >= finaleTextIndexes.Length - 1)
             {
+                GlobalManager.MStorage.FinaleShown = true;
                 // reset text positions
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.FinaleRollText, this, 0);
                 // reset text index

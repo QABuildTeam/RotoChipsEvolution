@@ -74,7 +74,7 @@ namespace RotoChips.Management
         }
 
         // this method checks user's input
-        public InputStatus CheckInput()
+        protected InputStatus ProcessInput()
         {
             touchesDetected = 0;
             if (Input.mousePresent)
@@ -135,7 +135,7 @@ namespace RotoChips.Management
             else
             {
                 touchesDetected = Input.touchCount;
-                for(int i = 0; i < touchesDetected; i++)
+                for (int i = 0; i < touchesDetected; i++)
                 {
                     input[i].phase = Input.GetTouch(i).phase;
                     input[i].position = Input.GetTouch(i).position;
@@ -210,6 +210,20 @@ namespace RotoChips.Management
             }
             return InputStatus.None;
 
+        }
+
+        InputStatus inputStatus = InputStatus.None;
+        private void Update()
+        {
+            if (Initialized != Status.None)
+            {
+                inputStatus = ProcessInput();
+            }
+        }
+
+        public InputStatus CheckInput()
+        {
+            return inputStatus;
         }
     }
 }

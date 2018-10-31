@@ -516,6 +516,7 @@ namespace RotoChips.Management
                                         {
                                             // if hint has been closed before the world finishes to rotate
                                             StopCoroutine(worldWaits);
+                                            worldWaits = null;
                                             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.WorldRotationEnable, this, true);
                                         }
                                         break;

@@ -313,7 +313,9 @@ namespace RotoChips.Management
                 firstPuzzleRun = true,
                 firstTimeFinished = false,
                 firstStart = true,
-                bonusCoinsAdded = false
+                bonusCoinsAdded = false,
+                introShown = false,
+                finaleShown = false
             };
             return tempStorage;
         }
