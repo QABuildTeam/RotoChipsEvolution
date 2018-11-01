@@ -789,7 +789,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a8b50b502fea4e478aab2b57e46f1c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startSceneName: Logo
+  startSceneName: World
 --- !u!1001 &1366745041
 Prefab:
   m_ObjectHideFlags: 0

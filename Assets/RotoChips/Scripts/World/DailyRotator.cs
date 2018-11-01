@@ -64,8 +64,8 @@ namespace RotoChips.World
             if (!rotationEnabled)
             {
                 isRotating = false;
-                selfRotationStartTime = Time.time;
             }
+            selfRotationStartTime = Time.time;
         }
 
         // message handling
