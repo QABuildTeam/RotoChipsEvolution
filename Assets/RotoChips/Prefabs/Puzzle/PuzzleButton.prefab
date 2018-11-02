@@ -105,11 +105,11 @@ MonoBehaviour:
   fastSFXParams:
     id: 12
     pitchFactor: 1.5
-    volumeFactor: 0.025
+    volumeFactor: 0.03
   slowSFXParams:
     id: 13
     pitchFactor: 1.5
-    volumeFactor: 0.025
+    volumeFactor: 0.03
   jinglePitchRange:
     min: 0.8
     max: 1.2

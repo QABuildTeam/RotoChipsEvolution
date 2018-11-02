@@ -494,7 +494,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 0, g: 0, b: 0, a: 0.5019608}
     m_HighlightedColor: {r: 0, g: 0, b: 0, a: 0.5019608}
@@ -735,9 +735,19 @@ MonoBehaviour:
   okButton: {fileID: 1671739099236500}
   titlePrefix: LevelTitle
   descriptionPrefix: LevelDescription
-  completionTextIndex: CompletionText
-  maxHorizontalSize: {x: 11.2, y: 4.2}
-  maxVerticalSize: {x: 7, y: 7}
+  dialogAdjustments:
+  - screenAspect: 2
+    dialogHeight: 460
+    maxHorizontalImageSize: {x: 11.2, y: 4}
+    maxVerticalImageSize: {x: 7, y: 5.5}
+    descriptionFontSize: 20
+    descriptionYShift: -105
+  - screenAspect: 0
+    dialogHeight: 560
+    maxHorizontalImageSize: {x: 11.2, y: 4.2}
+    maxVerticalImageSize: {x: 7, y: 7}
+    descriptionFontSize: 26
+    descriptionYShift: -75
   shiverScale:
     min: 1
     max: 1.05

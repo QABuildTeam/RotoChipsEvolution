@@ -46,21 +46,49 @@ namespace RotoChips.World
         protected string titlePrefix = "LevelTitle";
         [SerializeField]
         protected string descriptionPrefix = "LevelDescription";
+
+        // this is for the super-extended horizontally iPhone X screen
+        [System.Serializable]
+        protected class DialogAdjustment
+        {
+            public float screenAspect;
+            public float dialogHeight;
+            public Vector2 maxHorizontalImageSize;
+            public Vector2 maxVerticalImageSize;
+            public int descriptionFontSize;
+            public float descriptionYShift;
+        }
+
+        // higher screenAspects go first
         [SerializeField]
-        protected string completionTextIndex = "CompletionText";
-        [SerializeField]
-        protected Vector2 maxHorizontalSize;
-        [SerializeField]
-        protected Vector2 maxVerticalSize;
+        protected DialogAdjustment[] dialogAdjustments;
 
         protected Text activeTextScript;
         void InitializeDialog(LevelDataManager.Descriptor descriptor)
         {
+            // calculate dialog size
+            int adjustmentIndex = -1;
+            float currentScreenRatio = (float)Screen.width / (float)Screen.height;
+            for (int i = 0; i < dialogAdjustments.Length; i++)
+            {
+                if (currentScreenRatio >= dialogAdjustments[i].screenAspect)
+                {
+                    adjustmentIndex = i;
+                    break;
+                }
+            }
+            if (adjustmentIndex < 0)
+            {
+                return;
+            }
             // get level data
             string levelStr = descriptor.init.id.ToString("D3");
             titleText.GetComponent<Text>().text = GlobalManager.MLanguage.Entry(titlePrefix + levelStr);
             GameObject activeImage, inactiveImage;
             GameObject activeText, inactiveText;
+
+            // adjust dialog height
+            descriptionDialog.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, dialogAdjustments[adjustmentIndex].dialogHeight);
 
             bool horizontal = descriptor.init.finalXYScale >= 1f;
             // set up image dimensions and the dialog layout depending on "horizontal" or "vertical" image orientation
@@ -70,26 +98,31 @@ namespace RotoChips.World
             if (horizontal)
             {
                 // the maximum height of the image is fixed
-                finalImageHeight = maxHorizontalSize.y;
+                finalImageHeight = dialogAdjustments[adjustmentIndex].maxHorizontalImageSize.y;
                 finalImageWidth = finalImageHeight * descriptor.init.finalXYScale;
-                if (finalImageWidth > maxHorizontalSize.x)
+                if (finalImageWidth > dialogAdjustments[adjustmentIndex].maxHorizontalImageSize.x)
                 {
-                    finalImageWidth = maxHorizontalSize.x;
+                    finalImageWidth = dialogAdjustments[adjustmentIndex].maxHorizontalImageSize.x;
                     finalImageHeight = finalImageWidth / descriptor.init.finalXYScale;
                 }
                 activeImage = hDescriptionImage;
                 inactiveImage = vDescriptionImage;
                 activeText = hDescriptionText;
                 inactiveText = vDescriptionText;
+                // adjust horizontal description text Y-shift
+                RectTransform activeTextRectTransform = activeText.GetComponent<RectTransform>();
+                Vector2 activeTextPosition = activeTextRectTransform.localPosition;
+                activeTextPosition.y = dialogAdjustments[adjustmentIndex].descriptionYShift;
+                activeTextRectTransform.localPosition = activeTextPosition;
             }
             else
             {
                 // the maximum width of the image is fixed
-                finalImageWidth = maxVerticalSize.x;
+                finalImageWidth = dialogAdjustments[adjustmentIndex].maxVerticalImageSize.x;
                 finalImageHeight = finalImageWidth / descriptor.init.finalXYScale;
-                if (finalImageHeight > maxVerticalSize.y)
+                if (finalImageHeight > dialogAdjustments[adjustmentIndex].maxVerticalImageSize.y)
                 {
-                    finalImageHeight = maxVerticalSize.y;
+                    finalImageHeight = dialogAdjustments[adjustmentIndex].maxVerticalImageSize.y;
                     finalImageWidth = finalImageHeight * descriptor.init.finalXYScale;
                 }
                 activeImage = vDescriptionImage;
@@ -99,6 +132,7 @@ namespace RotoChips.World
             }
 
             activeTextScript = activeText.GetComponent<Text>();
+            activeTextScript.fontSize = dialogAdjustments[adjustmentIndex].descriptionFontSize;
             // activate active objects
             activeImage.SetActive(true);
             activeText.SetActive(true);
@@ -112,7 +146,6 @@ namespace RotoChips.World
             inactiveImage.SetActive(false);
             inactiveText.SetActive(false);
             okButton.GetComponent<Button>().interactable = true;
-            //CompletionText.GetComponent<Text>().text = LocalizationManager.instance.GetLocalizedValue(completionTextIndex);
             Visualize(flashRange.min);
             // now activate the dialog
             gameObject.SetActive(true);

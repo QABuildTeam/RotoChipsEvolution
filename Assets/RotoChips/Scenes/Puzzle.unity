@@ -1222,7 +1222,7 @@ MonoBehaviour:
   autostepJingle:
     id: 14
     pitchFactor: 1
-    volumeFactor: 0.3
+    volumeFactor: 0.5
   autostepPitchRange:
     min: 0.8
     max: 1.8
