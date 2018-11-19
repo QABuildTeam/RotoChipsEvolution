@@ -140,7 +140,7 @@ namespace RotoChips.World
                         // start level
                         GlobalManager.MAudio.PlaySFX(startLevelSFX);
                         GlobalManager.MStorage.SelectedLevel = descriptor.init.id;
-                        GlobalManager.MStorage.GalleryLevel = descriptor.init.id;
+                        //GlobalManager.MStorage.GalleryLevel = descriptor.init.id;
                         StartCoroutine(YieldToScene(targetObject, puzzleScene));
                     }
                 }
