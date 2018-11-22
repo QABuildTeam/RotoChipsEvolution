@@ -478,8 +478,8 @@ namespace RotoChips.Puzzle
                 autostepJingle.pitchFactor = autostepPitchRange.Random;
                 GlobalManager.MAudio.PlaySFX(autostepJingle);
                 //Debug.Log("Notifying of autostep");
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutostepUsed, this);
             }
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutostepUsed, this);
         }
 
         IEnumerator PerformAutocomplete()

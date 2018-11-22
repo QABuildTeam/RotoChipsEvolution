@@ -576,10 +576,6 @@ namespace RotoChips.Management
                                         puzzleHintsShown = true;
                                         if (puzzleCompletionProcessed)
                                         {
-                                            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutocomplete, this);
-                                        }
-                                        else
-                                        {
                                             LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(selectedLevel);
                                             PuzzleCompleteStatus completeStatus = new PuzzleCompleteStatus
                                             {
@@ -587,6 +583,10 @@ namespace RotoChips.Management
                                                 firstTime = !descriptor.state.Complete
                                             };
                                             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleComplete, this, completeStatus);
+                                        }
+                                        else
+                                        {
+                                            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutocomplete, this);
                                         }
                                         break;
                                 }
@@ -603,10 +603,6 @@ namespace RotoChips.Management
                                         puzzleHintsShown = true;
                                         if (puzzleCompletionProcessed)
                                         {
-                                            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutocomplete, this);
-                                        }
-                                        else
-                                        {
                                             LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(selectedLevel);
                                             PuzzleCompleteStatus completeStatus = new PuzzleCompleteStatus
                                             {
@@ -614,6 +610,10 @@ namespace RotoChips.Management
                                                 firstTime = !descriptor.state.Complete
                                             };
                                             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleComplete, this, completeStatus);
+                                        }
+                                        else
+                                        {
+                                            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutocomplete, this);
                                         }
                                         break;
                                 }
