@@ -44,6 +44,13 @@ namespace RotoChips.Management
         public InstantMessageType arrowMessage; // a message to be sent when the player taps the arrow sensitive spot
     }
 
+    // an auxillary class for ShowHintSequence parameters
+    public class HintShortParams
+    {
+        public HintType type;
+        public GameObject target;
+    }
+
     public class HintManager : GenericManager
     {
         public Dictionary<HintType, HintParams> Hints
@@ -96,6 +103,12 @@ namespace RotoChips.Management
         public override void Load(object prototype)
         {
             hintShown = (Dictionary<HintType, bool>)prototype;
+        }
+
+        public override void MakeReady()
+        {
+            GlobalManager.MInstantMessage.AddListener(InstantMessageType.GUIHintClosed, OnGUIHintClosed);
+            base.MakeReady();
         }
 
         // Hint management
@@ -154,6 +167,47 @@ namespace RotoChips.Management
             }
             */
             return false;
+        }
+
+        public void ShowHintSequence(HintShortParams[] hintList)
+        {
+            if (hintList != null)
+            {
+                StartCoroutine(ShowHintListCoroutine(hintList));
+            }
+        }
+
+        // this is a service method which allows to show a sequence of hints
+        bool hintSequenceStarted;
+        HintType hintSequenceType;
+        IEnumerator ShowHintListCoroutine(HintShortParams[] hintList)
+        {
+            foreach (HintShortParams hintParam in hintList)
+            {
+                if (!IsHintShown(hintParam.type))
+                {
+                    hintSequenceType = hintParam.type;
+                    hintSequenceStarted = true;
+                    ShowNewHint(hintParam.type, hintParam.target);
+                    while (hintSequenceStarted)
+                    {
+                        yield return null;
+                    }
+                }
+            }
+        }
+
+        // message handling
+        void OnGUIHintClosed(object sender, InstantMessageArgs args)
+        {
+            if (hintSequenceStarted)
+            {
+                HintType type = ((HintRequest)args.arg).type;
+                if (type == hintSequenceType)
+                {
+                    hintSequenceStarted = false;
+                }
+            }
         }
 
         protected void ResetHintsFromList(List<HintType> hintList)

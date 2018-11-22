@@ -51,7 +51,7 @@ namespace RotoChips.Puzzle
             exitMode = Exitmode.World;
             registrator.Add(
                 new MessageRegistrationTuple { type = InstantMessageType.PuzzleBusy, handler = OnPuzzleBusy },
-                new MessageRegistrationTuple { type = InstantMessageType.PuzzleComplete, handler = OnPuzzleComplete },
+                new MessageRegistrationTuple { type = InstantMessageType.PuzzleCompleteProcessed, handler = OnPuzzleCompleteProcessed },
                 new MessageRegistrationTuple { type = InstantMessageType.PuzzleWinImageStopped, handler = OnPuzzleWinImageStopped },
                 new MessageRegistrationTuple { type = InstantMessageType.PuzzleSourceImageClosed, handler = OnPuzzleSourceImageClosed },
                 new MessageRegistrationTuple { type = InstantMessageType.GUIBackButtonPressed, handler = OnGUIBackButtonPressed },
@@ -247,7 +247,7 @@ namespace RotoChips.Puzzle
         protected string levelCompletedOnceAgainId = "idLevelCompletedOnceAgain";
         [SerializeField]
         protected AudioTrackEnum victoryMusicId = AudioTrackEnum.VictoryTheme;
-        void OnPuzzleComplete(object sender, InstantMessageArgs args)
+        void OnPuzzleCompleteProcessed(object sender, InstantMessageArgs args)
         {
             exitMode = Exitmode.Victory;
             PuzzleCompleteStatus completeStatus = (PuzzleCompleteStatus)args.arg;

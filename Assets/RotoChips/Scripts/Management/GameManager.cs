@@ -316,11 +316,17 @@ namespace RotoChips.Management
             ConfigureWorldGUI();
         }
 
+        // special flags for tutorial completion
+        bool puzzleHintsShown;          // set to false for levels 0 and 1 in the first round, true otherwise;
+                                        // reset to true after all hints for tutorial levels have been shown
+        bool puzzleCompletionProcessed; // set to false on puzzle start; set to true on entry into OnPuzzleComplete
         void OnPuzzleStarted(object sender, InstantMessageArgs args)
         {
             sceneType = SceneType.Puzzle;
             bool firstRound = GlobalManager.MStorage.FirstRound;
             int selectedLevel = GlobalManager.MStorage.SelectedLevel;
+            puzzleHintsShown = true;
+            puzzleCompletionProcessed = false;
             // configure puzzle GUI
             GUIConfiguration puzzleConfiguration = puzzleGenericGUIConfiguration;
             if (firstRound)
@@ -328,9 +334,13 @@ namespace RotoChips.Management
                 switch (selectedLevel)
                 {
                     case 0:
+                        puzzleHintsShown = false;
+                        puzzleCompletionProcessed = false;
                         puzzleConfiguration = puzzleLevel0GUIConfiguration;
                         break;
                     case 1:
+                        puzzleHintsShown = false;
+                        puzzleCompletionProcessed = false;
                         puzzleConfiguration = puzzleLevel1GUIConfiguration;
                         break;
                 }
@@ -562,7 +572,22 @@ namespace RotoChips.Management
                                         GlobalManager.MHint.ShowNewHint(HintType.TwoRowsInPlace1);
                                         break;
                                     case HintType.TwoRowsInPlace1:
-                                        GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutocomplete, this);
+                                        // special processing for a completed puzzle
+                                        puzzleHintsShown = true;
+                                        if (puzzleCompletionProcessed)
+                                        {
+                                            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutocomplete, this);
+                                        }
+                                        else
+                                        {
+                                            LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(selectedLevel);
+                                            PuzzleCompleteStatus completeStatus = new PuzzleCompleteStatus
+                                            {
+                                                descriptor = descriptor,
+                                                firstTime = !descriptor.state.Complete
+                                            };
+                                            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleComplete, this, completeStatus);
+                                        }
                                         break;
                                 }
                                 break;
@@ -574,7 +599,22 @@ namespace RotoChips.Management
                                         GlobalManager.MHint.ShowNewHint(HintType.TwoRowsInPlace2);
                                         break;
                                     case HintType.TwoRowsInPlace2:
-                                        GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutocomplete, this);
+                                        // special processing for a completed puzzle
+                                        puzzleHintsShown = true;
+                                        if (puzzleCompletionProcessed)
+                                        {
+                                            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleAutocomplete, this);
+                                        }
+                                        else
+                                        {
+                                            LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(selectedLevel);
+                                            PuzzleCompleteStatus completeStatus = new PuzzleCompleteStatus
+                                            {
+                                                descriptor = descriptor,
+                                                firstTime = !descriptor.state.Complete
+                                            };
+                                            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleComplete, this, completeStatus);
+                                        }
                                         break;
                                 }
                                 break;
@@ -682,14 +722,20 @@ namespace RotoChips.Management
                         if (IsTileInPlace(new Vector2Int(descriptor.init.width - 1, 1), tilesInPlace, descriptor))
                         {
                             // second row assembled
-                            descriptor.state.EarnedPoints = firstRunLevel1Row1Bonus + firstRunLevel1Row0Bonus + (2 + 1) * puzzleAssembledRowBonusStep;
+                            if (!puzzleCompletionProcessed)
+                            {
+                                descriptor.state.EarnedPoints = firstRunLevel1Row1Bonus + firstRunLevel1Row0Bonus + (2 + 1) * puzzleAssembledRowBonusStep;
+                            }
                             StartCoroutine(WaitForButtonRotation(HintType.TwoRowsInPlace));
                         }
                         else
                         if (IsTileInPlace(new Vector2Int(descriptor.init.width - 1, 0), tilesInPlace, descriptor))
                         {
                             // first row assembled
-                            descriptor.state.EarnedPoints = firstRunLevel1Row0Bonus + puzzleAssembledRowBonusStep;
+                            if (!puzzleCompletionProcessed)
+                            {
+                                descriptor.state.EarnedPoints = firstRunLevel1Row0Bonus + puzzleAssembledRowBonusStep;
+                            }
                             StartCoroutine(WaitForButtonRotation(HintType.FirstRowCongratulation));
                         }
                         return;
@@ -758,151 +804,161 @@ namespace RotoChips.Management
 
         void OnPuzzleComplete(object sender, InstantMessageArgs args)
         {
-            bool firstRound = GlobalManager.MStorage.FirstRound;
             PuzzleCompleteStatus completeStatus = (PuzzleCompleteStatus)args.arg;
-            if (completeStatus != null)
+            if (!puzzleCompletionProcessed)
             {
-                int nextLevelId = GlobalManager.MLevel.NextLevel(completeStatus.descriptor.init.id);
-                int prevLevelId = GlobalManager.MLevel.PreviousLevel(completeStatus.descriptor.init.id);
-                RealmData.Init realmData = RealmData.initializers[completeStatus.descriptor.init.realmId];
-
-                // set a message queue for the Victory screen
-                if (completeStatus.firstTime)   // a puzzle is assembled for the first time
+                puzzleCompletionProcessed = true;
+                bool firstRound = GlobalManager.MStorage.FirstRound;
+                if (completeStatus != null)
                 {
-                    GlobalManager.MQueue.PostMessage(levelCompletedId);
-                    if (completeStatus.descriptor.init.id == 0) // this is the very first puzzle in the game
+                    int nextLevelId = GlobalManager.MLevel.NextLevel(completeStatus.descriptor.init.id);
+                    int prevLevelId = GlobalManager.MLevel.PreviousLevel(completeStatus.descriptor.init.id);
+                    RealmData.Init realmData = RealmData.initializers[completeStatus.descriptor.init.realmId];
+
+                    // set a message queue for the Victory screen
+                    if (completeStatus.firstTime)   // a puzzle is assembled for the first time
                     {
-                        GlobalManager.MStorage.GalleryLevel = completeStatus.descriptor.init.id;    // set the gallery level to the newly completed one
-                        GlobalManager.MStorage.FirstGallery = true;                                 // gallery message should be shown
-                        GlobalManager.MQueue.PostMessage(galleryOpenedId);                          // post a message about the gallery
-                    }
-                    if (completeStatus.descriptor.init.realmId >= 0)    // this should always be true, yet...
-                    {
-                        if (realmData.mainLevelId == completeStatus.descriptor.init.id)
+                        GlobalManager.MQueue.PostMessage(levelCompletedId);
+                        if (completeStatus.descriptor.init.id == 0) // this is the very first puzzle in the game
                         {
-                            // main (first) level of the realm has been complete
-                            GlobalManager.MQueue.PostMessage(realmRevealedId);
+                            GlobalManager.MStorage.GalleryLevel = completeStatus.descriptor.init.id;    // set the gallery level to the newly completed one
+                            GlobalManager.MStorage.FirstGallery = true;                                 // gallery message should be shown
+                            GlobalManager.MQueue.PostMessage(galleryOpenedId);                          // post a message about the gallery
                         }
-                    }
-                    if (nextLevelId >= 0)
-                    {
-                        // there is another level to play at
-                        GlobalManager.MQueue.PostMessage(newLevelPlayableId);
-                    }
-                }
-                else
-                {
-                    GlobalManager.MQueue.PostMessage(levelCompletedOnceAgainId);
-                }
-
-                // Do the accounting chores
-                // Also report of achievements
-                long earnedPoints = completeStatus.descriptor.state.EarnedPoints;
-                if (firstRound)
-                {
-                    switch (completeStatus.descriptor.init.id)
-                    {
-                        case 0:
-                            completeStatus.descriptor.state.EarnedPoints =
-                                ((completeStatus.descriptor.init.height + 1) * completeStatus.descriptor.init.height / 2) * puzzleAssembledRowBonusStep +
-                                firstRunLevel0Row0Bonus +
-                                puzzleCompleteBonus;
-                            GlobalManager.MAchievement.ReportNewAchievement(AchievementType.FirstPuzzleAssembled);
-                            break;
-                        case 1:
-                            completeStatus.descriptor.state.EarnedPoints =
-                                ((completeStatus.descriptor.init.height + 1) * completeStatus.descriptor.init.height / 2) * puzzleAssembledRowBonusStep +
-                                firstRunLevel1Row0Bonus +
-                                firstRunLevel1Row1Bonus +
-                                puzzleCompleteBonus;
-                            AddBonusCoins();
-                            GlobalManager.MAchievement.ReportNewAchievement(AchievementType.SecondPuzzleAssembled);
-                            break;
-                        case 2:
-                            GlobalManager.MAchievement.ReportNewAchievement(AchievementType.ThirdPuzzleAssembled);
-                            break;
-                        default:
-                            AddPoints(ref earnedPoints, puzzleCompleteBonus);
-                            completeStatus.descriptor.state.EarnedPoints = earnedPoints;
-                            break;
-                    }
-                }
-                else
-                {
-                    AddPoints(ref earnedPoints, puzzleCompleteBonus);
-                    completeStatus.descriptor.state.EarnedPoints = earnedPoints;
-                }
-                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoChipsChanged, this, (decimal)completeStatus.descriptor.state.EarnedPoints);
-                earnedPoints = GlobalManager.MStorage.CurrentPoints;
-                AddPoints(ref earnedPoints, completeStatus.descriptor.state.EarnedPoints);
-                GlobalManager.MStorage.CurrentPoints = earnedPoints;
-                completeStatus.descriptor.state.Complete = true;
-
-                // set all the levels in the current realm revealed
-                bool realmComplete = true;
-                for (int i = 0; i < realmData.members.Length; i++)
-                {
-                    LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(realmData.members[i]);
-                    if (!descriptor.state.Revealed)
-                    {
-                        descriptor.state.Revealed = true;
-                    }
-                    // check if all the levels in the realm are complete
-                    if (!descriptor.state.Complete)
-                    {
-                        realmComplete = false;
-                    }
-                }
-
-                // now add an achievement
-                if (firstRound)
-                {
-                    switch (completeStatus.descriptor.init.id)
-                    {
-                        case 0:
-                            break;
-                        case 1:
-                            break;
-                    }
-                }
-
-                if (nextLevelId >= 0)
-                {
-                    // make next level revealed and playable
-                    LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(nextLevelId);
-                    descriptor.state.Revealed = true;
-                    descriptor.state.Playable = true;
-                    completeStatus.descriptor.state.NextPlayableId = nextLevelId;
-                    GlobalManager.MStorage.SelectedLevel = nextLevelId;
-                }
-                if (prevLevelId >= 0)
-                {
-                    // link previously completed level to the newly completed one
-                    LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(prevLevelId);
-                    descriptor.state.NextCompleteId = completeStatus.descriptor.init.id;
-                }
-
-                // check if the game is complete
-                if (realmComplete)
-                {
-                    GlobalManager.MQueue.PostMessage(realmCompletedId);
-                    if (realmData.id >= 0 && realmData.id < realmAchievements.Length)
-                    {
-                        GlobalManager.MAchievement.ReportNewAchievement(realmAchievements[realmData.id]);
-                    }
-                    if (nextLevelId < 0)    // no more new levels
-                    {
-                        // the game is complete
-                        GlobalManager.MStorage.GameFinished = true;
-                        GlobalManager.MStorage.FirstRound = false;
-                        GlobalManager.MQueue.PostMessage(gameCompletedId);
-                        GlobalManager.MAchievement.ReportNewAchievement(AchievementType.FirstRunFinished);
+                        if (completeStatus.descriptor.init.realmId >= 0)    // this should always be true, yet...
+                        {
+                            if (realmData.mainLevelId == completeStatus.descriptor.init.id)
+                            {
+                                // main (first) level of the realm has been complete
+                                GlobalManager.MQueue.PostMessage(realmRevealedId);
+                            }
+                        }
+                        if (nextLevelId >= 0)
+                        {
+                            // there is another level to play at
+                            GlobalManager.MQueue.PostMessage(newLevelPlayableId);
+                        }
                     }
                     else
                     {
-                        GlobalManager.MQueue.PostMessage(realmOpenedId);
+                        GlobalManager.MQueue.PostMessage(levelCompletedOnceAgainId);
+                    }
+
+                    // Do the accounting chores
+                    // Also report of achievements
+                    long earnedPoints = completeStatus.descriptor.state.EarnedPoints;
+                    if (firstRound)
+                    {
+                        switch (completeStatus.descriptor.init.id)
+                        {
+                            case 0:
+                                completeStatus.descriptor.state.EarnedPoints =
+                                    ((completeStatus.descriptor.init.height + 1) * completeStatus.descriptor.init.height / 2) * puzzleAssembledRowBonusStep +
+                                    firstRunLevel0Row0Bonus +
+                                    puzzleCompleteBonus;
+                                GlobalManager.MAchievement.ReportNewAchievement(AchievementType.FirstPuzzleAssembled);
+                                break;
+                            case 1:
+                                completeStatus.descriptor.state.EarnedPoints =
+                                    ((completeStatus.descriptor.init.height + 1) * completeStatus.descriptor.init.height / 2) * puzzleAssembledRowBonusStep +
+                                    firstRunLevel1Row0Bonus +
+                                    firstRunLevel1Row1Bonus +
+                                    puzzleCompleteBonus;
+                                AddBonusCoins();
+                                GlobalManager.MAchievement.ReportNewAchievement(AchievementType.SecondPuzzleAssembled);
+                                break;
+                            case 2:
+                                GlobalManager.MAchievement.ReportNewAchievement(AchievementType.ThirdPuzzleAssembled);
+                                break;
+                            default:
+                                AddPoints(ref earnedPoints, puzzleCompleteBonus);
+                                completeStatus.descriptor.state.EarnedPoints = earnedPoints;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        AddPoints(ref earnedPoints, puzzleCompleteBonus);
+                        completeStatus.descriptor.state.EarnedPoints = earnedPoints;
+                    }
+                    GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIRotoChipsChanged, this, (decimal)completeStatus.descriptor.state.EarnedPoints);
+                    earnedPoints = GlobalManager.MStorage.CurrentPoints;
+                    AddPoints(ref earnedPoints, completeStatus.descriptor.state.EarnedPoints);
+                    GlobalManager.MStorage.CurrentPoints = earnedPoints;
+                    //completeStatus.descriptor.state.Complete = true;
+
+                    // set all the levels in the current realm revealed
+                    bool realmComplete = true;
+                    for (int i = 0; i < realmData.members.Length; i++)
+                    {
+                        LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(realmData.members[i]);
+                        if (!descriptor.state.Revealed)
+                        {
+                            descriptor.state.Revealed = true;
+                        }
+                        // check if all other levels in the realm are complete
+                        if (descriptor.init.id != completeStatus.descriptor.init.id && !descriptor.state.Complete)
+                        {
+                            realmComplete = false;
+                        }
+                    }
+
+                    // now add an achievement
+                    if (firstRound)
+                    {
+                        switch (completeStatus.descriptor.init.id)
+                        {
+                            case 0:
+                                break;
+                            case 1:
+                                break;
+                        }
+                    }
+
+                    if (nextLevelId >= 0)
+                    {
+                        // make next level revealed and playable
+                        LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(nextLevelId);
+                        descriptor.state.Revealed = true;
+                        descriptor.state.Playable = true;
+                        completeStatus.descriptor.state.NextPlayableId = nextLevelId;
+                        GlobalManager.MStorage.SelectedLevel = nextLevelId;
+                    }
+                    if (prevLevelId >= 0)
+                    {
+                        // link previously completed level to the newly completed one
+                        LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(prevLevelId);
+                        descriptor.state.NextCompleteId = completeStatus.descriptor.init.id;
+                    }
+
+                    // check if the game is complete
+                    if (realmComplete)
+                    {
+                        GlobalManager.MQueue.PostMessage(realmCompletedId);
+                        if (realmData.id >= 0 && realmData.id < realmAchievements.Length)
+                        {
+                            GlobalManager.MAchievement.ReportNewAchievement(realmAchievements[realmData.id]);
+                        }
+                        if (nextLevelId < 0)    // no more new levels
+                        {
+                            // the game is complete
+                            GlobalManager.MStorage.GameFinished = true;
+                            GlobalManager.MStorage.FirstRound = false;
+                            GlobalManager.MQueue.PostMessage(gameCompletedId);
+                            GlobalManager.MAchievement.ReportNewAchievement(AchievementType.FirstRunFinished);
+                        }
+                        else
+                        {
+                            GlobalManager.MQueue.PostMessage(realmOpenedId);
+                        }
                     }
                 }
+            }
+            // there may be some unshown hints; notify for puzzle processing completion otherwise
+            if (puzzleHintsShown)
+            {
+                completeStatus.descriptor.state.Complete = true;
+                GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleCompleteProcessed, this, completeStatus);
             }
         }
 

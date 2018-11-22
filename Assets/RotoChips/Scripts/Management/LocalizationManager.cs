@@ -69,8 +69,12 @@ namespace RotoChips.Management
         }
         public override void Load(object prototype)
         {
-            currentLanguage = ConformSystemLanguage(((LanguageWrapper)prototype).language);
+            if (currentLanguage == SystemLanguage.Unknown)
+            {
+                currentLanguage = ConformSystemLanguage(((LanguageWrapper)prototype).language);
+            }
         }
+
         public override string SaveSignature()
         {
             return signature;

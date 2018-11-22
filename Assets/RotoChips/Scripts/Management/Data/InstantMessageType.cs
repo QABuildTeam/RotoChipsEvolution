@@ -144,6 +144,9 @@ namespace RotoChips.Management
         PuzzleComplete,                 // Notification: The puzzle is assembled
                                         //      Arguments:
                                         //          RotoChips.Puzzle.PuzzleCompleteStatus completeStatus - a status of completeness
+        PuzzleCompleteProcessed,        // Notification: All the needed processing after the puzzle assembly has been completed
+                                        //      Arguments:
+                                        //          RotoChips.Puzzle.PuzzleCompleteStatus completeStatus - a status of completeness
         PuzzlePrepareAutostep,          // Command: Flash two tiles behind the autostep choice dialog
                                         //      Arguments: None
         PuzzleAutostep,                 // Command: Use an autostep feature
