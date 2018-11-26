@@ -64,6 +64,9 @@ namespace RotoChips.Story
         [SerializeField]
         protected GameObject stressedImage;
         protected StoryImage stressedStoryImage;
+        [Header("UI")]
+        [SerializeField]
+        protected Button stopButton;
 
         void SetImageSize(StoryImage storyImage)
         {
@@ -215,7 +218,10 @@ namespace RotoChips.Story
         protected override void AwakeInit()
         {
             //Debug.Log("StoryTeller.AwakeInit");
-            registrator.Add(new MessageRegistrationTuple { type = InstantMessageType.GUIWhiteCurtainFaded, handler = OnGUIWhiteCurtainFaded });
+            registrator.Add(
+                new MessageRegistrationTuple { type = InstantMessageType.GUIWhiteCurtainFaded, handler = OnGUIWhiteCurtainFaded },
+                new MessageRegistrationTuple { type = InstantMessageType.GUIFullScreenButtonPressed, handler = OnGUIFullScreenButtonPressed }
+            );
             normalStoryImage = new StoryImage(normalImage);
             stressedStoryImage = new StoryImage(stressedImage);
             frameId = -1;
@@ -228,6 +234,7 @@ namespace RotoChips.Story
             stressedStoryImage.originalRect = stressedStoryImage.rectTransform.rect;
             normalStoryImage.fader.Turn(false);
             stressedStoryImage.fader.Turn(false);
+            stopButton.interactable = GlobalManager.MStorage.IntroShown;
             Visualize(flashRange.min);
         }
 
@@ -247,6 +254,12 @@ namespace RotoChips.Story
             {
                 StartCoroutine(SwitchMessageDelayed());
             }
+        }
+
+        void OnGUIFullScreenButtonPressed(object sender, InstantMessageArgs args)
+        {
+            stopButton.interactable = false;
+            GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.GUIFadeWhiteCurtain, this, true);
         }
     }
 }

@@ -13,11 +13,6 @@ using RotoChips.Generic;
 
 namespace RotoChips.Management
 {
-    public enum QueuedMessageType
-    {
-        Unknown
-    }
-
     public class MessageQueueManager : GenericManager
     {
 

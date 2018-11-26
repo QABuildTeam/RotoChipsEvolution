@@ -506,6 +506,7 @@ namespace RotoChips.Management
             HintRequest hintRequest = (HintRequest)args.arg;
             bool firstRound = GlobalManager.MStorage.FirstRound;
             int selectedLevel = GlobalManager.MStorage.SelectedLevel;
+            Debug.Log("GameManager.OnGUIHintClosed after " + hintRequest.type.ToString());
             switch (sceneType)
             {
                 case SceneType.World:
@@ -574,6 +575,7 @@ namespace RotoChips.Management
                                     case HintType.TwoRowsInPlace1:
                                         // special processing for a completed puzzle
                                         puzzleHintsShown = true;
+                                        Debug.Log("GameManager.OnGUIHintClosed: after " + hintRequest.type.ToString() + " puzzleCompletionProcessed is " + puzzleCompletionProcessed.ToString());
                                         if (puzzleCompletionProcessed)
                                         {
                                             LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(selectedLevel);
@@ -595,12 +597,14 @@ namespace RotoChips.Management
                                 switch (hintRequest.type)
                                 {
                                     case HintType.TwoRowsInPlace:
+                                        Debug.Log("GameManager.OnGUIHintClosed: after " + hintRequest.type.ToString() + " show new hint TwoRowsInPlace2");
                                         AddBonusCoins();
                                         GlobalManager.MHint.ShowNewHint(HintType.TwoRowsInPlace2);
                                         break;
                                     case HintType.TwoRowsInPlace2:
                                         // special processing for a completed puzzle
                                         puzzleHintsShown = true;
+                                        Debug.Log("GameManager.OnGUIHintClosed: after " + hintRequest.type.ToString() + " puzzleCompletionProcessed is " + puzzleCompletionProcessed.ToString());
                                         if (puzzleCompletionProcessed)
                                         {
                                             LevelDataManager.Descriptor descriptor = GlobalManager.MLevel.GetDescriptor(selectedLevel);
@@ -807,7 +811,9 @@ namespace RotoChips.Management
             PuzzleCompleteStatus completeStatus = (PuzzleCompleteStatus)args.arg;
             if (!puzzleCompletionProcessed)
             {
+                // this may be the first pass at tutorial levels
                 puzzleCompletionProcessed = true;
+                Debug.Log("GameManager.OnPuzzleComplete: set puzzleCompletionProcessed flag to true");
                 bool firstRound = GlobalManager.MStorage.FirstRound;
                 if (completeStatus != null)
                 {
@@ -922,7 +928,7 @@ namespace RotoChips.Management
                         descriptor.state.Revealed = true;
                         descriptor.state.Playable = true;
                         completeStatus.descriptor.state.NextPlayableId = nextLevelId;
-                        GlobalManager.MStorage.SelectedLevel = nextLevelId;
+                        //GlobalManager.MStorage.SelectedLevel = nextLevelId;
                     }
                     if (prevLevelId >= 0)
                     {
@@ -957,8 +963,15 @@ namespace RotoChips.Management
             // there may be some unshown hints; notify for puzzle processing completion otherwise
             if (puzzleHintsShown)
             {
+                // this may be the second pass at tutorial levels (0 and 1)
+                Debug.Log("GameManager.OnPuzzleComplete: all hints are shown, completing the level");
                 completeStatus.descriptor.state.Complete = true;
+                GlobalManager.MStorage.SelectedLevel = GlobalManager.MLevel.NextLevel(completeStatus.descriptor.init.id);
                 GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleCompleteProcessed, this, completeStatus);
+            }
+            else
+            {
+                Debug.Log("GameManager.OnPuzzleComplete: not every hint is shown yet");
             }
         }
 
