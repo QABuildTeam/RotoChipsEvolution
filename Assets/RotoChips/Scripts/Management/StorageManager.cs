@@ -13,6 +13,13 @@ using RotoChips.Generic;
 
 namespace RotoChips.Management
 {
+
+    [System.Serializable]
+    public enum RollsType
+    {
+        Story,
+        Finale
+    }
     public class StorageManager : GenericManager
     {
         [System.Serializable]
@@ -51,6 +58,7 @@ namespace RotoChips.Management
                                                 // set after the Story scene has been shown and is never reset
             public bool finaleShown;            // the Finale scene has been shown
                                                 // set after the Finale scene has been shown and is never reset
+            public RollsType rolls;             // a type of a video clip to be shown by tapping the View button in the World scene
         }
 
         // real storage
@@ -297,6 +305,22 @@ namespace RotoChips.Management
             }
         }
 
+        public RollsType Rolls
+        {
+            get
+            {
+                return storage.rolls;
+            }
+            set
+            {
+                if (storage.rolls != value)
+                {
+                    storage.rolls = value;
+                    GlobalManager.Instance.Save();
+                }
+            }
+        }
+
         protected virtual Storage InitialStorage()
         {
             Storage tempStorage = new Storage
@@ -315,7 +339,8 @@ namespace RotoChips.Management
                 firstStart = true,
                 bonusCoinsAdded = false,
                 introShown = false,
-                finaleShown = false
+                finaleShown = false,
+                rolls = RollsType.Story
             };
             return tempStorage;
         }

@@ -84,7 +84,7 @@ MonoBehaviour:
     rotocoinsPanel: 0
   worldRun1GUIConfiguration:
     restartButton: 0
-    viewButton: 0
+    viewButton: 1
     backButton: 0
     magicButon: 0
     cupButton: 1

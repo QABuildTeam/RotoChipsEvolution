@@ -53,6 +53,7 @@ namespace RotoChips.UI
         ShowAdHint,
         RestorePurchases,
         BackToPuzzle,
-        CupButton
+        CupButton,
+        StoryButton
     }
 }

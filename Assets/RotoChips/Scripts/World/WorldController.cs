@@ -109,6 +109,8 @@ namespace RotoChips.World
         [SerializeField]
         protected string finaleScene = "Finale";
         [SerializeField]
+        protected string storyScene = "Story";
+        [SerializeField]
         protected string restartGameQuestion = "idGUIRestartGameQuestion";
         [SerializeField]
         protected SFXPlayParams levelDescriptionSFX;
@@ -233,9 +235,30 @@ namespace RotoChips.World
 
         void OnGUIViewButtonPressed(object sender, InstantMessageArgs args)
         {
-            if (!GlobalManager.MHint.ShowNewHint(HintType.GameRollsButton))
+            if (GlobalManager.MStorage.FirstRound && !GlobalManager.MStorage.FinaleShown)
             {
-                StartCoroutine(YieldToScene(null, finaleScene));
+                if (!GlobalManager.MHint.ShowNewHint(HintType.StoryButton))
+                {
+                    GlobalManager.MStorage.Rolls = RollsType.Story;
+                    StartCoroutine(YieldToScene(null, storyScene));
+                }
+            }
+            else
+            {
+                if (!GlobalManager.MHint.ShowNewHint(HintType.GameRollsButton))
+                {
+                    RollsType newRolls = RollsType.Finale;
+                    string newScene = finaleScene;
+                    switch (GlobalManager.MStorage.Rolls)
+                    {
+                        case RollsType.Finale:
+                            newRolls = RollsType.Story;
+                            newScene = storyScene;
+                            break;
+                    }
+                    GlobalManager.MStorage.Rolls = newRolls;
+                    StartCoroutine(YieldToScene(null, newScene));
+                }
             }
         }
 

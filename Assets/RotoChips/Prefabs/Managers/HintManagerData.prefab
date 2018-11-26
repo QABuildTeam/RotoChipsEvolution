@@ -199,7 +199,7 @@ MonoBehaviour:
     hintMsgId: idHelpPuzzlePointScoreTapped
     layout: 3
     width: 500
-    height: 140
+    height: 180
     xGap: -100
     yGap: -50
     arrowOn: 0
@@ -389,6 +389,17 @@ MonoBehaviour:
     height: 150
     xGap: 100
     yGap: 100
+    arrowOn: 0
+    target: {fileID: 0}
+    arrowAngle: 0
+    arrowMessage: 0
+  - type: 42
+    hintMsgId: idHelpStartVideoButton
+    layout: 3
+    width: 500
+    height: 180
+    xGap: -100
+    yGap: -50
     arrowOn: 0
     target: {fileID: 0}
     arrowAngle: 0
