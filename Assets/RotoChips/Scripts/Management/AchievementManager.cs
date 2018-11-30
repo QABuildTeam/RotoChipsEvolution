@@ -79,7 +79,7 @@ namespace RotoChips.Management
                 ILeaderboard leaderboard = Social.CreateLeaderboard();
                 leaderboard.id = LeaderboardName;
                 Debug.Log("Loading scores for leaderboard " + LeaderboardName);
-                Social.LoadScores(LeaderboardName, ProcessScores);
+                leaderboard.LoadScores(result => ProcessScores(result, leaderboard));
             }
         }
 
@@ -91,8 +91,20 @@ namespace RotoChips.Management
             }
         }
 
-        void ProcessScores(IScore[] scores)
+        void ProcessScores(bool result, ILeaderboard leaderboard)
         {
+            if (result)
+            {
+                Debug.Log("Scores in " + leaderboard.id + " successfully loaded");
+                foreach (IScore score in leaderboard.scores)
+                {
+                    Debug.Log(score);
+                }
+            }
+            else
+            {
+                Debug.Log("No scores loaded");
+            }
         }
 
         public void ReportNewScore(long score)
