@@ -104,17 +104,17 @@ MonoBehaviour:
     subclipOrder: 
   sfx:
   - id: 1
-    clip: {fileID: 8300000, guid: 0afc04de06d5746b4981f321b75fa8af, type: 3}
+    clip: {fileID: 8300000, guid: fb770e74377051e4d96ba835da3ba8e9, type: 3}
     loop: 0
     pitch: 1
     volume: 1
   - id: 2
-    clip: {fileID: 8300000, guid: 84c52bdb4531848fda49696996c0a851, type: 3}
+    clip: {fileID: 8300000, guid: 47cef3177cc896b4ea3ac389a42529ad, type: 3}
     loop: 0
     pitch: 1
     volume: 1
   - id: 3
-    clip: {fileID: 8300000, guid: 873306423fb9f467eaeb1f82b41d2751, type: 3}
+    clip: {fileID: 8300000, guid: fc8ac2a481dfa9a4b854430e19d8474c, type: 3}
     loop: 0
     pitch: 1
     volume: 1

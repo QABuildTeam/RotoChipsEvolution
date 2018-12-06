@@ -1,140 +1,140 @@
-{"id":"idHelpMagicButton","language":"English","value":"If you're stuck while solving\\nthe puzzle, tap this icon\\nto automagically move\\none tile to its place.\\nThis action costs\\n<color=red>1,000 RotoCoins</color>, however."}
-{"language":"English","id":"id3000_rotocoins","value":"3,000 RotoCoins"}
-{"value":"When the river Fossa drops from a height of 122 m at the south of Iceland, it forms the waterfall Haifodd here. This is the third highest waterfall in Iceland.","id":"LevelDescription027","language":"English"}
-{"value":"Moraine Lake, situated high in mountains of Alberta, Canada and glacially fed, is widely considered to be one of the most beautiful lakes in the world.","id":"LevelDescription005","language":"English"}
-{"language":"English","id":"idShopQuestion","value":"INSUFFICIENT ROTOCOINS\\nDo you want to buy some?"}
-{"language":"English","id":"LevelTitle018","value":"Baikal forest"}
-{"value":"Move the next two tiles to their places by tapping this button.","id":"idHelpSecondTileButtonsHint","language":"English"}
-{"value":"Their light faded, so did their colors","id":"idIntro008","language":"English"}
-{"value":"Li River (or Lijiang) is one of the most clear rivers of China. It flows through green hills and rice fields while forming crescent-like bends on its way from Mao'er Mountains to Yangshuo county. There it becomes Gui River, and together these two rivers are 437 km long.\n","language":"English","id":"LevelDescription026"}
-{"id":"LevelTitle028","language":"English","value":"Statuary of Bryce Canyon"}
-{"id":"idHelpFirstPuzzleQuarterRotated","language":"English","value":"Yeah, you're doing it right!\\nGo ahead, try once more!"}
-{"value":"Loading...","id":"idLogoLoadingMessage","language":"English"}
-{"language":"English","id":"idGameCompleted","value":"YOU HAVE COMPLETED THE GAME!"}
-{"value":"TAP TO CONTINUE","id":"idGUIContinueMessage","language":"English"}
-{"language":"English","id":"LevelDescription024","value":"Greenland is considered to be the world's largest island which almost fully covered with the permanent ice sheet. Its nearest relative, Antarctica, though fully covered with ice, is considered to be a continental landmass."}
-{"value":"But time knows no mercy, so the miraculous pictures\\ndid not last for the eternity","id":"idIntro007","language":"English"}
-{"value":"And here is one of them...","language":"English","id":"idWelcomeMessage2"}
-{"value":"Once there lived an artist who painted miraculous pictures","id":"idIntro001","language":"English"}
-{"value":"Move the first tile to its place by tapping this button.","id":"idHelpFirstTileButtonsHint","language":"English"}
-{"value":"YOU HAVE ASSEMBLED THE PUZZLE!","id":"idLevelCompleted","language":"English"}
-{"language":"English","id":"LevelDescription012","value":"National Park Arches, Utah, United States\\nThe state of Utah - the record holder for amazing, unimaginable forms, created by nature with the help of water and wind. In Arches Park there are more than 2000 sand arches. The length of the largest arch is 85 meters."}
-{"language":"English","id":"LevelTitle011","value":"The Blue abyss"}
-{"value":"One of the most famous Crimean landmarks is situated near the town of Belogorsk. It is Akkaya, an enormous wall of coquina 100 meters high.","id":"LevelDescription006","language":"English"}
-{"language":"English","id":"LevelTitle031","value":"Antelope Canyon magic"}
-{"value":"Great!\\nThe first tile is in its place!","language":"English","id":"idHelpFirstTileInPlace"}
-{"id":"LevelTitle022","language":"English","value":"Altai mountains from a birdsight"}
-{"value":"A pier in Lofotens","id":"LevelTitle000","language":"English"}
-{"language":"English","id":"idLevelAlreadyAssembled","value":"This puzzle has already been assembled."}
-{"value":"Chuuk Lagoon is a part of the Federated States of Micronesia, situated in the south-west of the Pacific. Scuba divers from all over the world enjoy the sights of military wreckage in the shallow waters of the lagoon which is surrounded by barrier reefs.","language":"English","id":"LevelDescription033"}
-{"value":"An ice shard","id":"LevelTitle019","language":"English"}
-{"value":"Dutch settlers of South Africa called the eastern portion of the Great Escarpment ''Drakensbergen'', or ''Mountains of Dragons'' (possibly because of their pointy peaks resembling the backbone of these mythical fire-breathing beasts).","id":"LevelDescription029","language":"English"}
-{"language":"English","id":"idHelpGalleryOpened","value":"This satellite stores all the puzzle images\\nyou've assembled so far."}
-{"value":"AN ENTRANCE TO A NEW REALM IS OPENED!","language":"English","id":"idRealmOpened"}
-{"value":"A waterfall sunset","language":"English","id":"LevelTitle023"}
-{"language":"English","id":"idGalleryOpened","value":"GALLERY OPENED!"}
-{"value":"This is your actual RotoCoins balance.","id":"idHelpPuzzleCoinsScoreTapped","language":"English"}
+{"value":"But time knows no mercy, so the miraculous pictures\\ndid not last for the eternity","language":"English","id":"idIntro007"}
+{"id":"LevelTitle030","value":"Baikal lake, the shore of the Big Ushkan island","language":"English"}
+{"id":"idLogoLoadingMessage","value":"Loading...","language":"English"}
+{"id":"idHelpStartVideoButton","value":"You can watch the story of the Artist\\nof Light by tapping this button.","language":"English"}
+{"id":"idHelpGalleryOpened","value":"This satellite stores all the puzzle images\\nyou've assembled so far.","language":"English"}
+{"id":"LevelDescription022","language":"English","value":"The natural beauty of the Altai Mountains is so incredible that one can easily take them for a movie landscape or a videogame location rather than a real mountain range in Central and Eastern Asia which is almost half a billion years old."}
+{"id":"idHelpTwoRowsInPlace","language":"English","value":"Congratulations!\\nThe two top rows are assembled,\\nand you are awarded with bonus\\nRotoChips and RotoCoins!"}
+{"id":"LevelTitle027","value":"Iceland, Haifoss waterfall","language":"English"}
+{"id":"idLogoStartMessage","language":"English","value":"Tap to start"}
+{"value":"TAP TO START","language":"English","id":"idGUIStartMessage"}
+{"id":"LevelDescription026","value":"Li River (or Lijiang) is one of the most clear rivers of China. It flows through green hills and rice fields while forming crescent-like bends on its way from Mao'er Mountains to Yangshuo county. There it becomes Gui River, and together these two rivers are 437 km long.\n","language":"English"}
+{"value":"Congratulations!\\nYou have just finished the game!","language":"English","id":"idGameFinishedCongratulation"}
+{"id":"idHelpFirstPuzzleQuarterRotated","value":"Yeah, you're doing it right!\\nGo ahead, try once more!","language":"English"}
+{"value":"1,000 RotoCoins","language":"English","id":"id1000_rotocoins"}
+{"language":"English","value":"An autumn stream","id":"LevelTitle013"}
+{"id":"LevelTitle005","value":"A rainbow over the mountain lake","language":"English"}
+{"id":"idFinalTextRoll2","value":"Photographs of wild nature\\nwere shot by\\n<color=yellow>DMITRY ARKHIPOV</color>\\n<color=lightblue>http://dmitryarkhipov.com/</color>","language":"English"}
+{"language":"English","value":"This button lets you view an ad and earn some RotoCoins!","id":"idShowAd"}
+{"value":"A NEW PUZZLE BECOMES PLAYABLE!","language":"English","id":"idNewLevelPlayable"}
+{"value":"Moraine Lake, situated high in mountains of Alberta, Canada and glacially fed, is widely considered to be one of the most beautiful lakes in the world.","language":"English","id":"LevelDescription005"}
+{"id":"idFirstRowCongratulation","value":"Marvellous!\\nThe top row is in place!\\nYou receive bonus RotoChips!","language":"English"}
+{"id":"idHelpPuzzleCoinsScoreTapped","value":"This is your actual RotoCoins balance.","language":"English"}
+{"id":"idHelpBackButton","language":"English","value":"Tap this icon to\\nreturn back to puzzle selection"}
+{"id":"LevelDescription020","language":"English","value":"A unique backdrop of Capetown, South Africa, is Table Mountain which has been officially included in the ''New7Wonders of Nature'' list.Its fully flat top gave the name not only to the mountain itself, but also to its natural twins and the Mensa constellation as well."}
+{"value":"Welcome to RotoChips!\\nThis planet Earth\\nhides many wonderful masterpieces\\nof the Artist of Light.","language":"English","id":"idWelcomeMessage"}
 {"id":"LevelTitle033","language":"English","value":"Coral reefs at Truk Islands"}
-{"language":"English","id":"LevelDescription034","value":"Cypress woods occupy the wide spreaded swamps in Texas and Louisiana. Everyone who manages to get here is overwhelmed with their almost ethereal supernatiralism."}
-{"id":"idFinalTextRoll3","language":"English","value":"THANK YOU FOR PLAYING!"}
-{"id":"LevelTitle020","language":"English","value":"A sight of Table Mountain"}
-{"id":"LevelDescription030","language":"English","value":"Though hard to believe, Lake Baikal and the Dead Sea are ''relatives'' to some extent: they are both situated in tectonic rifts - deep linear cavities where the Earth lithosphere is being pulled apart."}
-{"id":"idHelpSecondLevelChallenge","language":"English","value":"Try and assemble two top rows of the puzzle."}
-{"value":"Olkhon island is the largest island of Lake Baikal which comprises different natural areas amongst which are steppes, sand beaches, and coniferous forests. Carved by erosion within limestone rocks, Shaman cave is one of the places of interest at Olkhon island. ","id":"LevelDescription002","language":"English"}
-{"value":"Ice blue","id":"LevelTitle017","language":"English"}
-{"language":"English","id":"LevelTitle015","value":"An autumn lake"}
-{"value":"Marvellous!\\nThe top row is in place!\\nYou receive bonus RotoChips!","language":"English","id":"idHelpThirdTileInPlace"}
-{"value":"This puzzle game has been developed\\nand brought to you by\\n\\n<color=yellow>IGOR SPIRIDONOV</color>\\n\\nPhotographs of wild nature\\nwere taken by\\n\\n<color=yellow>DMITRY ARKHIPOV</color>\\n<color=lightblue>http://dmitryarkhipov.com/</color>\\n\\n\\n\\n\\n\\nThank you for playing!\\n","id":"idFinalTextRoll","language":"English"}
-{"id":"idHelpCupButton","language":"English","value":"This button shows\\nyour game achievements."}
-{"language":"English","id":"LevelDescription023","value":"Fantastic sunset on the waterfall of Haifoss. We were very fortunate. We arrived at the waterfall 3 hours before sunset to fly on the drone. But soon a beautiful light show began in the sky..."}
-{"language":"English","id":"idRealmCompleted","value":"YOU HAVE COMPLETED A REALM!"}
-{"value":"Canyon lakes","language":"English","id":"LevelTitle001"}
-{"id":"idFirstRowCongratulation","language":"English","value":"Marvellous!\\nThe top row is in place!\\nYou receive bonus RotoChips!"}
-{"value":"Excellent!\\nThe second tile in place!","language":"English","id":"idHelpSecondTileInPlace"}
-{"value":"You can watch the story of the Artist\\nof Light or the final rolls\\nby tapping this button","id":"idHelpGameRollsButton","language":"English"}
-{"value":"Everyone can enjoy the view of thos rocky ''island'' in Banff National Park - the oldest national park of Canada, which is situated to the west of the province of Alberta.","language":"English","id":"LevelDescription007"}
-{"language":"English","id":"LevelTitle021","value":"Svartifoss, a black waterfall"}
-{"language":"English","id":"idLogoStartMessage","value":"Tap to start"}
-{"language":"English","id":"LevelTitle009","value":"A misty tide"}
-{"language":"English","id":"idPurchaseConfirmation","value":"BUY {0}\\nFOR {1}?"}
-{"language":"English","id":"idHelpGameRestartButton","value":"Now you can restart it\\nby tapping this button\\nto earn new points\\nand become\\nthe RotoChips CHAMPION!"}
-{"value":"An icy cave at the Olkhon island","id":"LevelTitle002","language":"English"}
-{"value":"The White Rock","id":"LevelTitle006","language":"English"}
-{"value":"The south-west of the US is rich with national parks among which are the famous Grand Canyon, Death Valley, the Mojave Desert, Yosemite, and many others, their climate and natural conditions ranging from scorched deserts to millenial forests to underground cave systems.","language":"English","id":"LevelDescription001"}
-{"language":"English","id":"idWelcomeMessage","value":"Welcome to RotoChips!\\nThis planet Earth\\nhides many wonderful masterpieces\\nof the Artist of Light."}
-{"value":"The Blue abyss at dusk","language":"English","id":"LevelTitle014"}
-{"language":"English","id":"LevelTitle016","value":"Old mill"}
-{"language":"English","id":"LevelDescription000","value":"The Lofoten Islands are scattered across the harsh waters of the Norwegian Sea, far beyond the Arctic Circle. This rare wilderness outpost offers an untrammelled landscape of majestic mountains, deep fjords, squawking seabird colonies and long, surf-swept beaches."}
-{"value":"Egyptian authorities only allow diving in the Blue Hole for qualified freedivers accompanied by the certified diving instructors.","id":"LevelDescription014","language":"English"}
-{"value":"The original image has been cut\\ninto pieces, which are shuffled\\nin random manner.\\nTry to re-assemble the image by tapping the yellow buttons!","id":"idHelpPuzzleFirstShuffled","language":"English"}
-{"value":"This is a score of RotoChip points you've earned while solving this very puzzle.","language":"English","id":"idHelpPuzzlePointScoreTapped"}
-{"value":"A road in the Altai mountains","id":"LevelTitle025","language":"English"}
-{"value":"And that's why they became miraculous","id":"idIntro003","language":"English"}
-{"id":"LevelTitle029","language":"English","value":"Rock sphere"}
-{"value":"This level is not yet playable.","id":"idLevelNotYetPlayable","language":"English"}
-{"value":"Tap this icon\\nto view the original image","id":"idHelpShowSourceButton","language":"English"}
-{"value":"Spirit Island","id":"LevelTitle008","language":"English"}
-{"language":"English","id":"LevelTitle005","value":"A rainbow over the mountain lake"}
-{"value":"The Icelandic ice sheet melts faster than the water can freeze and produce the new ice. Because of this the world's sea level constantly rises.","language":"English","id":"LevelDescription019"}
-{"id":"idRealmRevealed","language":"English","value":"THE REALM IS REVEALED!"}
-{"language":"English","id":"id1000_rotocoins","value":"1,000 RotoCoins"}
-{"language":"English","id":"idBackToPuzzle","value":"This button returns you to the puzzle."}
-{"language":"English","id":"idHelpWorldPointScoreTapped","value":"This is a score of RotoChip points you'v earned for all the puzzles of this World."}
-{"language":"English","id":"LevelDescription020","value":"A unique backdrop of Capetown, South Africa, is Table Mountain which has been officially included in the ''New7Wonders of Nature'' list.Its fully flat top gave the name not only to the mountain itself, but also to its natural twins and the Mensa constellation as well."}
-{"id":"LevelDescription016","language":"English","value":"An old wooden mill on Crystal River, Colorado, was really a powerhouse which powered an air compressor in the nearby mines. It has been abandoned tens of years ago, but still pleases the eyes of numerous tourists and photographers due to the marvellous nature sight around it."}
-{"value":"So far, you've assembled two images. From now on you're on your own. Enjoy these crazy brain-crunching puzzles!","id":"idHelpNoMoreBonuses","language":"English"}
-{"value":"BACK TO PICTURE SELECTION?","id":"idGUIBackQuestion","language":"English"}
-{"value":"A crescent of the river","id":"LevelTitle026","language":"English"}
-{"language":"English","id":"idIntro002","value":"He created them with Light, not with paints"}
-{"language":"English","id":"idIntro006","value":"And people admired them"}
-{"value":"Tourists and photographers from all the world are attracted by the arabesque shapes of Lower Antelope Canyon rocks. Their grooved surfaces reflect the sun rays multiple times turning the whole sight into pure magic.","language":"English","id":"LevelDescription031"}
-{"language":"English","id":"idGUIMagicQuestion","value":"MOVE THE TILE TO ITS PLACE?\\nThis'll cost you 1000 RotoCoins!"}
-{"value":"This button lets you view an ad and earn some RotoCoins!","language":"English","id":"idShowAd"}
-{"value":"REALLY RESET THE GAME?","id":"idGUIRestartGameQuestion","language":"English"}
-{"value":"YOU WON!","id":"idVictory","language":"English"}
-{"value":"RESTART THE PUZZLE?","id":"idGUIRestartLevelQuestion","language":"English"}
-{"value":"A bear in its forest","language":"English","id":"LevelTitle010"}
-{"value":"Located in the southwest Utah, USA, Bryce Canyon National Park is not really a canyon. as the name may suggest, but a giantic amphitheatre of rocks with bizarre forms. Those forms were carved by an erosion process which lasted for several tens of millions years.","id":"LevelDescription028","language":"English"}
-{"value":"Baikal lake, the shore of the Big Ushkan island","id":"LevelTitle030","language":"English"}
-{"value":"Scattered by the north-western coast of Norway, islands of Lofoten archipelago are divided from each other by narrow sea passages and bays. The most famous maelstrom in the world - Moskstraumen - is situated here, between Vaeroy and Moskenesoya islands.","id":"LevelDescription009","language":"English"}
-{"language":"English","id":"idFinalTextRoll2","value":"Photographs of wild nature\\nwere shot by\\n<color=yellow>DMITRY ARKHIPOV</color>\\n<color=lightblue>http://dmitryarkhipov.com/</color>"}
-{"id":"id10000_rotocoins","language":"English","value":"10,000 RotoCoins"}
-{"value":"You can watch the story of the Artist\\of Light by tapping this button.","id":"idHelpStartVideoButton","language":"English"}
-{"value":"The natural beauty of the Altai Mountains is so incredible that one can easily take them for a movie landscape or a videogame location rather than a real mountain range in Central and Eastern Asia which is almost half a billion years old.","id":"LevelDescription022","language":"English"}
-{"value":"South-West Arches","id":"LevelTitle012","language":"English"}
-{"language":"English","id":"LevelDescription017","value":"Though beyond the North Arctic Circle, Lofotens exhibit a relatively warm climate even in the coldest winter months. This is all due to the warm Atlantic current, the Gulf Stream."}
-{"value":"WELL DONE!","id":"idLevelCompletedOnceAgain","language":"English"}
-{"value":"Bears in Karelia are common inhabitants, and people ususally can watch them going out of the woods.","language":"English","id":"LevelDescription010"}
-{"language":"English","id":"LevelDescription004","value":"Lofoten. Norway. Winter. Polar night is coming. Next time the sun will rise here after six months."}
-{"language":"English","id":"idRestorePurcases","value":"You may restore your purchases by tapping this button."}
-{"id":"LevelTitle003","language":"English","value":"A windmill"}
-{"value":"Svartifall, the ''Black Falls'' of Iceland, is widely known because of its decorations - hexagonal columns of dark lava which not only gave the waterfall its name, but served as a source of inspiration for many Icelandic architects.","id":"LevelDescription021","language":"English"}
-{"language":"English","id":"LevelTitle032","value":"The gloriuos sea, sacred Baikal"}
-{"id":"LevelDescription032","language":"English","value":"The Baikal ice is almost perfectly transparent, its thickness reaching 1-2 m by the end of the winter. Heavy Siberian frosts tear the ice into pieces covering it with the unique weaving of cracks through which the oxygen penetrates into deeper layers of water."}
-{"language":"English","id":"LevelDescription013","value":"The mountain river begins with tiny streams that merge and form a powerful flow which may create colossal waterfalls and river rapids. Here, behind the waterfalls, are nesting places for flocks of trout - which is famous for its its beauty and unique taste."}
-{"value":"In the XVIII century a system of windmills was built in the village of Kinderdijk, not far from Rotterdam. Nowdays these windmills are one of the well-known Dutch tourist sites.","id":"LevelDescription003","language":"English"}
-{"value":"His masterpieces were divided into parts which spreaded all across the world","id":"idIntro005","language":"English"}
-{"value":"In the middle of Lake Baikal there is a small archipelago which is called Uskan Islands. Most taiga trees and plants are widely represented in those islands' woods, such as larch trees, pine trees, birch trees, and rosemary.","id":"LevelDescription018","language":"English"}
-{"language":"English","id":"idGameFinishedCongratulation","value":"Congratulations!\\nYou have just finished the game!"}
-{"value":"A village in Lofotens","language":"English","id":"LevelTitle004"}
-{"value":"But there is a way to revive them!","language":"English","id":"idIntro010"}
-{"language":"English","id":"LevelDescription011","value":"The Blue Hole of the Red Sea is situated to the north of Dahab, Egypt, 132 m beyond the sea level, and is believed to be the most dangerous diving site in the world because of many diving fatalities in the past."}
-{"id":"idHelpRestartLevelButton","language":"English","value":"Tap this icon to restart the puzzle.\\nWARNING!\\nAll your points you've earned in this puzzle\\nwill be lost! "}
-{"value":"What was painted on those pictures could be hardly guessed by acid paint spots on them","id":"idIntro009","language":"English"}
-{"id":"LevelTitle024","language":"English","value":"An icy arch"}
-{"value":"This puzzle game\\nhas been developed\\nand brought to you by\\n<color=yellow>IGOR SPIRIDONOV</color>\\n<color=lightblue>https://vk.com/rotochips</color>\\n\\nAdditional\\nlogo design\\n<color=yellow>ALINA SPIRIDONOVA</color>","id":"idFinalTextRoll1","language":"English"}
+{"id":"idIntro005","language":"English","value":"His masterpieces were divided into parts which spreaded all across the world"}
+{"value":"Once there lived an artist who painted miraculous pictures","language":"English","id":"idIntro001"}
+{"language":"English","value":"Located in the southwest Utah, USA, Bryce Canyon National Park is not really a canyon. as the name may suggest, but a giantic amphitheatre of rocks with bizarre forms. Those forms were carved by an erosion process which lasted for several tens of millions years.","id":"LevelDescription028"}
+{"language":"English","value":"When the river Fossa drops from a height of 122 m at the south of Iceland, it forms the waterfall Haifodd here. This is the third highest waterfall in Iceland.","id":"LevelDescription027"}
+{"id":"idGalleryOpened","value":"GALLERY OPENED!","language":"English"}
+{"id":"idHelpPuzzleFirstShuffled","language":"English","value":"The original image has been cut\\ninto pieces, which are shuffled\\nin random manner.\\nTry to re-assemble the image by tapping the yellow buttons!"}
+{"value":"The Blue abyss","language":"English","id":"LevelTitle011"}
+{"id":"idRestorePurcases","language":"English","value":"You may restore your purchases by tapping this button."}
+{"value":"This button returns you to the puzzle.","language":"English","id":"idBackToPuzzle"}
+{"value":"INSUFFICIENT ROTOCOINS\\nDo you want to buy some?","language":"English","id":"idShopQuestion"}
+{"id":"LevelDescription018","language":"English","value":"In the middle of Lake Baikal there is a small archipelago which is called Uskan Islands. Most taiga trees and plants are widely represented in those islands' woods, such as larch trees, pine trees, birch trees, and rosemary."}
+{"language":"English","value":"An autumn lake","id":"LevelTitle015"}
+{"id":"idGUIRestartLevelQuestion","language":"English","value":"RESTART THE PUZZLE?"}
 {"id":"LevelDescription008","language":"English","value":"Thrown in the middle of Maligne Lake of the Canadian Rockies, tied with the shore by a thin isthmus, Spirit Island is widely known among photographers from all around the world."}
-{"value":"Cypress swamps","id":"LevelTitle034","language":"English"}
-{"id":"idGUIViewMessage","language":"English","value":"TAP TO VIEW COMPLETE PUZZLE"}
-{"language":"English","id":"idGUIStartMessage","value":"TAP TO START"}
-{"language":"English","id":"LevelDescription025","value":"The Altai Mountains are considered to be the most ecologically clean region of Russian Federation. There are no industrial enterprises or railways here. Highways are present, though."}
-{"value":"Try and assemble the top row of the puzzle.","id":"idHelpFirstLevelChallenge","language":"English"}
-{"language":"English","id":"idHelpTwoRowsInPlace","value":"Congratulations!\\nThe two top rows are assembled,\\nand you are awarded with bonus\\nRotoChips and RotoCoins!"}
-{"language":"English","id":"idIntro004","value":"Every country considered it an honor to own at least a part of the Artist's pictures"}
-{"language":"English","id":"LevelTitle013","value":"An autumn stream"}
-{"language":"English","id":"idHelpBackButton","value":"Tap this icon to\\nreturn back to puzzle selection"}
-{"value":"A stone island","id":"LevelTitle007","language":"English"}
-{"language":"English","id":"LevelDescription015","value":"Gorny Altai. Golden autumn. The snow falling in the morning by the evening has melted and remained only high in the mountains."}
-{"language":"English","id":"idHelpTwoRowsInPlace2","value":"Now the puzzle will be assembled by itself!"}
-{"language":"English","id":"idNewLevelPlayable","value":"A NEW PUZZLE BECOMES PLAYABLE!"}
-{"language":"English","id":"LevelTitle027","value":"Iceland, Haifoss waterfall"}
+{"value":"Try and assemble two top rows of the puzzle.","language":"English","id":"idHelpSecondLevelChallenge"}
+{"language":"English","value":"YOU WON!","id":"idVictory"}
+{"language":"English","value":"And people admired them","id":"idIntro006"}
+{"id":"idHelpTwoRowsInPlace2","language":"English","value":"Now the puzzle will be assembled by itself!"}
+{"id":"idHelpFirstLevelChallenge","language":"English","value":"Try and assemble the top row of the puzzle."}
+{"value":"Spirit Island","language":"English","id":"LevelTitle008"}
+{"language":"English","value":"He created them with Light, not with paints","id":"idIntro002"}
+{"value":"South-West Arches","language":"English","id":"LevelTitle012"}
+{"id":"idFinalTextRoll1","value":"This puzzle game\\nhas been developed\\nand brought to you by\\n<color=yellow>IGOR SPIRIDONOV</color>\\n<color=lightblue>https://vk.com/rotochips</color>\\n\\nAdditional\\nlogo design\\n<color=yellow>ALINA SPIRIDONOVA</color>","language":"English"}
+{"language":"English","value":"10,000 RotoCoins","id":"id10000_rotocoins"}
+{"id":"idLevelNotYetPlayable","value":"This level is not yet playable.","language":"English"}
+{"id":"idHelpSecondTileInPlace","language":"English","value":"Excellent!\\nThe second tile in place!"}
+{"language":"English","value":"Lofoten. Norway. Winter. Polar night is coming. Next time the sun will rise here after six months.","id":"LevelDescription004"}
+{"id":"LevelDescription021","language":"English","value":"Svartifall, the ''Black Falls'' of Iceland, is widely known because of its decorations - hexagonal columns of dark lava which not only gave the waterfall its name, but served as a source of inspiration for many Icelandic architects."}
+{"language":"English","value":"One of the most famous Crimean landmarks is situated near the town of Belogorsk. It is Akkaya, an enormous wall of coquina 100 meters high.","id":"LevelDescription006"}
+{"language":"English","value":"YOU HAVE COMPLETED A REALM!","id":"idRealmCompleted"}
+{"language":"English","value":"The Lofoten Islands are scattered across the harsh waters of the Norwegian Sea, far beyond the Arctic Circle. This rare wilderness outpost offers an untrammelled landscape of majestic mountains, deep fjords, squawking seabird colonies and long, surf-swept beaches.","id":"LevelDescription000"}
+{"value":"An old wooden mill on Crystal River, Colorado, was really a powerhouse which powered an air compressor in the nearby mines. It has been abandoned tens of years ago, but still pleases the eyes of numerous tourists and photographers due to the marvellous nature sight around it.","language":"English","id":"LevelDescription016"}
+{"id":"idHelpWorldPointScoreTapped","language":"English","value":"This is a score of RotoChip points you'v earned for all the puzzles of this World."}
+{"id":"idHelpGameRestartButton","language":"English","value":"Now you can restart it\\nby tapping this button\\nto earn new points\\nand become\\nthe RotoChips CHAMPION!"}
+{"value":"A bear in its forest","language":"English","id":"LevelTitle010"}
+{"value":"The Icelandic ice sheet melts faster than the water can freeze and produce the new ice. Because of this the world's sea level constantly rises.","language":"English","id":"LevelDescription019"}
+{"id":"idHelpGameRollsButton","value":"You can watch the story of the Artist\\nof Light or the final rolls\\nby tapping this button","language":"English"}
+{"language":"English","value":"This puzzle game has been developed\\nand brought to you by\\n\\n<color=yellow>IGOR SPIRIDONOV</color>\\n\\nPhotographs of wild nature\\nwere taken by\\n\\n<color=yellow>DMITRY ARKHIPOV</color>\\n<color=lightblue>http://dmitryarkhipov.com/</color>\\n\\n\\n\\n\\n\\nThank you for playing!\\n","id":"idFinalTextRoll"}
+{"id":"LevelTitle026","language":"English","value":"A crescent of the river"}
+{"id":"LevelTitle025","value":"A road in the Altai mountains","language":"English"}
+{"language":"English","value":"This button shows\\nyour game achievements.","id":"idHelpCupButton"}
+{"value":"BACK TO PICTURE SELECTION?","language":"English","id":"idGUIBackQuestion"}
+{"id":"LevelDescription025","language":"English","value":"The Altai Mountains are considered to be the most ecologically clean region of Russian Federation. There are no industrial enterprises or railways here. Highways are present, though."}
+{"language":"English","value":"Though hard to believe, Lake Baikal and the Dead Sea are ''relatives'' to some extent: they are both situated in tectonic rifts - deep linear cavities where the Earth lithosphere is being pulled apart.","id":"LevelDescription030"}
+{"id":"LevelTitle020","value":"A sight of Table Mountain","language":"English"}
+{"language":"English","value":"So far, you've assembled two images. From now on you're on your own. Enjoy these crazy brain-crunching puzzles!","id":"idHelpNoMoreBonuses"}
+{"language":"English","value":"The mountain river begins with tiny streams that merge and form a powerful flow which may create colossal waterfalls and river rapids. Here, behind the waterfalls, are nesting places for flocks of trout - which is famous for its its beauty and unique taste.","id":"LevelDescription013"}
+{"language":"English","value":"Dutch settlers of South Africa called the eastern portion of the Great Escarpment ''Drakensbergen'', or ''Mountains of Dragons'' (possibly because of their pointy peaks resembling the backbone of these mythical fire-breathing beasts).","id":"LevelDescription029"}
+{"language":"English","value":"National Park Arches, Utah, United States\\nThe state of Utah - the record holder for amazing, unimaginable forms, created by nature with the help of water and wind. In Arches Park there are more than 2000 sand arches. The length of the largest arch is 85 meters.","id":"LevelDescription012"}
+{"id":"LevelTitle009","value":"A misty tide","language":"English"}
+{"id":"idLevelCompletedOnceAgain","language":"English","value":"WELL DONE!"}
+{"value":"Tourists and photographers from all the world are attracted by the arabesque shapes of Lower Antelope Canyon rocks. Their grooved surfaces reflect the sun rays multiple times turning the whole sight into pure magic.","language":"English","id":"LevelDescription031"}
+{"id":"LevelTitle021","value":"Svartifoss, a black waterfall","language":"English"}
+{"id":"LevelDescription010","value":"Bears in Karelia are common inhabitants, and people ususally can watch them going out of the woods.","language":"English"}
+{"id":"LevelDescription032","language":"English","value":"The Baikal ice is almost perfectly transparent, its thickness reaching 1-2 m by the end of the winter. Heavy Siberian frosts tear the ice into pieces covering it with the unique weaving of cracks through which the oxygen penetrates into deeper layers of water."}
+{"id":"idIntro009","language":"English","value":"What was painted on those pictures could be hardly guessed by acid paint spots on them"}
+{"language":"English","value":"Move the first tile to its place by tapping this button.","id":"idHelpFirstTileButtonsHint"}
+{"id":"id3000_rotocoins","value":"3,000 RotoCoins","language":"English"}
+{"language":"English","value":"TAP TO CONTINUE","id":"idGUIContinueMessage"}
+{"id":"idLevelCompleted","value":"YOU HAVE ASSEMBLED THE PUZZLE!","language":"English"}
+{"language":"English","value":"Everyone can enjoy the view of thos rocky ''island'' in Banff National Park - the oldest national park of Canada, which is situated to the west of the province of Alberta.","id":"LevelDescription007"}
+{"value":"Great!\\nThe first tile is in its place!","language":"English","id":"idHelpFirstTileInPlace"}
+{"id":"idFinalTextRoll3","value":"THANK YOU FOR PLAYING!","language":"English"}
+{"id":"LevelTitle031","language":"English","value":"Antelope Canyon magic"}
+{"language":"English","value":"Altai mountains from a birdsight","id":"LevelTitle022"}
+{"language":"English","value":"Fantastic sunset on the waterfall of Haifoss. We were very fortunate. We arrived at the waterfall 3 hours before sunset to fly on the drone. But soon a beautiful light show began in the sky...","id":"LevelDescription023"}
+{"id":"LevelTitle004","language":"English","value":"A village in Lofotens"}
+{"language":"English","value":"Chuuk Lagoon is a part of the Federated States of Micronesia, situated in the south-west of the Pacific. Scuba divers from all over the world enjoy the sights of military wreckage in the shallow waters of the lagoon which is surrounded by barrier reefs.","id":"LevelDescription033"}
+{"language":"English","value":"The White Rock","id":"LevelTitle006"}
+{"id":"LevelTitle000","value":"A pier in Lofotens","language":"English"}
+{"language":"English","value":"The gloriuos sea, sacred Baikal","id":"LevelTitle032"}
+{"value":"Every country considered it an honor to own at least a part of the Artist's pictures","language":"English","id":"idIntro004"}
+{"id":"LevelDescription011","value":"The Blue Hole of the Red Sea is situated to the north of Dahab, Egypt, 132 m beyond the sea level, and is believed to be the most dangerous diving site in the world because of many diving fatalities in the past.","language":"English"}
+{"id":"LevelTitle029","language":"English","value":"Rock sphere"}
+{"value":"REALLY RESET THE GAME?","language":"English","id":"idGUIRestartGameQuestion"}
+{"id":"LevelTitle002","value":"An icy cave at the Olkhon island","language":"English"}
+{"language":"English","value":"The Blue abyss at dusk","id":"LevelTitle014"}
+{"value":"TAP TO VIEW COMPLETE PUZZLE","language":"English","id":"idGUIViewMessage"}
+{"language":"English","value":"Their light faded, so did their colors","id":"idIntro008"}
+{"value":"But there is a way to revive them!","language":"English","id":"idIntro010"}
+{"value":"Canyon lakes","language":"English","id":"LevelTitle001"}
+{"id":"LevelTitle018","language":"English","value":"Baikal forest"}
+{"id":"idIntro003","value":"And that's why they became miraculous","language":"English"}
+{"value":"Ice blue","language":"English","id":"LevelTitle017"}
+{"id":"LevelDescription002","value":"Olkhon island is the largest island of Lake Baikal which comprises different natural areas amongst which are steppes, sand beaches, and coniferous forests. Carved by erosion within limestone rocks, Shaman cave is one of the places of interest at Olkhon island. ","language":"English"}
+{"id":"idHelpRestartLevelButton","value":"Tap this icon to restart the puzzle.\\nWARNING!\\nAll your points you've earned in this puzzle\\nwill be lost! ","language":"English"}
+{"language":"English","value":"An ice shard","id":"LevelTitle019"}
+{"id":"LevelDescription001","value":"The south-west of the US is rich with national parks among which are the famous Grand Canyon, Death Valley, the Mojave Desert, Yosemite, and many others, their climate and natural conditions ranging from scorched deserts to millenial forests to underground cave systems.","language":"English"}
+{"id":"LevelTitle016","value":"Old mill","language":"English"}
+{"id":"LevelDescription014","language":"English","value":"Egyptian authorities only allow diving in the Blue Hole for qualified freedivers accompanied by the certified diving instructors."}
+{"language":"English","value":"BUY {0}\\nFOR {1}?","id":"idPurchaseConfirmation"}
+{"value":"And here is one of them...","language":"English","id":"idWelcomeMessage2"}
+{"id":"idLevelAlreadyAssembled","value":"This puzzle has already been assembled.","language":"English"}
+{"id":"idHelpThirdTileInPlace","value":"Marvellous!\\nThe top row is in place!\\nYou receive bonus RotoChips!","language":"English"}
+{"id":"idHelpShowSourceButton","language":"English","value":"Tap this icon\\nto view the original image"}
+{"language":"English","value":"Cypress swamps","id":"LevelTitle034"}
+{"value":"Statuary of Bryce Canyon","language":"English","id":"LevelTitle028"}
+{"id":"idHelpMagicButton","value":"If you're stuck while solving\\nthe puzzle, tap this icon\\nto automagically move\\none tile to its place.\\nThis action costs\\n<color=red>1,000 RotoCoins</color>, however.","language":"English"}
+{"id":"idGUIMagicQuestion","language":"English","value":"MOVE THE TILE TO ITS PLACE?\\nThis'll cost you 1000 RotoCoins!"}
+{"value":"THE REALM IS REVEALED!","language":"English","id":"idRealmRevealed"}
+{"language":"English","value":"Greenland is considered to be the world's largest island which almost fully covered with the permanent ice sheet. Its nearest relative, Antarctica, though fully covered with ice, is considered to be a continental landmass.","id":"LevelDescription024"}
+{"id":"LevelDescription017","value":"Though beyond the North Arctic Circle, Lofotens exhibit a relatively warm climate even in the coldest winter months. This is all due to the warm Atlantic current, the Gulf Stream.","language":"English"}
+{"id":"LevelDescription015","language":"English","value":"Gorny Altai. Golden autumn. The snow falling in the morning by the evening has melted and remained only high in the mountains."}
+{"value":"A windmill","language":"English","id":"LevelTitle003"}
+{"value":"Move the next two tiles to their places by tapping this button.","language":"English","id":"idHelpSecondTileButtonsHint"}
+{"value":"Cypress woods occupy the wide spreaded swamps in Texas and Louisiana. Everyone who manages to get here is overwhelmed with their almost ethereal supernatiralism.","language":"English","id":"LevelDescription034"}
+{"id":"idRealmOpened","value":"AN ENTRANCE TO A NEW REALM IS OPENED!","language":"English"}
+{"id":"LevelDescription003","value":"In the XVIII century a system of windmills was built in the village of Kinderdijk, not far from Rotterdam. Nowdays these windmills are one of the well-known Dutch tourist sites.","language":"English"}
+{"id":"idHelpPuzzlePointScoreTapped","language":"English","value":"This is a score of RotoChip points you've earned while solving this very puzzle."}
+{"id":"LevelTitle023","language":"English","value":"A waterfall sunset"}
+{"id":"idGameCompleted","language":"English","value":"YOU HAVE COMPLETED THE GAME!"}
+{"language":"English","value":"An icy arch","id":"LevelTitle024"}
+{"value":"Scattered by the north-western coast of Norway, islands of Lofoten archipelago are divided from each other by narrow sea passages and bays. The most famous maelstrom in the world - Moskstraumen - is situated here, between Vaeroy and Moskenesoya islands.","language":"English","id":"LevelDescription009"}
+{"id":"LevelTitle007","value":"A stone island","language":"English"}
