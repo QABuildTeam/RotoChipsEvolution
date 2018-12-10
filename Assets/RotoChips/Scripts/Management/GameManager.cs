@@ -37,6 +37,7 @@ namespace RotoChips.Management
             // the level states are already loaded before MakeReady()
             if (GlobalManager.MStorage.FirstRound && !GlobalManager.MStorage.BonusCoinsAdded)
             {
+                /*
                 LevelDataManager.Descriptor descriptor1 = GlobalManager.MLevel.GetDescriptor(1);
                 if (!descriptor1.state.Complete)
                 {
@@ -59,6 +60,18 @@ namespace RotoChips.Management
                         {
                             GlobalManager.MLevel.ResetLevel(descriptor.init.id);
                         }
+                    }
+                }
+                */
+                LevelDataManager.Descriptor descriptor0 = GlobalManager.MLevel.GetDescriptor(0);
+                if (!descriptor0.state.Complete)
+                {
+                    // reset remaining hints
+                    GlobalManager.MHint.ResetHintFlags(0);
+                    // totally reset the game
+                    foreach (LevelDataManager.Descriptor descriptor in GlobalManager.MLevel.LevelDescriptors())
+                    {
+                        GlobalManager.MLevel.ResetLevel(descriptor.init.id);
                     }
                 }
             }

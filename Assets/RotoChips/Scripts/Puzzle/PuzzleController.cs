@@ -329,7 +329,7 @@ namespace RotoChips.Puzzle
         {
             startVictoryScreen = false;
             GlobalManager.MInstantMessage.DeliverMessage(InstantMessageType.PuzzleBusy, this, true);
-            GlobalManager.MLevel.ResetLevel(descriptor.init.id);
+            GlobalManager.MLevel.ResetLevel(descriptor.init.id, true);
             RestoreAll();
             StartCoroutine(ShufflePuzzle());
         }

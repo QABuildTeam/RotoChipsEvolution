@@ -107,9 +107,9 @@ MonoBehaviour:
     rotochipsPanel: 1
     rotocoinsPanel: 0
   puzzleLevel1GUIConfiguration:
-    restartButton: 0
+    restartButton: 1
     viewButton: 1
-    backButton: 0
+    backButton: 1
     magicButon: 0
     cupButton: 0
     rotochipsPanel: 1

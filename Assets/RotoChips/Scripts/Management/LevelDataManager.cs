@@ -391,7 +391,7 @@ namespace RotoChips.Management
             return -1;
         }
 
-        public void ResetLevel(int levelId)
+        public void ResetLevel(int levelId, bool keepPlayable = false)
         {
             State state = levelStates[levelId];
             state.Complete = false;
@@ -402,8 +402,11 @@ namespace RotoChips.Management
             state.LastGoodState = string.Empty;
             state.NextCompleteId = -1;
             state.NextPlayableId = -1;
-            state.Playable = levelId == 0;
-            state.Revealed = levelId == 0;
+            if (!keepPlayable)
+            {
+                state.Playable = levelId == 0;
+                state.Revealed = levelId == 0;
+            }
             state.EarnedPoints = 0;
         }
 
