@@ -63,7 +63,9 @@ namespace RotoChips.ImageProcessing
             //Debug.Log("StressImageCreator.BgStressImage: creating STRESS image from " + sourceGraphicResource + " as " + (originalImage == null ? "null" : originalImage.ToString()));
             int w = originalImage.width;
             int h = originalImage.height;
-            stressedImage = new Texture2D(w, h, originalImage.format, false);
+            //stressedImage = new Texture2D(w, h, originalImage.format, false);
+            // only RGBA32 textures are allowed to be written into
+            stressedImage = new Texture2D(w, h, TextureFormat.RGBA32, false);
             Color[] ic = originalImage.GetPixels();
             Color[] oc = new Color[w * h];
             int coffset = 0;
