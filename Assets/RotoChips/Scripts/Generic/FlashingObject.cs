@@ -62,34 +62,34 @@ namespace RotoChips.Generic
             // true  - appearance changes from flashRange.min to flashRange.max, using flashDuration.min
             // false - appearance changes from flashRange.max to flashRange.min, using flashDuration.max
             int periodHalf = up ? 0 : 1;
-            float startFlash = flashRange[periodHalf];
-            float endFlash = flashRange[periodHalf + 1];
-            float minFlash = Mathf.Min(startFlash, endFlash);
-            float maxFlash = Mathf.Max(startFlash, endFlash);
+            float startFlashFactor = flashRange[periodHalf];
+            float endFlashFactor = flashRange[periodHalf + 1];
+            float minFlashFactor = Mathf.Min(startFlashFactor, endFlashFactor);
+            float maxFlashFactor = Mathf.Max(startFlashFactor, endFlashFactor);
             int periodCounter = 0;
             float currentTime = 0;
             while (IsValidPeriod(periodCounter))
             {
-                Visualize(startFlash);
-                float currentFlash = startFlash;
+                Visualize(startFlashFactor);
+                float currentFlashFactor = startFlashFactor;
                 float duration = flashDuration[periodHalf];
                 while (currentTime < duration)
                 {
                     yield return null;
                     currentTime += Time.deltaTime;
-                    currentFlash = Mathf.Clamp(Mathf.Lerp(startFlash, endFlash, currentTime / duration), minFlash, maxFlash);
-                    Visualize(currentFlash);
+                    currentFlashFactor = Mathf.Clamp(Mathf.Lerp(startFlashFactor, endFlashFactor, currentTime / duration), minFlashFactor, maxFlashFactor);
+                    Visualize(currentFlashFactor);
                 }
-                Visualize(endFlash);
+                Visualize(endFlashFactor);
                 PeriodFinished(up);
                 up = !up;
                 periodHalf = up ? 0 : 1;
                 periodCounter = (periodCounter + 1) % 1024; // 1024 is a trick which does not allow periodCounter to become too big
                 currentTime -= duration;
                 // exchange startFlash and endFlash
-                float temp = startFlash;
-                startFlash = endFlash;
-                endFlash = temp;
+                float temp = startFlashFactor;
+                startFlashFactor = endFlashFactor;
+                endFlashFactor = temp;
             }
             currentFlash = null;
         }

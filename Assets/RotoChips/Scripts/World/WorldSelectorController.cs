@@ -77,7 +77,7 @@ namespace RotoChips.World
                 {
                     if (levelDescriptor.state.Playable)
                     {
-                        Debug.Log("WorldSelectorController.Init: id=" + levelDescriptor.init.id.ToString() + ", playable=" + levelDescriptor.state.Playable.ToString());
+                        //Debug.Log("WorldSelectorController.Init: id=" + levelDescriptor.init.id.ToString() + ", playable=" + levelDescriptor.state.Playable.ToString());
                         iconPath += "/icon";
                         if (levelDescriptor.init.id == GlobalManager.MStorage.SelectedLevel)
                         {

@@ -70,15 +70,17 @@ namespace RotoChips.Management
             }
         }
 
+        protected ILeaderboard leaderboard;
+
         void ProcessAuthentication(bool success)
         {
             if (success)
             {
                 Social.LoadAchievements(ProcessLoadedAchievements);
-                Debug.Log("Creating leaderboard " + LeaderboardName);
-                ILeaderboard leaderboard = Social.CreateLeaderboard();
+                //Debug.Log("Creating leaderboard " + LeaderboardName);
+                leaderboard = Social.CreateLeaderboard();
                 leaderboard.id = LeaderboardName;
-                Debug.Log("Loading scores for leaderboard " + LeaderboardName);
+                //Debug.Log("Loading scores for leaderboard " + LeaderboardName);
                 leaderboard.LoadScores(result => ProcessScores(result, leaderboard));
             }
         }
@@ -87,7 +89,7 @@ namespace RotoChips.Management
         {
             if (achievements.Length == 0)
             {
-                Debug.Log("No achievements loaded");
+                //Debug.Log("No achievements loaded");
             }
         }
 
@@ -95,7 +97,7 @@ namespace RotoChips.Management
         {
             if (result)
             {
-                Debug.Log("Scores in " + leaderboard.id + " successfully loaded");
+                //Debug.Log("Scores in " + leaderboard.id + " successfully loaded");
                 foreach (IScore score in leaderboard.scores)
                 {
                     Debug.Log(score);
@@ -109,9 +111,9 @@ namespace RotoChips.Management
 
         public void ReportNewScore(long score)
         {
-            if (data != null)
+            if (leaderboard != null)
             {
-                Social.ReportScore(score, LeaderboardName, success =>
+                Social.ReportScore(score, leaderboard.id, (success) =>
                 {
                     Debug.Log("Score " + score.ToString() + " has been " + (success ? "successfully" : "unsuccessfully") + " reported of");
                 });

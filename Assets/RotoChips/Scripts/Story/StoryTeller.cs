@@ -100,9 +100,13 @@ namespace RotoChips.Story
 
         void SetStressedImage()
         {
+            /*
             string stressImage = StressImageCreator.StressedFinalImageFile(storyMessages[frameId].pictureId);
             Texture2D stressTex = new Texture2D(2, 2, TextureFormat.RGB24, false);
             stressTex.LoadImage(System.IO.File.ReadAllBytes(stressImage));
+            */
+            string stressTexResource = LevelDataManager.StressImageResource(storyMessages[frameId].pictureId);
+            Texture2D stressTex = Resources.Load<Texture2D>(stressTexResource);
             stressedStoryImage.image.texture = stressTex;
             SetImageSize(stressedStoryImage);
         }

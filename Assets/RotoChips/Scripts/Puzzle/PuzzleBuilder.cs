@@ -61,9 +61,12 @@ namespace RotoChips.Puzzle
             float puzzleRatioXY = (float)width / (float)height;
 
             // prepare one STRESS texture for all tiles
+            /*
             string stressImage = StressImageCreator.StressedFinalImageFile(descriptor.init.id);
             Texture2D tex = new Texture2D(2, 2, TextureFormat.RGB24, false);
             tex.LoadImage(System.IO.File.ReadAllBytes(stressImage));
+            */
+            Texture2D tex = Resources.Load<Texture2D>(LevelDataManager.StressImageResource(descriptor.init.id));
             // a special factor used in later calculations
             Vector2 texFactor = new Vector2
             {

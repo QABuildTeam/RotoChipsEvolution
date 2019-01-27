@@ -143,7 +143,8 @@ namespace RotoChips.Management
                 {
                     points = maximumPoints;
                 }
-            }else if (deltaPoints < 0)
+            }
+            else if (deltaPoints < 0)
             {
                 if (points >= -deltaPoints)
                 {
@@ -904,6 +905,7 @@ namespace RotoChips.Management
                     earnedPoints = GlobalManager.MStorage.CurrentPoints;
                     AddPoints(ref earnedPoints, completeStatus.descriptor.state.EarnedPoints);
                     GlobalManager.MStorage.CurrentPoints = earnedPoints;
+                    GlobalManager.MAchievement.ReportNewScore(earnedPoints);
                     //completeStatus.descriptor.state.Complete = true;
 
                     // set all the levels in the current realm revealed

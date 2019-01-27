@@ -48,6 +48,7 @@ namespace RotoChips.Puzzle
         ImageScaleParams[] imageParams;
 
         Vector2 sourceCanvasSize;
+        Vector2 screenSize;
         protected FloatRange currentScale;
         LevelDataManager.Descriptor descriptor;
 
@@ -61,9 +62,12 @@ namespace RotoChips.Puzzle
             float screenAspect = Camera.main.aspect;
 
             // load STRESS and SMOOTH textures
+            /*
             string stressImage = StressImageCreator.StressedFinalImageFile(descriptor.init.id);
             Texture2D stressTex = new Texture2D(2, 2, TextureFormat.RGB24, false);
             stressTex.LoadImage(System.IO.File.ReadAllBytes(stressImage));
+            */
+            Texture2D stressTex = Resources.Load<Texture2D>(LevelDataManager.StressImageResource(descriptor.init.id));
             imageParams[0].winImage.texture = stressTex;
             Texture2D smoothTex = Resources.Load<Texture2D>(LevelDataManager.SmoothImageResource(descriptor.init.id));
             imageParams[1].winImage.texture = smoothTex;
@@ -73,6 +77,7 @@ namespace RotoChips.Puzzle
             // the size of the canvas excluding margins
             Rect sourceCanvasRect = new Rect(0, 0, canvasScaler.referenceResolution.x * (1 - marginRatio), canvasScaler.referenceResolution.y * (1 - marginRatio));
             sourceCanvasSize = new Vector2(sourceCanvasRect.width, sourceCanvasRect.height);
+            screenSize = new Vector2(Screen.width, Screen.height);
             // SourceCanvas matches screen by width, so the final height scaling should be adjusted by:
             float heightAdjustFactor = sourceCanvasRect.width / sourceCanvasRect.height / screenAspect;
             for (int i = 0; i < imageParams.Length; i++)
@@ -124,18 +129,24 @@ namespace RotoChips.Puzzle
             );
         }
 
+        int lowIndex = 0;
+        int hiIndex = 1;
         void GenerateNewStep(bool up)
         {
-            int index = up ? 1 : 0;     // address corresponding scale and position parts
+            lowIndex = up ? 0 : 1;     // address corresponding to scale and position start parts
+            hiIndex = up ? 1 : 0;       // address corresponding to scale and position end parts
             float newScale = effectFinished ? 1f : scaleRange.Random;
-            currentScale[index] = newScale;
+            currentScale[hiIndex] = newScale;
             Vector2 endParts = effectFinished ? Vector2.zero : (new Vector2(Random.value, Random.value) - Vector2.one * 0.5f);
             for (int i = 0; i < imageParams.Length; i++)
             {
-                Vector2 displacement = Vector2.Scale((imageParams[i].effectiveSize * newScale - sourceCanvasSize), endParts);
+                //Vector2 displacement = Vector2.Scale((imageParams[i].effectiveSize * newScale - sourceCanvasSize), endParts);
+                Vector2 displacement = Vector2.Scale((imageParams[i].effectiveSize * newScale - sourceCanvasSize), endParts) / 2;
                 Vector2 newPosition = imageParams[i].originalPosition + displacement;
-                imageParams[i].movePosition[index] = newPosition;
+                imageParams[i].movePosition[hiIndex] = newPosition;
             }
+            Debug.Log("New step: from " + lowIndex.ToString() + " (scale=" + currentScale[lowIndex].ToString() + ",position=" + imageParams[0].movePosition[lowIndex].ToString() + ") to " + hiIndex.ToString() + " (scale=" + currentScale[hiIndex].ToString() + ",position=" + imageParams[0].movePosition[hiIndex].ToString() + ")");
+            Debug.Log("New rect bounds: (" + (imageParams[0].movePosition[hiIndex] - imageParams[0].effectiveSize * newScale / 2).ToString() + "," + (imageParams[0].movePosition[hiIndex] + imageParams[0].effectiveSize * newScale / 2) + ")");
             //Debug.Log("original=" + imageParams[0].originalPosition.ToString() + "; scale: min=" + currentScale.min.ToString() + ", max=" + currentScale.max.ToString() + "; position: 0=" + imageParams[0].movePosition[0].ToString() + ", 1=" + imageParams[0].movePosition[1].ToString());
         }
 
@@ -143,11 +154,16 @@ namespace RotoChips.Puzzle
         {
             for (int i = 0; i < imageParams.Length; i++)
             {
-                Vector2 effectiveScale = imageParams[i].sourceScale * Mathf.Lerp(currentScale.min, currentScale.max, factor);
+                Vector2 effectiveScale = imageParams[i].sourceScale * Mathf.Lerp(currentScale[0], currentScale[1], factor);
                 imageParams[i].imageTransform.localScale = effectiveScale;
                 Vector2 effectivePosition = Vector2.Lerp(imageParams[i].movePosition[0], imageParams[i].movePosition[1], factor);
                 imageParams[i].imageTransform.localPosition = effectivePosition;
-                //Debug.Log("Scale " + effectiveScale.ToString() + ", position " + effectivePosition.ToString());
+                /*
+                if (i == 0)
+                {
+                    Debug.Log("Factor " + factor.ToString() + ", scale " + effectiveScale.ToString() + ", position " + effectivePosition.ToString());
+                }
+                */
             }
         }
 

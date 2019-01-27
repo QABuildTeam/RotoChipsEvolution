@@ -48,7 +48,7 @@ namespace RotoChips.Accounting
             // debug
             foreach(ProductDesc product in data.products)
             {
-                Debug.Log("Product " + product.id + " price: " + product.price.value.ToString() + ", value: " + product.value.value.ToString());
+                //Debug.Log("Product " + product.id + " price: " + product.price.value.ToString() + ", value: " + product.value.value.ToString());
             }
             InitializePurchasing();
             base.MakeInitial();

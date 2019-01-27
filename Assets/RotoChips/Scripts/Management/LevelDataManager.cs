@@ -334,6 +334,11 @@ namespace RotoChips.Management
             return GraphicsResource(levelId) + "/smooth";
         }
 
+        public static string StressImageResource(int levelid)
+        {
+            return GraphicsResource(levelid) + "/stress";
+        }
+
         public IEnumerable LevelDescriptors()
         {
             foreach (int levelId in levelInits.Keys)

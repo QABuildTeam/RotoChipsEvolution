@@ -240,14 +240,14 @@ namespace RotoChips.ImageProcessing
             Debug.Log("stress time " + level.ToString() + ": " + (endTime - startTime).ToString());
             // now try to save the stressed image into a file
             var bytes = stressedImage.EncodeToJPG();
-            string imageFileName = StressedFinalImageFile(level);
+            string imageFileName = StressedFinalImageFilename(level);
             Debug.Log("Writing data to file " + imageFileName);
             System.IO.File.WriteAllBytes(imageFileName, bytes);
             hasStressFile[level] = true;
         }
 
         // this method returns the name of the stress image file for a specified level
-        public static string StressedFinalImageFile(int level)
+        public static string StressedFinalImageFilename(int level)
         {
             if (level < 0 || level >= LevelData.initializers.Length)
             {
@@ -264,7 +264,7 @@ namespace RotoChips.ImageProcessing
             hasStressFile = new Dictionary<int, bool>();
             foreach (LevelDataManager.Descriptor ld in GlobalManager.MLevel.LevelDescriptors())
             {
-                hasStressFile[ld.init.id] = System.IO.File.Exists(StressedFinalImageFile(ld.init.id));
+                hasStressFile[ld.init.id] = System.IO.File.Exists(StressedFinalImageFilename(ld.init.id));
             }
         }
 
@@ -274,7 +274,7 @@ namespace RotoChips.ImageProcessing
             hasStressFile = new Dictionary<int, bool>();
             foreach (LevelDataManager.Descriptor ld in GlobalManager.MLevel.LevelDescriptors())
             {
-                string fn = StressedFinalImageFile(ld.init.id);
+                string fn = StressedFinalImageFilename(ld.init.id);
                 if (System.IO.File.Exists(fn))
                 {
                     System.IO.File.Delete(fn);
@@ -289,11 +289,11 @@ namespace RotoChips.ImageProcessing
         // this is the list of stress images ids neede for the intro story
         // it should end with the id 0
         protected int[] pregeneratedStressImages;
-        IEnumerator PreGenerateStressFiels()
+        IEnumerator PreGenerateStressFiles()
         {
             foreach (int levelId in pregeneratedStressImages)
             {
-                if (!HasFinalImage(levelId))
+                if (!HasFinalImageFile(levelId))
                 {
                     StartCoroutine(BgStressImage(levelId));
                     while (!HasFinalImage(levelId))
@@ -310,7 +310,7 @@ namespace RotoChips.ImageProcessing
         {
             foreach (LevelDataManager.Descriptor ld in GlobalManager.MLevel.LevelDescriptors())
             {
-                if (!HasFinalImage(ld.init.id))
+                if (!HasFinalImageFile(ld.init.id))
                 {
                     //Debug.Log ("Generating stress image #" + i.ToString ());
                     StartCoroutine(BgStressImage(ld.init.id));
@@ -323,7 +323,7 @@ namespace RotoChips.ImageProcessing
         }
 
         // this method tells if there is a valid stress image file
-        public bool HasFinalImage(int levelId)
+        public bool HasFinalImageFile(int levelId)
         {
             bool has = false;
             if (hasStressFile.TryGetValue(levelId, out has))
@@ -333,23 +333,32 @@ namespace RotoChips.ImageProcessing
             return false;
         }
 
+        public bool HasFinalImage(int levelId)
+        {
+            return true;
+        }
+
         public override void MakeInitial()
         {
+            /*
             ComputeNeighbourhood();
             SetFileFlags();
+            */
             base.MakeInitial();
         }
 
         public override void MakeLoading()
         {
-            // MakeLoading only generates stress images neede for the intro
-            StartCoroutine(PreGenerateStressFiels());
+            // MakeLoading only generates stress images needed for the intro
+            /*
+            StartCoroutine(PreGenerateStressFiles());
+            */
             base.MakeLoading();
         }
 
         public override void MakeReady()
         {
-            StartCoroutine(CheckStressFile());
+            //StartCoroutine(CheckStressFile());
             base.MakeReady();
         }
 

@@ -37,9 +37,12 @@ namespace RotoChips.Puzzle
             float screenAspect = Camera.main.aspect;
 
             // prepare STRESS texture
+            /*
             string stressImage = StressImageCreator.StressedFinalImageFile(descriptor.init.id);
             Texture2D tex = new Texture2D(2, 2, TextureFormat.RGB24, false);
             tex.LoadImage(System.IO.File.ReadAllBytes(stressImage));
+            */
+            Texture2D tex = Resources.Load<Texture2D>(LevelDataManager.StressImageResource(descriptor.init.id));
             Vector2 texFactor = new Vector2
             {
                 x = descriptor.init.finalXYScale > puzzleRatioXY ? puzzleRatioXY / descriptor.init.finalXYScale : 1f,

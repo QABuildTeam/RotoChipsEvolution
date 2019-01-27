@@ -104,7 +104,7 @@ namespace RotoChips.World
                             connectorLine.GetComponent<IntercubeConnectorFlasher>().Init(realmData.connectorColor, previousSelector.transform.position - newPosition);
                         }
                     }
-                    Debug.Log("Creating selector " + descriptor.init.id.ToString() + ": revealed=" + descriptor.state.Revealed.ToString() + ", complete=" + descriptor.state.Complete.ToString());
+                    //Debug.Log("Creating selector " + descriptor.init.id.ToString() + ": revealed=" + descriptor.state.Revealed.ToString() + ", complete=" + descriptor.state.Complete.ToString());
                     previousSelector = selector;
                 }
             }
