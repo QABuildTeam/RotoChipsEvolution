@@ -50,3 +50,19 @@ namespace RotoChips.World
     }
 }
 #endif
+#if UNITY_ANDROID
+using UnityEngine;
+using UnityEngine.PostProcessing;
+
+namespace RotoChips.World
+{
+    public class AmbientOcclusionSwitcher : MonoBehaviour
+    {
+        void Awake()
+        {
+            GetComponent<PostProcessingBehaviour>().enabled = false;
+        }
+
+    }
+}
+#endif

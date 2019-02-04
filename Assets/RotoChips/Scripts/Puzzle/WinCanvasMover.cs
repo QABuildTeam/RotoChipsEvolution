@@ -145,8 +145,8 @@ namespace RotoChips.Puzzle
                 Vector2 newPosition = imageParams[i].originalPosition + displacement;
                 imageParams[i].movePosition[hiIndex] = newPosition;
             }
-            Debug.Log("New step: from " + lowIndex.ToString() + " (scale=" + currentScale[lowIndex].ToString() + ",position=" + imageParams[0].movePosition[lowIndex].ToString() + ") to " + hiIndex.ToString() + " (scale=" + currentScale[hiIndex].ToString() + ",position=" + imageParams[0].movePosition[hiIndex].ToString() + ")");
-            Debug.Log("New rect bounds: (" + (imageParams[0].movePosition[hiIndex] - imageParams[0].effectiveSize * newScale / 2).ToString() + "," + (imageParams[0].movePosition[hiIndex] + imageParams[0].effectiveSize * newScale / 2) + ")");
+            //Debug.Log("New step: from " + lowIndex.ToString() + " (scale=" + currentScale[lowIndex].ToString() + ",position=" + imageParams[0].movePosition[lowIndex].ToString() + ") to " + hiIndex.ToString() + " (scale=" + currentScale[hiIndex].ToString() + ",position=" + imageParams[0].movePosition[hiIndex].ToString() + ")");
+            //Debug.Log("New rect bounds: (" + (imageParams[0].movePosition[hiIndex] - imageParams[0].effectiveSize * newScale / 2).ToString() + "," + (imageParams[0].movePosition[hiIndex] + imageParams[0].effectiveSize * newScale / 2) + ")");
             //Debug.Log("original=" + imageParams[0].originalPosition.ToString() + "; scale: min=" + currentScale.min.ToString() + ", max=" + currentScale.max.ToString() + "; position: 0=" + imageParams[0].movePosition[0].ToString() + ", 1=" + imageParams[0].movePosition[1].ToString());
         }
 
