@@ -52,37 +52,121 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leaderboardName: RotoChipsScore
+  platformLeaderboardName:
+    genericValue: RotoChipsScore
+    platformVariants:
+    - key: 8
+      value: RotoChipsScore
+    - key: 11
+      value: CgkIvZvXm_QbEAIQAA
   achievements:
   - type: 1
     achievementId: FirstPuzzleAssembled
+    platformAchievementId:
+      genericValue: FirstPuzzleAssembled
+      platformVariants:
+      - key: 8
+        value: FirstPuzzleAssembled
+      - key: 11
+        value: CgkIvZvXm_QbEAIQAQ
     points: 10
   - type: 2
     achievementId: SecondPuzzleAssembled
+    platformAchievementId:
+      genericValue: SecondPuzzleAssembled
+      platformVariants:
+      - key: 8
+        value: SecondPuzzleAssembled
+      - key: 11
+        value: CgkIvZvXm_QbEAIQAg
     points: 10
   - type: 3
     achievementId: ThirdPuzzleAssembled
+    platformAchievementId:
+      genericValue: ThirdPuzzleAssembled
+      platformVariants:
+      - key: 8
+        value: ThirdPuzzleAssembled
+      - key: 11
+        value: CgkIvZvXm_QbEAIQAw
     points: 10
   - type: 4
     achievementId: Realm1Assembled
+    platformAchievementId:
+      genericValue: Realm1Assembled
+      platformVariants:
+      - key: 8
+        value: Realm1Assembled
+      - key: 11
+        value: CgkIvZvXm_QbEAIQBA
     points: 10
   - type: 5
     achievementId: Realm2Assembled
+    platformAchievementId:
+      genericValue: Realm2Assembled
+      platformVariants:
+      - key: 8
+        value: Realm2Assembled
+      - key: 11
+        value: CgkIvZvXm_QbEAIQBQ
     points: 10
   - type: 6
     achievementId: Realm3Assembled
+    platformAchievementId:
+      genericValue: Realm3Assembled
+      platformVariants:
+      - key: 8
+        value: Realm3Assembled
+      - key: 11
+        value: CgkIvZvXm_QbEAIQBg
     points: 10
   - type: 7
     achievementId: Realm4Assembled
+    platformAchievementId:
+      genericValue: Realm4Assembled
+      platformVariants:
+      - key: 8
+        value: Realm4Assembled
+      - key: 11
+        value: CgkIvZvXm_QbEAIQBw
     points: 10
   - type: 8
     achievementId: Realm5Assembled
+    platformAchievementId:
+      genericValue: Realm5Assembled
+      platformVariants:
+      - key: 8
+        value: Realm5Assembled
+      - key: 11
+        value: CgkIvZvXm_QbEAIQCA
     points: 10
   - type: 9
     achievementId: Realm6Assembled
+    platformAchievementId:
+      genericValue: Realm6Assembled
+      platformVariants:
+      - key: 8
+        value: Realm6Assembled
+      - key: 11
+        value: CgkIvZvXm_QbEAIQCQ
     points: 10
   - type: 10
     achievementId: Realm7Assembled
+    platformAchievementId:
+      genericValue: Realm7Assembled
+      platformVariants:
+      - key: 8
+        value: Realm7Assembled
+      - key: 11
+        value: CgkIvZvXm_QbEAIQCg
     points: 10
   - type: 11
     achievementId: FirstRunFinished
+    platformAchievementId:
+      genericValue: FirstRunFinished
+      platformVariants:
+      - key: 8
+        value: FirstRunFinished
+      - key: 11
+        value: CgkIvZvXm_QbEAIQCw
     points: 10

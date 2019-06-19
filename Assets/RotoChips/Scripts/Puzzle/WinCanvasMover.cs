@@ -48,7 +48,7 @@ namespace RotoChips.Puzzle
         ImageScaleParams[] imageParams;
 
         Vector2 sourceCanvasSize;
-        Vector2 screenSize;
+        //Vector2 screenSize;
         protected FloatRange currentScale;
         LevelDataManager.Descriptor descriptor;
 
@@ -77,7 +77,7 @@ namespace RotoChips.Puzzle
             // the size of the canvas excluding margins
             Rect sourceCanvasRect = new Rect(0, 0, canvasScaler.referenceResolution.x * (1 - marginRatio), canvasScaler.referenceResolution.y * (1 - marginRatio));
             sourceCanvasSize = new Vector2(sourceCanvasRect.width, sourceCanvasRect.height);
-            screenSize = new Vector2(Screen.width, Screen.height);
+            //screenSize = new Vector2(Screen.width, Screen.height);
             // SourceCanvas matches screen by width, so the final height scaling should be adjusted by:
             float heightAdjustFactor = sourceCanvasRect.width / sourceCanvasRect.height / screenAspect;
             for (int i = 0; i < imageParams.Length; i++)
@@ -129,11 +129,11 @@ namespace RotoChips.Puzzle
             );
         }
 
-        int lowIndex = 0;
+        //int lowIndex = 0;
         int hiIndex = 1;
         void GenerateNewStep(bool up)
         {
-            lowIndex = up ? 0 : 1;     // address corresponding to scale and position start parts
+            //lowIndex = up ? 0 : 1;     // address corresponding to scale and position start parts
             hiIndex = up ? 1 : 0;       // address corresponding to scale and position end parts
             float newScale = effectFinished ? 1f : scaleRange.Random;
             currentScale[hiIndex] = newScale;

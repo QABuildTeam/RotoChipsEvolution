@@ -8,13 +8,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RotoChips.Management;
+using RotoChips.Generic;
 
 namespace RotoChips.Data
 {
     public class AchievementManagerData : MonoBehaviour
     {
         [SerializeField]
-        public string leaderboardName = "RotoChipsScore";
+        public PlatformString platformLeaderboardName;  // "RotoChipsScore"
         [SerializeField]
         public List<Achievement> achievements;
     }

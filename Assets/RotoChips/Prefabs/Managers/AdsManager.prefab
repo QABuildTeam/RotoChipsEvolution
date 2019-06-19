@@ -52,5 +52,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initOrder: 400
-  gameId: 0
+  gameId: 2828764
+  gameIdsList:
+    genericValue: 2828764
+    platformVariants:
+    - key: 8
+      value: 2828764
+    - key: 11
+      value: 2828762
   rewardedVideo: rewardedVideo
+  checkDelay: 10

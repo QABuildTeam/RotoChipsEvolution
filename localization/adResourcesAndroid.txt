@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Google Play game services IDs.
+Save this file as res/values/games-ids.xml in your project.
+-->
+<resources>
+  <!-- app_id -->
+  <string name="app_id" translatable="false">958909500861</string>
+  <!-- package_name -->
+  <string name="package_name" translatable="false">com.IgorSpiridonov.RotoChips</string>
+  <!-- achievement FirstPuzzleAssembled -->
+  <string name="achievement_firstpuzzleassembled" translatable="false">CgkIvZvXm_QbEAIQAQ</string>
+  <!-- achievement SecondPuzzleAssembled -->
+  <string name="achievement_secondpuzzleassembled" translatable="false">CgkIvZvXm_QbEAIQAg</string>
+  <!-- achievement ThirdPuzzleAssembled -->
+  <string name="achievement_thirdpuzzleassembled" translatable="false">CgkIvZvXm_QbEAIQAw</string>
+  <!-- achievement Realm1Assembled -->
+  <string name="achievement_realm1assembled" translatable="false">CgkIvZvXm_QbEAIQBA</string>
+  <!-- achievement Realm2Assembled -->
+  <string name="achievement_realm2assembled" translatable="false">CgkIvZvXm_QbEAIQBQ</string>
+  <!-- achievement Realm3Assembled -->
+  <string name="achievement_realm3assembled" translatable="false">CgkIvZvXm_QbEAIQBg</string>
+  <!-- achievement Realm4Assembled -->
+  <string name="achievement_realm4assembled" translatable="false">CgkIvZvXm_QbEAIQBw</string>
+  <!-- achievement Realm5Assembled -->
+  <string name="achievement_realm5assembled" translatable="false">CgkIvZvXm_QbEAIQCA</string>
+  <!-- achievement Realm6Assembled -->
+  <string name="achievement_realm6assembled" translatable="false">CgkIvZvXm_QbEAIQCQ</string>
+  <!-- achievement Realm7Assembled -->
+  <string name="achievement_realm7assembled" translatable="false">CgkIvZvXm_QbEAIQCg</string>
+  <!-- achievement FirstRunFinished -->
+  <string name="achievement_firstrunfinished" translatable="false">CgkIvZvXm_QbEAIQCw</string>
+  <!-- leaderboard RotoChipsScore -->
+  <string name="leaderboard_rotochipsscore" translatable="false">CgkIvZvXm_QbEAIQAA</string>
+</resources>

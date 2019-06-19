@@ -330,16 +330,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 10
       objectReference: {fileID: 0}
-    - target: {fileID: 114260920113151048, guid: 18c5a4a22c028d049b13ba9ac1491688,
-        type: 2}
-      propertyPath: gameId
-      value: 2828764
-      objectReference: {fileID: 0}
-    - target: {fileID: 114260920113151048, guid: 18c5a4a22c028d049b13ba9ac1491688,
-        type: 2}
-      propertyPath: checkDelay
-      value: 10
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 18c5a4a22c028d049b13ba9ac1491688, type: 2}
   m_IsPrefabAsset: 0

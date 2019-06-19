@@ -24,13 +24,18 @@ namespace RotoChips.Accounting
     {
 
         [SerializeField]
-        protected string gameId = "0";
+        protected PlatformString gameIdsList;
+        /*
+            { RuntimePlatform.Android, "2828762" },
+            { RuntimePlatform.IPhonePlayer, "2828764" }
+        */
         [SerializeField]
         protected string rewardedVideo = "rewardedVideo";
         // Use this for initialization
         public override void MakeInitial()
         {
-            Advertisement.Initialize(gameId);
+            string platformGameId = gameIdsList.Value(Application.platform);
+            Advertisement.Initialize(platformGameId);
             base.MakeInitial();
         }
 

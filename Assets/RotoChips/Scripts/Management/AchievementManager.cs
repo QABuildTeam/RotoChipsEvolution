@@ -7,6 +7,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if PLATFORM_ANDROID
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
+#endif
 using UnityEngine.SocialPlatforms;
 using RotoChips.Generic;
 using System;
@@ -35,7 +39,8 @@ namespace RotoChips.Management
     public class Achievement
     {
         public AchievementType type;
-        public string achievementId;
+        [SerializeField]
+        public PlatformString platformAchievementId;
         public float points;
     }
 
@@ -54,6 +59,12 @@ namespace RotoChips.Management
                     achievementDictionary.Add(achievement.type, achievement);
                 }
             }
+#if PLATFORM_ANDROID
+            PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder().Build();
+            PlayGamesPlatform.InitializeInstance(config);
+            PlayGamesPlatform.DebugLogEnabled = true;
+            PlayGamesPlatform.Activate();
+#endif
             Social.localUser.Authenticate(ProcessAuthentication);
             base.MakeInitial();
         }
@@ -64,7 +75,7 @@ namespace RotoChips.Management
             {
                 if (data != null)
                 {
-                    return data.leaderboardName;
+                    return data.platformLeaderboardName.Value(Application.platform);
                 }
                 return null;
             }
@@ -85,26 +96,41 @@ namespace RotoChips.Management
             }
         }
 
+        string achievementsText;
         void ProcessLoadedAchievements(IAchievement[] achievements)
         {
+            achievementsText = string.Empty;
             if (achievements.Length == 0)
             {
-                //Debug.Log("No achievements loaded");
+                Debug.Log("No achievements loaded");
+                achievementsText = "No achievements loaded";
+            }
+            else
+            {
+                foreach (IAchievement achievement in achievements)
+                {
+                    achievementsText += achievement.id + " is " + (achievement.hidden ? "hidden" : "revealed") + " and " + (achievement.completed ? "" : "not ") + "completed" + "\n";
+                }
             }
         }
 
+        string scoreText;
         void ProcessScores(bool result, ILeaderboard leaderboard)
         {
+            scoreText = string.Empty;
             if (result)
             {
-                //Debug.Log("Scores in " + leaderboard.id + " successfully loaded");
+                Debug.Log("Scores in " + leaderboard.id + " successfully loaded");
+                scoreText = "Leaderboard " + leaderboard.id + "\n";
                 foreach (IScore score in leaderboard.scores)
                 {
+                    scoreText += score.userID + " " + score.value.ToString() + "\n";
                     Debug.Log(score);
                 }
             }
             else
             {
+                scoreText = "No scores loaded";
                 Debug.Log("No scores loaded");
             }
         }
@@ -125,9 +151,10 @@ namespace RotoChips.Management
             Achievement achievement;
             if (achievementDictionary.TryGetValue(achievementType, out achievement))
             {
-                Social.ReportProgress(achievement.achievementId, 100, success =>
+                string achievementId = achievement.platformAchievementId.Value(Application.platform);
+                Social.ReportProgress(achievementId, 100, success =>
                 {
-                    Debug.Log("Achievement " + achievement + " has been " + (success ? "successfully" : "unsuccessfully") + " reported of");
+                    Debug.Log("Achievement " + achievementId + " has been " + (success ? "successfully" : "unsuccessfully") + " reported of");
                 });
             }
         }
@@ -142,5 +169,71 @@ namespace RotoChips.Management
             Social.ShowLeaderboardUI();
         }
 
+        // Testing
+        /*
+        public void GetSocialData(Action<string> callback)
+        {
+            string socialData = Social.Active.ToString() + "\nUser " + Social.localUser.id + " is " + (Social.localUser.authenticated ? "" : "not ") + "authenticated";
+            callback(socialData);
+        }
+
+        public void GetAchievementDescriptions(Action<string> callback)
+        {
+            Social.LoadAchievementDescriptions(descriptions =>
+            {
+                if (descriptions.Length > 0)
+                {
+                    Debug.Log("Got " + descriptions.Length + " achievement descriptions");
+                    string achievementDescriptions = "Achievement Descriptions:\n";
+                    foreach (IAchievementDescription ad in descriptions)
+                    {
+                        achievementDescriptions += "\t'" +
+                            ad.id + "' '" +
+                            ad.title + "' '" +
+                            ad.unachievedDescription + "'\n";
+                    }
+                    Debug.Log(achievementDescriptions);
+                    callback(achievementDescriptions);
+                }
+                else
+                {
+                    string achievementDescriptions = "Achievement Descriptions:\nNone";
+                    Debug.Log("Failed to load achievement descriptions");
+                    callback(achievementDescriptions);
+                }
+            });
+        }
+
+        public void GetAchievementsText(Action<string> callback)
+        {
+            Social.LoadAchievements(
+                (achievements) =>
+                {
+                    ProcessLoadedAchievements(achievements);
+                    if (callback != null)
+                    {
+                        callback(achievementsText);
+                    }
+                }
+            );
+        }
+
+        public void GetScoreText(Action<string> callback)
+        {
+            if (leaderboard != null)
+            {
+                leaderboard.LoadScores(
+                    (result) =>
+                    {
+                        ProcessScores(result, leaderboard);
+                        if (callback != null)
+                        {
+                            callback(scoreText);
+                        }
+                    }
+                );
+            }
+        }
+        */
     }
 }
